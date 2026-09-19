@@ -1,298 +1,461 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dil Say Dil Tak - Chat</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Socialyte - Chat</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
 
-    body {
-      background: #f5f7fb;
-      min-height: 100vh;
-    }
+body{
+  background:#f4f6fb;
+  color:#20242c;
+  min-height:100vh;
+}
 
-    header {
-      background: #20242c;
-      color: white;
-      padding: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+header{
+  background:#20242c;
+  color:white;
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
 
-    .logo {
-      font-size: 20px;
-      font-weight: bold;
-    }
+.logo{
+  font-size:21px;
+  font-weight:bold;
+}
 
-    #logout {
-      background: white;
-      color: #20242c;
-      border: none;
-      padding: 9px 14px;
-      border-radius: 10px;
-      font-weight: bold;
-    }
+.logo span{
+  color:#ff4f81;
+}
 
-    .chat {
-      max-width: 600px;
-      margin: 20px auto;
-      padding: 15px;
-    }
+#logout{
+  background:white;
+  border:0;
+  padding:9px 14px;
+  border-radius:10px;
+  font-weight:bold;
+}
 
-    #messages {
-      height: 60vh;
-      overflow-y: auto;
-      background: white;
-      border-radius: 18px;
-      padding: 15px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-    }
+.container{
+  max-width:700px;
+  margin:auto;
+  padding:14px;
+}
 
-    .message-row {
-      display: flex;
-      margin-bottom: 12px;
-    }
+/* Profile */
+.profile{
+  background:white;
+  padding:15px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  box-shadow:0 5px 20px rgba(0,0,0,.06);
+  margin-bottom:14px;
+}
 
-    .message-row.mine {
-      justify-content: flex-end;
-    }
+.avatar{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:#ff4f81;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  font-weight:bold;
+}
 
-    .message-row.other {
-      justify-content: flex-start;
-    }
+.profile-name{
+  font-weight:bold;
+  font-size:16px;
+}
 
-    .message {
-      max-width: 80%;
-      padding: 10px 13px;
-      border-radius: 15px;
-    }
+.online{
+  color:#19a463;
+  font-size:12px;
+  margin-top:4px;
+}
 
-    .mine .message {
-      background: #20242c;
-      color: white;
-      border-bottom-right-radius: 4px;
-    }
+/* Chat */
+.chat-card{
+  background:white;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 5px 25px rgba(0,0,0,.07);
+}
 
-    .other .message {
-      background: #f0f2f5;
-      color: #20242c;
-      border-bottom-left-radius: 4px;
-    }
+.chat-title{
+  padding:15px;
+  border-bottom:1px solid #eee;
+  font-weight:bold;
+}
 
-    .username {
-      font-size: 12px;
-      font-weight: bold;
-      margin-bottom: 4px;
-      opacity: 0.75;
-    }
+#messages{
+  height:55vh;
+  overflow-y:auto;
+  padding:15px;
+}
 
-    .message-text {
-      font-size: 15px;
-      word-wrap: break-word;
-    }
+.message-row{
+  display:flex;
+  margin-bottom:13px;
+}
 
-    .time {
-      font-size: 10px;
-      margin-top: 5px;
-      opacity: 0.6;
-      text-align: right;
-    }
+.mine{
+  justify-content:flex-end;
+}
 
-    .send-box {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
+.other{
+  justify-content:flex-start;
+}
 
-    #messageInput {
-      flex: 1;
-      padding: 14px;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      font-size: 15px;
-      outline: none;
-    }
+.message{
+  max-width:80%;
+  padding:11px 14px;
+  border-radius:17px;
+}
 
-    #sendBtn {
-      border: none;
-      background: #20242c;
-      color: white;
-      padding: 0 18px;
-      border-radius: 12px;
-      font-weight: bold;
-    }
+.mine .message{
+  background:#20242c;
+  color:white;
+  border-bottom-right-radius:5px;
+}
 
-    #status {
-      text-align: center;
-      margin: 10px;
-      color: #777;
-    }
-  </style>
+.other .message{
+  background:#f0f2f5;
+  border-bottom-left-radius:5px;
+}
+
+.username{
+  font-size:11px;
+  font-weight:bold;
+  margin-bottom:4px;
+  opacity:.7;
+}
+
+.message-text{
+  font-size:15px;
+  word-break:break-word;
+}
+
+.time{
+  font-size:9px;
+  opacity:.55;
+  text-align:right;
+  margin-top:5px;
+}
+
+/* Buttons */
+.fun-buttons{
+  display:flex;
+  gap:8px;
+  padding:10px 15px;
+  border-top:1px solid #eee;
+  overflow-x:auto;
+}
+
+.fun-buttons button{
+  border:0;
+  background:#f4f5f8;
+  padding:9px 13px;
+  border-radius:20px;
+  white-space:nowrap;
+  font-size:13px;
+}
+
+.send-box{
+  display:flex;
+  gap:8px;
+  padding:12px 15px 15px;
+}
+
+#messageInput{
+  flex:1;
+  padding:14px;
+  border:1px solid #ddd;
+  border-radius:14px;
+  outline:none;
+  font-size:15px;
+}
+
+#sendBtn{
+  border:0;
+  background:#ff4f81;
+  color:white;
+  padding:0 18px;
+  border-radius:14px;
+  font-weight:bold;
+}
+
+#status{
+  text-align:center;
+  font-size:12px;
+  color:#777;
+  padding-bottom:10px;
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <div class="logo">Dil Say Dil Tak 💬</div>
+  <div class="logo">Socia<span>lyte</span> 💬</div>
   <button id="logout">Logout</button>
 </header>
 
-<div class="chat">
+<div class="container">
 
-  <div id="messages"></div>
+  <div class="profile">
+    <div class="avatar" id="avatar">U</div>
 
-  <div class="send-box">
-    <input
-      type="text"
-      id="messageInput"
-      placeholder="Write a message..."
-    >
-    <button id="sendBtn">Send</button>
+    <div>
+      <div class="profile-name" id="profileName">User</div>
+      <div class="online">● Online</div>
+    </div>
   </div>
 
-  <div id="status"></div>
+  <div class="chat-card">
+
+    <div class="chat-title">
+      💬 Public Chat
+    </div>
+
+    <div id="messages"></div>
+
+    <div class="fun-buttons">
+
+      <button onclick="sendFun('🤗 Jhappi')">
+        🤗 Jhappi
+      </button>
+
+      <button onclick="sendFun('😘 Chupair')">
+        😘 Chupair
+      </button>
+
+      <button onclick="sendFun('❤️ Love')">
+        ❤️ Love
+      </button>
+
+      <button onclick="sendFun('😂 Haha')">
+        😂 Haha
+      </button>
+
+    </div>
+
+    <div class="send-box">
+
+      <input
+        type="text"
+        id="messageInput"
+        placeholder="Write a message..."
+      >
+
+      <button id="sendBtn">
+        Send
+      </button>
+
+    </div>
+
+    <div id="status"></div>
+
+  </div>
 
 </div>
 
 <script>
 
-const SUPABASE_URL = "https://szmauhxiyjffjhrcruee.supabase.co";
+const SUPABASE_URL =
+"https://szmauhxiyjffjhrcruee.supabase.co";
 
-const SUPABASE_KEY = "sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
+const SUPABASE_KEY =
+"sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
 
-const supabaseClient = window.supabase.createClient(
+const supabaseClient =
+window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
 
 let currentUser = null;
 
-async function checkUser() {
+async function checkUser(){
 
-  const { data, error } = await supabaseClient.auth.getUser();
+  const {data,error} =
+    await supabaseClient.auth.getUser();
 
-  if (error || !data.user) {
-    window.location.href = "login.html";
+  if(error || !data.user){
+
+    window.location.href="login.html";
     return;
   }
 
-  currentUser = data.user;
-
-  loadMessages();
-}
-
-async function loadMessages() {
-
-  const { data, error } = await supabaseClient
-    .from("messages")
-    .select("*")
-    .order("created_at", { ascending: true });
-
-  if (error) {
-    document.getElementById("status").textContent = error.message;
-    return;
-  }
-
-  const box = document.getElementById("messages");
-
-  box.innerHTML = "";
-
-  data.forEach(msg => {
-
-    const isMine = msg.user_id === currentUser.id;
-
-    const row = document.createElement("div");
-    row.className = "message-row " + (isMine ? "mine" : "other");
-
-    const messageDiv = document.createElement("div");
-    messageDiv.className = "message";
-
-    const usernameDiv = document.createElement("div");
-    usernameDiv.className = "username";
-    usernameDiv.textContent = msg.username || "User";
-
-    const textDiv = document.createElement("div");
-    textDiv.className = "message-text";
-    textDiv.textContent = msg.message;
-
-    const timeDiv = document.createElement("div");
-    timeDiv.className = "time";
-
-    const messageTime = new Date(msg.created_at);
-
-    timeDiv.textContent = messageTime.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-
-    messageDiv.appendChild(usernameDiv);
-    messageDiv.appendChild(textDiv);
-    messageDiv.appendChild(timeDiv);
-
-    row.appendChild(messageDiv);
-    box.appendChild(row);
-
-  });
-
-  box.scrollTop = box.scrollHeight;
-}
-
-document.getElementById("sendBtn").addEventListener("click", async function() {
-
-  const input = document.getElementById("messageInput");
-
-  const text = input.value.trim();
-
-  if (!text || !currentUser) return;
+  currentUser=data.user;
 
   const username =
     currentUser.user_metadata?.username ||
     currentUser.email.split("@")[0];
 
-  const { error } = await supabaseClient
-    .from("messages")
-    .insert({
-      user_id: currentUser.id,
-      username: username,
-      message: text
-    });
+  document.getElementById("profileName")
+    .textContent=username;
 
-  if (error) {
-    document.getElementById("status").textContent = error.message;
+  document.getElementById("avatar")
+    .textContent=username.charAt(0).toUpperCase();
+
+  loadMessages();
+}
+
+async function loadMessages(){
+
+  const {data,error} =
+    await supabaseClient
+    .from("messages")
+    .select("*")
+    .order("created_at",{ascending:true});
+
+  if(error){
+
+    document.getElementById("status")
+      .textContent=error.message;
+
     return;
   }
 
-  input.value = "";
+  const box=document.getElementById("messages");
 
-  loadMessages();
+  box.innerHTML="";
 
-});
+  data.forEach(msg=>{
 
-document.getElementById("messageInput").addEventListener("keydown", function(event) {
+    const row=document.createElement("div");
 
-  if (event.key === "Enter") {
-    document.getElementById("sendBtn").click();
+    const mine =
+      msg.user_id === currentUser.id;
+
+    row.className =
+      "message-row " +
+      (mine ? "mine" : "other");
+
+    const message=document.createElement("div");
+
+    message.className="message";
+
+    const username=document.createElement("div");
+
+    username.className="username";
+
+    username.textContent =
+      msg.username || "User";
+
+    const text=document.createElement("div");
+
+    text.className="message-text";
+
+    text.textContent=msg.message;
+
+    const time=document.createElement("div");
+
+    time.className="time";
+
+    const date=new Date(msg.created_at);
+
+    time.textContent =
+      date.toLocaleTimeString([],{
+        hour:"2-digit",
+        minute:"2-digit"
+      });
+
+    message.appendChild(username);
+    message.appendChild(text);
+    message.appendChild(time);
+
+    row.appendChild(message);
+
+    box.appendChild(row);
+
+  });
+
+  box.scrollTop=box.scrollHeight;
+}
+
+async function sendMessage(){
+
+  const input =
+    document.getElementById("messageInput");
+
+  const text=input.value.trim();
+
+  if(!text || !currentUser) return;
+
+  const username =
+    currentUser.user_metadata?.username ||
+    currentUser.email.split("@")[0];
+
+  const {error} =
+    await supabaseClient
+    .from("messages")
+    .insert({
+      user_id:currentUser.id,
+      username:username,
+      message:text
+    });
+
+  if(error){
+
+    document.getElementById("status")
+      .textContent=error.message;
+
+    return;
   }
 
-});
+  input.value="";
 
-document.getElementById("logout").addEventListener("click", async function() {
+  loadMessages();
+}
 
-  await supabaseClient.auth.signOut();
+function sendFun(text){
 
-  window.location.href = "login.html";
+  document.getElementById("messageInput")
+    .value=text;
 
-});
+  sendMessage();
+}
+
+document.getElementById("sendBtn")
+  .addEventListener("click",sendMessage);
+
+document.getElementById("messageInput")
+  .addEventListener("keydown",function(e){
+
+    if(e.key==="Enter"){
+      sendMessage();
+    }
+
+  });
+
+document.getElementById("logout")
+  .addEventListener("click",async function(){
+
+    await supabaseClient.auth.signOut();
+
+    window.location.href="login.html";
+
+  });
 
 checkUser();
 
