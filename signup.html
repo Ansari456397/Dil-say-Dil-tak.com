@@ -1,82 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Socialyte - Sign Up</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Socialyte - Sign Up</title>
 
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-}
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-body {
-  min-height: 100vh;
-  background: #f5f7fb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
 
-.signup-box {
-  width: 100%;
-  max-width: 400px;
-  background: white;
-  padding: 35px 25px;
-  border-radius: 22px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-}
+    body {
+      min-height: 100vh;
+      background: #f5f7fb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
 
-.logo {
-  text-align: center;
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
+    .signup-box {
+      width: 100%;
+      max-width: 400px;
+      background: white;
+      padding: 35px 25px;
+      border-radius: 22px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
 
-.subtitle {
-  text-align: center;
-  color: #777;
-  margin-bottom: 28px;
-}
+    .logo {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
 
-input {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  outline: none;
-  font-size: 15px;
-}
+    .subtitle {
+      text-align: center;
+      color: #777;
+      margin-bottom: 28px;
+    }
 
-button {
-  width: 100%;
-  padding: 14px;
-  border: none;
-  border-radius: 12px;
-  background: #20242c;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-}
+    input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      outline: none;
+      font-size: 15px;
+    }
 
-.login {
-  text-align: center;
-  margin-top: 20px;
-  color: #777;
-}
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: #20242c;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-.login a {
-  color: #20242c;
-  font-weight: bold;
-  text-decoration: none;
-}
-</style>
+    #message {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .login {
+      text-align: center;
+      margin-top: 20px;
+      color: #777;
+    }
+
+    .login a {
+      color: #20242c;
+      font-weight: bold;
+      text-decoration: none;
+    }
+  </style>
 </head>
 
 <body>
@@ -89,17 +98,41 @@ button {
     Create your Socialyte account
   </div>
 
-  <form>
-    <input type="text" placeholder="Username" required>
+  <form id="signupForm">
 
-    <input type="email" placeholder="Email" required>
+    <input
+      type="text"
+      id="username"
+      placeholder="Username"
+      required
+    >
 
-    <input type="password" placeholder="Password" required>
+    <input
+      type="email"
+      id="email"
+      placeholder="Email"
+      required
+    >
 
-    <input type="password" placeholder="Confirm Password" required>
+    <input
+      type="password"
+      id="password"
+      placeholder="Password"
+      required
+    >
+
+    <input
+      type="password"
+      id="confirmPassword"
+      placeholder="Confirm Password"
+      required
+    >
 
     <button type="submit">Create Account</button>
+
   </form>
+
+  <div id="message"></div>
 
   <div class="login">
     Already have an account?
@@ -107,6 +140,59 @@ button {
   </div>
 
 </div>
+
+<script>
+const SUPABASE_URL = "PASTE_YOUR_PROJECT_URL_HERE";
+const SUPABASE_KEY = "PASTE_YOUR_PUBLISHABLE_OR_ANON_KEY_HERE";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+document.getElementById("signupForm").addEventListener("submit", async function(e) {
+
+  e.preventDefault();
+
+  const username = document.getElementById("username").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+  const message = document.getElementById("message");
+
+  if (password !== confirmPassword) {
+    message.textContent = "Passwords do not match.";
+    return;
+  }
+
+  if (password.length < 6) {
+    message.textContent = "Password must be at least 6 characters.";
+    return;
+  }
+
+  message.textContent = "Creating account...";
+
+  const { data, error } = await supabaseClient.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+      data: {
+        username: username
+      }
+    }
+  });
+
+  if (error) {
+    message.textContent = error.message;
+    return;
+  }
+
+  message.textContent =
+    "Account created successfully! Please check your email if verification is required.";
+
+  document.getElementById("signupForm").reset();
+});
+</script>
 
 </body>
 </html>
