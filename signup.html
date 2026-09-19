@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Socialyte - Sign Up</title>
+  <title>Dil Say Dil Tak - Sign Up</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -92,10 +93,10 @@
 
 <div class="signup-box">
 
-  <div class="logo">Socialyte</div>
+  <div class="logo">Dil Say Dil Tak</div>
 
   <div class="subtitle">
-    Create your Socialyte account
+    Create your account
   </div>
 
   <form id="signupForm">
@@ -142,12 +143,13 @@
 </div>
 
 <script>
-const SUPABASE_URL = "PASTE_YOUR_PROJECT_URL_HERE";
-const SUPABASE_KEY = "-ys_eIxK2WuUucSGtoBdqw_nKWnIgep
+const SUPABASE_URL = "https://szmauhxiyjffjhrcruee.supabase.co";
+
+const SUPABASE_KEY = "PASTE_YOUR_COMPLETE_PUBLISHABLE_KEY_HERE";
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
-  SUPABASE_KEYsb_published.-ys_eIxK2WuUucSGtoBdqw_nKWnIgep
+  SUPABASE_KEY
 );
 
 document.getElementById("signupForm").addEventListener("submit", async function(e) {
