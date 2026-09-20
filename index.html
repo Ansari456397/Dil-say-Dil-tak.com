@@ -1,10 +1,12 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Socialyte</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{
@@ -16,6 +18,7 @@ body{
   font-family:Arial,sans-serif;
   background:#f4f6fb;
   color:#222;
+  padding-top:125px;
 }
 
 /* HEADER */
@@ -25,284 +28,203 @@ body{
   left:0;
   width:100%;
   height:60px;
-  z-index:1000;
-  background:white;
-  border-bottom:1px solid #ddd;
+  background:linear-gradient(135deg,#6c5ce7,#8e44ad);
+  color:white;
   display:flex;
   align-items:center;
-  padding:0 15px;
+  justify-content:center;
+  z-index:1000;
+  box-shadow:0 2px 10px #0002;
 }
 
 .logo{
-  font-size:22px;
+  font-size:24px;
   font-weight:bold;
-  color:#4f46e5;
 }
 
-/* TOP MESSAGE AREA */
-.message-area{
+/* TOP MESSAGE BOX */
+.home-message-box{
   position:fixed;
   top:60px;
   left:0;
   width:100%;
-  z-index:999;
-  background:#f4f6fb;
-  padding:8px;
-  border-bottom:1px solid #ddd;
-}
-
-/* MESSAGE BOX */
-.message-box{
-  max-width:650px;
-  margin:auto;
   background:white;
-  border-radius:14px;
   padding:10px;
-  box-shadow:0 3px 12px rgba(0,0,0,.12);
+  z-index:999;
+  box-shadow:0 2px 10px #0002;
 }
 
-/* TITLE */
 .message-title{
-  font-size:15px;
   font-weight:bold;
-  margin-bottom:8px;
-  color:#4f46e5;
+  color:#6c5ce7;
+  margin-bottom:7px;
 }
 
-/* INPUT ROW */
 .message-row{
   display:flex;
-  gap:7px;
-  align-items:center;
+  gap:6px;
 }
 
-/* MESSAGE INPUT */
-.message-input{
+#chatInput{
   flex:1;
-  height:44px;
+  min-width:0;
   border:1px solid #ddd;
-  border-radius:22px;
-  padding:0 15px;
-  font-size:14px;
+  border-radius:20px;
+  padding:11px 14px;
   outline:none;
-  background:#f8f9fc;
+  font-size:14px;
 }
 
-.message-input:focus{
-  border-color:#4f46e5;
-  background:white;
-}
-
-/* SEND */
-.send-btn{
-  width:44px;
-  height:44px;
+.chat-send{
   border:0;
-  border-radius:50%;
-  background:#4f46e5;
+  background:#6c5ce7;
   color:white;
+  border-radius:20px;
+  width:45px;
   font-size:20px;
   cursor:pointer;
 }
 
-/* OPTIONS */
-.message-options{
+.media-row{
   display:flex;
   gap:8px;
   margin-top:8px;
 }
 
-.option-btn{
-  flex:1;
-  border:1px solid #ddd;
-  background:#f8f9fc;
-  border-radius:9px;
-  padding:8px 5px;
-  font-size:12px;
+.media-btn{
+  border:0;
+  background:#f0edff;
+  color:#5d4bd6;
+  padding:7px 12px;
+  border-radius:15px;
   cursor:pointer;
+  font-size:13px;
 }
 
-.option-btn:active{
-  transform:scale(.97);
-}
-
-/* RECORDING */
-.record-status{
-  display:none;
-  text-align:center;
-  color:#e53935;
-  font-size:12px;
-  margin-top:6px;
-}
-
-/* IMAGE PREVIEW */
-#imagePreview img{
+/* CONTENT */
+.container{
   width:100%;
-  max-height:150px;
-  object-fit:cover;
-  border-radius:10px;
-  margin-top:8px;
+  max-width:650px;
+  margin:auto;
+  padding:10px;
+}
+
+.welcome{
+  background:white;
+  padding:15px;
+  border-radius:14px;
+  margin-bottom:12px;
+  box-shadow:0 2px 8px #0001;
+}
+
+.welcome h3{
+  margin:0 0 5px;
+  color:#6c5ce7;
 }
 
 /* POSTS */
-.container{
-  max-width:650px;
-  margin:auto;
-  padding:185px 10px 25px;
-}
-
 .post{
   background:white;
   border-radius:14px;
-  padding:15px;
+  padding:14px;
   margin-bottom:12px;
-  box-shadow:0 2px 8px rgba(0,0,0,.07);
+  box-shadow:0 2px 8px #0001;
 }
 
 .post-user{
   font-weight:bold;
-  margin-bottom:8px;
-  color:#4f46e5;
+  color:#6c5ce7;
+  margin-bottom:7px;
 }
 
 .post-text{
-  font-size:15px;
-  line-height:1.5;
+  white-space:pre-wrap;
+  word-break:break-word;
 }
 
 .post-image{
-  width:100%;
-  max-height:400px;
-  object-fit:cover;
-  border-radius:10px;
-  margin-top:10px;
+  max-width:100%;
+  border-radius:12px;
+  margin-top:8px;
 }
 
-/* MOBILE */
-@media(max-width:500px){
+.status{
+  text-align:center;
+  color:#777;
+  font-size:13px;
+  margin:10px;
+}
 
-  .message-box{
-    border-radius:12px;
-  }
-
-  .message-title{
-    font-size:14px;
-  }
-
-  .message-options{
-    gap:5px;
-  }
-
-  .option-btn{
-    font-size:11px;
-    padding:8px 3px;
-  }
-
-  .container{
-    padding-top:180px;
-  }
+#recordStatus{
+  display:none;
+  color:#e74c3c;
+  font-size:12px;
+  margin-top:5px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <div class="logo">Socialyte</div>
 </div>
 
+<!-- MESSAGE BOX TOP PAR -->
+<div class="home-message-box">
 
-<!-- =========================
-     MESSAGE BOX - SAB SE UPAR
-========================= -->
+  <div class="message-title">💬 Message</div>
 
-<div class="message-area">
-
-  <div class="message-box">
-
-    <div class="message-title">
-      💬 Message
-    </div>
-
-    <div class="message-row">
-
-      <input
-        type="text"
-        id="messageInput"
-        class="message-input"
-        placeholder="Write a message..."
-        onkeydown="handleEnter(event)"
-      >
-
-      <button
-        class="send-btn"
-        onclick="sendMessage()">
-        ➤
-      </button>
-
-    </div>
-
-
-    <div class="message-options">
-
-      <!-- IMAGE -->
-      <button
-        class="option-btn"
-        onclick="document.getElementById('imageInput').click()">
-        🖼️ Upload Image
-      </button>
-
-      <!-- VOICE -->
-      <button
-        class="option-btn"
-        onclick="toggleVoice()">
-        🎤 Voice
-      </button>
-
-    </div>
-
-
-    <div id="recordStatus" class="record-status">
-      🔴 Recording... Tap Voice again to stop
-    </div>
-
-
+  <div class="message-row">
     <input
-      type="file"
-      id="imageInput"
-      accept="image/*"
-      style="display:none"
-      onchange="sendImage(event)"
+      type="text"
+      id="chatInput"
+      placeholder="Write a message..."
+      onkeydown="if(event.key==='Enter') sendMessage()"
     >
 
-    <div id="imagePreview"></div>
+    <button class="chat-send" onclick="sendMessage()">➤</button>
+  </div>
+
+  <div class="media-row">
+
+    <button
+      class="media-btn"
+      onclick="document.getElementById('imageInput').click()">
+      🖼️ Upload Image
+    </button>
+
+    <button
+      class="media-btn"
+      id="voiceBtn"
+      onclick="toggleVoice()">
+      🎤 Voice
+    </button>
 
   </div>
+
+  <input
+    type="file"
+    id="imageInput"
+    accept="image/*"
+    style="display:none"
+    onchange="sendImage()"
+  >
+
+  <div id="recordStatus">🎤 Listening... Tap Voice again to stop</div>
 
 </div>
 
 
-<!-- =========================
-     POSTS
-========================= -->
-
 <div class="container">
 
+  <div class="welcome">
+    <h3>Welcome to Socialyte 💜</h3>
+    <div id="userStatus">Loading...</div>
+  </div>
+
   <div id="posts">
-
-    <div class="post">
-
-      <div class="post-user">
-        Socialyte
-      </div>
-
-      <div class="post-text">
-        Welcome to Socialyte 💙
-      </div>
-
-    </div>
-
+    <div class="status">Loading posts...</div>
   </div>
 
 </div>
@@ -311,55 +233,174 @@ body{
 <script>
 
 /* =========================
-   MESSAGE
+   SUPABASE
 ========================= */
 
-function sendMessage(){
+const SUPABASE_URL =
+"https://szmauhxiyjffjhrcruee.supabase.co";
+
+/*
+  YAHAN APNI EXISTING PUBLISHABLE KEY PASTE KARO
+  Chat mein key mat bhejna.
+*/
+const SUPABASE_KEY =
+"PASTE_YOUR_KEY_HERE";
+
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let currentUser = null;
+let currentUsername = "User";
+
+
+/* =========================
+   START APP
+========================= */
+
+async function startApp(){
+
+  const {
+    data,
+    error
+  } = await supabaseClient.auth.getUser();
+
+  if(error || !data.user){
+
+    window.location.href = "login.html";
+    return;
+  }
+
+  currentUser = data.user;
+
+  currentUsername =
+    data.user.user_metadata?.username ||
+    data.user.email?.split("@")[0] ||
+    "User";
+
+  document.getElementById("userStatus").textContent =
+    "Logged in as " + currentUsername;
+
+  loadPosts();
+}
+
+
+/* =========================
+   LOAD POSTS
+========================= */
+
+async function loadPosts(){
+
+  const postsBox =
+    document.getElementById("posts");
+
+  postsBox.innerHTML =
+    '<div class="status">Loading...</div>';
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("posts")
+    .select("*")
+    .order("id", {ascending:false});
+
+  if(error){
+
+    console.error(error);
+
+    postsBox.innerHTML =
+      '<div class="status">Posts load nahi ho rahe.</div>';
+
+    return;
+  }
+
+  postsBox.innerHTML = "";
+
+  if(!data || data.length === 0){
+
+    postsBox.innerHTML =
+      '<div class="status">Abhi koi post nahi hai.</div>';
+
+    return;
+  }
+
+  data.forEach(post => {
+
+    const div =
+      document.createElement("div");
+
+    div.className = "post";
+
+    const user =
+      document.createElement("div");
+
+    user.className = "post-user";
+
+    user.textContent =
+      post.username || "User";
+
+    const text =
+      document.createElement("div");
+
+    text.className = "post-text";
+
+    text.textContent =
+      post.content || "";
+
+    div.appendChild(user);
+    div.appendChild(text);
+
+    postsBox.appendChild(div);
+
+  });
+}
+
+
+/* =========================
+   SEND MESSAGE
+========================= */
+
+async function sendMessage(){
 
   const input =
-    document.getElementById("messageInput");
+    document.getElementById("chatInput");
 
   const text =
     input.value.trim();
 
-  if(!text){
+  if(!text) return;
+
+  if(!currentUser){
+
+    alert("Please login first.");
     return;
   }
 
-  const post =
-    document.createElement("div");
+  const {
+    error
+  } = await supabaseClient
+    .from("posts")
+    .insert({
+      user_id: currentUser.id,
+      username: currentUsername,
+      content: text
+    });
 
-  post.className = "post";
+  if(error){
 
-  post.innerHTML = `
-    <div class="post-user">
-      You
-    </div>
+    console.error(error);
 
-    <div class="post-text">
-      ${escapeHTML(text)}
-    </div>
-  `;
+    alert("Message send nahi hua.");
 
-  document
-    .getElementById("posts")
-    .prepend(post);
+    return;
+  }
 
   input.value = "";
-}
 
-
-/* ENTER SEND */
-
-function handleEnter(event){
-
-  if(event.key === "Enter"){
-
-    event.preventDefault();
-
-    sendMessage();
-
-  }
+  await loadPosts();
 
 }
 
@@ -368,60 +409,34 @@ function handleEnter(event){
    IMAGE
 ========================= */
 
-function sendImage(event){
+async function sendImage(){
+
+  const input =
+    document.getElementById("imageInput");
 
   const file =
-    event.target.files[0];
+    input.files[0];
 
-  if(!file){
-    return;
-  }
+  if(!file) return;
 
-  const reader =
-    new FileReader();
+  /*
+    Abhi image ko database mein permanently
+    save nahi kar rahe.
+    Pehle Storage setup karna hoga.
+  */
 
-  reader.onload =
-    function(e){
+  alert(
+    "Image option ready hai 👍\n\n" +
+    "Image ko permanently save karne ke liye " +
+    "Supabase Storage setup karna hoga."
+  );
 
-      const image =
-        e.target.result;
-
-      const post =
-        document.createElement("div");
-
-      post.className = "post";
-
-      post.innerHTML = `
-        <div class="post-user">
-          You
-        </div>
-
-        <img
-          class="post-image"
-          src="${image}">
-      `;
-
-      document
-        .getElementById("posts")
-        .prepend(post);
-
-      document
-        .getElementById("imagePreview")
-        .innerHTML = "";
-
-      document
-        .getElementById("imageInput")
-        .value = "";
-
-    };
-
-  reader.readAsDataURL(file);
-
+  input.value = "";
 }
 
 
 /* =========================
-   VOICE
+   VOICE / SPEECH TO TEXT
 ========================= */
 
 let recognition = null;
@@ -429,15 +444,24 @@ let isRecording = false;
 
 function toggleVoice(){
 
-  if(!("webkitSpeechRecognition" in window)){
+  const status =
+    document.getElementById("recordStatus");
+
+  const input =
+    document.getElementById("chatInput");
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if(!SpeechRecognition){
 
     alert(
-      "Voice typing is not supported in this browser."
+      "Voice typing tumhare browser mein supported nahi hai."
     );
 
     return;
   }
-
 
   if(isRecording){
 
@@ -445,83 +469,70 @@ function toggleVoice(){
 
     isRecording = false;
 
-    document
-      .getElementById("recordStatus")
-      .style.display = "none";
+    status.style.display = "none";
 
     return;
   }
 
-
   recognition =
-    new webkitSpeechRecognition();
+    new SpeechRecognition();
 
   recognition.lang = "ur-PK";
 
-  recognition.continuous = false;
+  recognition.continuous = true;
 
   recognition.interimResults = false;
 
+  recognition.onresult = function(event){
 
-  recognition.onstart =
-    function(){
+    let result = "";
 
-      isRecording = true;
+    for(
+      let i = event.resultIndex;
+      i < event.results.length;
+      i++
+    ){
 
-      document
-        .getElementById("recordStatus")
-        .style.display = "block";
+      if(event.results[i].isFinal){
 
-    };
+        result +=
+          event.results[i][0].transcript + " ";
+      }
+    }
 
+    input.value += result;
 
-  recognition.onresult =
-    function(event){
+  };
 
-      const text =
-        event.results[0][0].transcript;
+  recognition.onerror = function(){
 
-      document
-        .getElementById("messageInput")
-        .value = text;
+    isRecording = false;
 
-    };
+    status.style.display = "none";
+  };
 
+  recognition.onend = function(){
 
-  recognition.onend =
-    function(){
+    isRecording = false;
 
-      isRecording = false;
-
-      document
-        .getElementById("recordStatus")
-        .style.display = "none";
-
-    };
-
+    status.style.display = "none";
+  };
 
   recognition.start();
 
+  isRecording = true;
+
+  status.style.display = "block";
 }
 
 
 /* =========================
-   SECURITY
+   START
 ========================= */
 
-function escapeHTML(text){
-
-  const div =
-    document.createElement("div");
-
-  div.textContent = text;
-
-  return div.innerHTML;
-
-}
+startApp();
 
 </script>
 
 </body>
 </html>
-```
