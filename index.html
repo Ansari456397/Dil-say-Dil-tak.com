@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Socialyte</title>
 
@@ -12,36 +14,34 @@
 
 *{
   box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:Arial,sans-serif;
 }
 
 body{
-  background:#f5f6fa;
-  color:#20242c;
-  padding-bottom:80px;
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f6fb;
+  color:#222;
 }
 
-/* HEADER */
-
-header{
-  height:60px;
-  background:#20242c;
+.header{
+  background:linear-gradient(135deg,#6c5ce7,#8e44ad);
   color:white;
+  padding:16px;
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  padding:0 16px;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:20;
 }
 
 .logo{
-  font-size:23px;
+  font-size:24px;
   font-weight:bold;
 }
 
 .logo span{
-  color:#ff4f81;
+  color:#ffd6ff;
 }
 
 .header-buttons{
@@ -50,145 +50,140 @@ header{
 }
 
 .header-buttons button{
+  border:0;
+  background:rgba(255,255,255,.18);
+  color:white;
   width:38px;
   height:38px;
-  border:0;
   border-radius:50%;
-  background:#303641;
-  color:white;
-  font-size:17px;
+  font-size:18px;
 }
 
-/* PROFILE */
+.container{
+  max-width:650px;
+  margin:auto;
+  padding:12px;
+  padding-bottom:90px;
+}
 
-.profile{
+.profile-card{
   background:white;
-  padding:15px;
+  border-radius:18px;
+  padding:16px;
   display:flex;
   align-items:center;
   gap:12px;
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
+  margin-bottom:12px;
 }
 
 .avatar{
-  width:50px;
-  height:50px;
+  width:55px;
+  height:55px;
   border-radius:50%;
-  background:#ff4f81;
+  background:linear-gradient(135deg,#6c5ce7,#e056fd);
   color:white;
   display:flex;
-  align-items:center;
   justify-content:center;
-  font-size:20px;
+  align-items:center;
+  font-size:24px;
   font-weight:bold;
 }
 
 .profile-name{
+  font-size:18px;
   font-weight:bold;
-  font-size:16px;
 }
 
-.online{
-  color:#18a463;
-  font-size:12px;
-  margin-top:4px;
+.status{
+  font-size:13px;
+  color:#28a745;
+  margin-top:3px;
 }
 
-/* WRITE */
-
-.write-card{
+.create-box{
   background:white;
-  margin:12px;
-  padding:14px;
   border-radius:18px;
-  box-shadow:0 4px 18px rgba(0,0,0,.06);
+  padding:15px;
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
+  margin-bottom:12px;
 }
 
-.write-title{
-  font-weight:bold;
-  margin-bottom:10px;
-}
-
-.write-row{
-  display:flex;
-  gap:8px;
-}
-
-#postInput{
-  flex:1;
-  border:1px solid #ddd;
+.create-box textarea{
+  width:100%;
+  min-height:80px;
+  border:1px solid #e2e2e2;
   border-radius:14px;
-  padding:13px;
+  padding:12px;
+  resize:none;
   font-size:15px;
   outline:none;
 }
 
-#postBtn{
-  border:0;
-  background:#ff4f81;
-  color:white;
-  border-radius:14px;
-  padding:0 17px;
-  font-weight:bold;
+.create-box textarea:focus{
+  border-color:#6c5ce7;
 }
 
-/* ACTIONS */
-
-.actions{
-  display:flex;
-  gap:7px;
+.post-btn{
+  width:100%;
+  border:0;
+  background:linear-gradient(135deg,#6c5ce7,#8e44ad);
+  color:white;
+  padding:12px;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:bold;
   margin-top:10px;
 }
 
+.actions{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-bottom:14px;
+}
+
 .action{
-  flex:1;
+  background:white;
   border:0;
-  background:#f1f2f5;
-  border-radius:13px;
-  padding:9px 3px;
-  font-size:11px;
+  border-radius:14px;
+  padding:10px 5px;
+  font-size:13px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
 }
 
-.action:active{
-  transform:scale(.96);
+.action:first-line{
+  font-size:20px;
 }
-
-/* MENU */
 
 .menu{
-  background:white;
-  margin:12px;
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:0 4px 18px rgba(0,0,0,.05);
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:14px;
 }
 
 .menu button{
   border:0;
   background:white;
-  padding:15px 10px;
-  text-align:left;
+  padding:12px 5px;
+  border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
   font-size:13px;
-  border-bottom:1px solid #eee;
 }
 
-.menu button:hover{
-  background:#f8f8f8;
-}
-
-/* POSTS */
-
-.posts{
-  margin:12px;
+.section-title{
+  font-size:19px;
+  font-weight:bold;
+  margin:16px 3px 10px;
 }
 
 .post{
   background:white;
   border-radius:18px;
-  padding:14px;
+  padding:15px;
   margin-bottom:12px;
-  box-shadow:0 4px 18px rgba(0,0,0,.05);
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
 }
 
 .post-head{
@@ -198,321 +193,274 @@ header{
 }
 
 .post-avatar{
-  width:40px;
-  height:40px;
+  width:43px;
+  height:43px;
   border-radius:50%;
-  background:#ff4f81;
+  background:linear-gradient(135deg,#6c5ce7,#e056fd);
   color:white;
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   font-weight:bold;
+  font-size:18px;
 }
 
 .post-user{
   font-weight:bold;
-  font-size:14px;
+  font-size:16px;
 }
 
 .post-time{
-  font-size:10px;
-  color:#888;
+  color:#777;
+  font-size:12px;
   margin-top:3px;
 }
 
 .post-content{
-  margin:13px 0;
-  font-size:15px;
+  margin:14px 0;
   line-height:1.5;
-  word-break:break-word;
+  white-space:pre-wrap;
 }
 
 .post-actions{
   display:flex;
-  gap:5px;
+  flex-wrap:wrap;
+  gap:6px;
   border-top:1px solid #eee;
   padding-top:10px;
-  flex-wrap:wrap;
 }
 
 .post-action{
-  flex:1;
-  min-width:70px;
   border:0;
-  background:#f5f6f8;
+  background:#f4f5fa;
   border-radius:10px;
-  padding:9px 3px;
-  font-size:11px;
+  padding:8px 10px;
+  font-size:12px;
 }
 
 .post-action.active{
-  background:#ffe6ef;
-  color:#ff4f81;
-  font-weight:bold;
-}
-
-/* CHAT */
-
-.chat{
-  background:white;
-  margin:12px;
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:0 4px 18px rgba(0,0,0,.05);
-}
-
-.chat-title{
-  padding:15px;
-  font-weight:bold;
-  border-bottom:1px solid #eee;
-}
-
-#messages{
-  max-height:42vh;
-  overflow-y:auto;
-  padding:15px;
-}
-
-.message-row{
-  display:flex;
-  margin-bottom:13px;
-}
-
-.mine{
-  justify-content:flex-end;
-}
-
-.other{
-  justify-content:flex-start;
-}
-
-.message{
-  max-width:80%;
-  padding:10px 13px;
-  border-radius:16px;
-}
-
-.mine .message{
-  background:#20242c;
-  color:white;
-  border-bottom-right-radius:4px;
-}
-
-.other .message{
-  background:#f0f2f5;
-  border-bottom-left-radius:4px;
-}
-
-.username{
-  font-size:11px;
-  font-weight:bold;
-  opacity:.7;
-  margin-bottom:4px;
-}
-
-.text{
-  font-size:15px;
-  word-break:break-word;
-}
-
-.time{
-  font-size:9px;
-  opacity:.55;
-  text-align:right;
-  margin-top:5px;
-}
-
-.reply{
-  border:0;
-  background:transparent;
-  font-size:11px;
-  margin-top:5px;
-  opacity:.7;
-}
-
-/* STATUS */
-
-#status{
-  text-align:center;
-  color:#777;
-  font-size:11px;
-  padding:7px;
-}
-
-.action-note{
-  display:none;
-  margin:8px 12px;
-  padding:10px;
-  background:white;
-  border-radius:12px;
-  text-align:center;
-  font-size:13px;
-}
-
-/* BOTTOM */
-
-.bottom{
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:0;
-  height:68px;
-  background:white;
-  border-top:1px solid #ddd;
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-  z-index:10;
-}
-
-.bottom button{
-  border:0;
-  background:none;
-  color:#555;
-  font-size:10px;
-}
-
-.bottom-icon{
-  font-size:20px;
-  margin-bottom:3px;
-}
-
-.bottom .active{
-  color:#ff4f81;
+  background:#e9e2ff;
+  color:#6c5ce7;
   font-weight:bold;
 }
 
 .empty{
-  text-align:center;
+  background:white;
+  border-radius:16px;
   padding:25px;
-  color:#888;
-  font-size:13px;
+  text-align:center;
+  color:#777;
+}
+
+.chat-box{
+  background:white;
+  border-radius:18px;
+  padding:15px;
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
+  margin-top:15px;
+}
+
+.messages{
+  max-height:280px;
+  overflow-y:auto;
+}
+
+.message{
+  padding:8px 0;
+  border-bottom:1px solid #eee;
+}
+
+.message-user{
+  font-weight:bold;
+  color:#6c5ce7;
+}
+
+.message-text{
+  margin-top:3px;
+}
+
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  display:flex;
+  justify-content:space-around;
+  padding:10px 5px;
+  box-shadow:0 -3px 12px rgba(0,0,0,.08);
+  z-index:30;
+}
+
+.bottom-nav button{
+  border:0;
+  background:none;
+  font-size:12px;
+  color:#555;
+}
+
+.bottom-nav button span{
+  display:block;
+  font-size:20px;
+  margin-bottom:2px;
+}
+
+@media(max-width:400px){
+
+  .actions{
+    gap:5px;
+  }
+
+  .action{
+    font-size:11px;
+  }
+
+  .menu{
+    grid-template-columns:repeat(2,1fr);
+  }
+
 }
 
 </style>
+
 </head>
 
 <body>
 
-<!-- HEADER -->
-
-<header>
+<header class="header">
 
   <div class="logo">
     Socia<span>lyte</span>
   </div>
 
   <div class="header-buttons">
-    <button>🔔</button>
-    <button>⚙️</button>
+    <button onclick="showNotice('Notifications coming soon 🔔')">
+      🔔
+    </button>
+
+    <button onclick="showNotice('Settings coming soon ⚙️')">
+      ⚙️
+    </button>
   </div>
 
 </header>
 
 
-<!-- PROFILE -->
+<div class="container">
 
-<div class="profile">
+  <div class="profile-card">
 
-  <div class="avatar" id="avatar">
-    U
-  </div>
-
-  <div>
-    <div class="profile-name" id="profileName">
-      User
+    <div class="avatar" id="avatar">
+      U
     </div>
 
-    <div class="online">
-      ● Online
+    <div>
+      <div class="profile-name" id="profileName">
+        Loading...
+      </div>
+
+      <div class="status">
+        🟢 Online
+      </div>
     </div>
+
   </div>
 
-</div>
 
+  <!-- CREATE POST -->
 
-<!-- WRITE POST -->
+  <div class="create-box">
 
-<div class="write-card">
-
-  <div class="write-title">
-    📝 Create a Post
-  </div>
-
-  <div class="write-row">
-
-    <input
+    <textarea
       id="postInput"
-      type="text"
-      placeholder="Write something..."
-    >
+      placeholder="What's on your mind?"
+    ></textarea>
 
-    <button id="postBtn">
-      Post
+    <button
+      class="post-btn"
+      onclick="createPost()"
+    >
+      📝 Post
     </button>
 
   </div>
+
+
+  <!-- ACTIONS -->
 
   <div class="actions">
 
-    <button class="action"
-      onclick="showAction('🤗 Jhappi')">
-      🤗<br>Jhappi
+    <button
+      class="action"
+      onclick="showAction('🤗 Jhappi')"
+    >
+      🤗<br>
+      Jhappi
     </button>
 
-    <button class="action"
-      onclick="showAction('👋 Chupair')">
-      👋<br>Chupair
+    <button
+      class="action"
+      onclick="showAction('👋 Chupair')"
+    >
+      👋<br>
+      Chupair
     </button>
 
-    <button class="action"
-      onclick="showAction('❤️ Love')">
-      ❤️<br>Love
+    <button
+      class="action"
+      onclick="showAction('❤️ Love')"
+    >
+      ❤️<br>
+      Love
     </button>
 
-    <button class="action"
-      onclick="showAction('😂 Haha')">
-      😂<br>Haha
+    <button
+      class="action"
+      onclick="showAction('😂 Haha')"
+    >
+      😂<br>
+      Haha
     </button>
 
   </div>
 
-</div>
+
+  <!-- MENU -->
+
+  <div class="menu">
+
+    <button onclick="showNotice('Public Chat')">
+      💬 Public Chat
+    </button>
+
+    <button onclick="showNotice('Private Chat coming soon')">
+      🔒 Private Chat
+    </button>
+
+    <button onclick="showNotice('Online Users coming soon')">
+      🟢 Online Users
+    </button>
+
+    <button onclick="showNotice('Members coming soon')">
+      👥 Members
+    </button>
+
+    <button onclick="showNotice('My Profile coming soon')">
+      👤 My Profile
+    </button>
+
+    <button onclick="showNotice('Stars coming soon')">
+      ⭐ Stars
+    </button>
+
+  </div>
 
 
-<div id="actionNote" class="action-note"></div>
+  <!-- POSTS -->
 
-
-<!-- MENU -->
-
-<div class="menu">
-
-  <button>🏠 Home</button>
-
-  <button>💬 Public Chat</button>
-
-  <button>🔒 Private Chat</button>
-
-  <button>🟢 Online Users</button>
-
-  <button>👥 Members</button>
-
-  <button>📝 Posts</button>
-
-  <button>🔔 Notifications</button>
-
-  <button>👤 My Profile</button>
-
-  <button>⭐ Stars</button>
-
-  <button>🔥 Trending Posts</button>
-
-</div>
-
-
-<!-- POSTS -->
-
-<div class="posts">
+  <div class="section-title">
+    🔥 Trending Posts
+  </div>
 
   <div id="postsList">
 
@@ -522,50 +470,59 @@ header{
 
   </div>
 
-</div>
 
+  <!-- PUBLIC CHAT -->
 
-<!-- PUBLIC CHAT -->
-
-<div class="chat">
-
-  <div class="chat-title">
+  <div class="section-title">
     💬 Public Chat
   </div>
 
-  <div id="messages"></div>
+  <div class="chat-box">
 
-  <div id="status"></div>
+    <div
+      class="messages"
+      id="messages"
+    >
+      Loading messages...
+    </div>
+
+  </div>
+
+
+  <div
+    id="status"
+    style="
+      text-align:center;
+      color:#777;
+      font-size:12px;
+      margin-top:12px;
+    "
+  ></div>
 
 </div>
 
 
 <!-- BOTTOM NAV -->
 
-<div class="bottom">
+<div class="bottom-nav">
 
-  <button class="active">
-    <div class="bottom-icon">🏠</div>
+  <button onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <span>🏠</span>
     Home
   </button>
 
-  <button>
-    <div class="bottom-icon">💬</div>
-    Chat
-  </button>
-
-  <button>
-    <div class="bottom-icon">🟢</div>
-    Online
-  </button>
-
-  <button>
-    <div class="bottom-icon">📝</div>
+  <button onclick="document.getElementById('postsList').scrollIntoView({behavior:'smooth'})">
+    <span>📝</span>
     Posts
   </button>
 
-  <button>
-    <div class="bottom-icon">👤</div>
+  <button onclick="showNotice('Members coming soon')">
+    <span>👥</span>
+    Members
+  </button>
+
+  <button onclick="showNotice('Profile coming soon')">
+    <span>👤</span>
     Profile
   </button>
 
@@ -574,19 +531,15 @@ header{
 
 <script>
 
-/* SUPABASE */
+/* =========================
+   SUPABASE
+========================= */
 
 const SUPABASE_URL =
 "https://szmauhxiyjffjhrcruee.supabase.co";
 
-/*
-  IMPORTANT:
-  Apni existing working Supabase Publishable Key
-  yahan paste karein.
-*/
-
 const SUPABASE_KEY =
-"sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
+"YOUR_SUPABASE_PUBLISHABLE_KEY";
 
 const supabaseClient =
 window.supabase.createClient(
@@ -598,68 +551,134 @@ window.supabase.createClient(
 let currentUser = null;
 
 
-/* CHECK USER */
+/* =========================
+   CHECK LOGIN
+========================= */
 
 async function checkUser(){
 
-  const {data,error} =
+  try{
+
+    const {
+      data,
+      error
+    } =
     await supabaseClient.auth.getUser();
 
-  if(error || !data.user){
+    if(error){
 
-    window.location.href="login.html";
+      console.error(
+        "Supabase Auth Error:",
+        error
+      );
 
-    return;
+      document.getElementById("status")
+        .textContent =
+        "Login session error. Please login again.";
+
+      return;
+    }
+
+    if(
+      !data ||
+      !data.user
+    ){
+
+      window.location.href =
+        "login.html";
+
+      return;
+    }
+
+    currentUser =
+      data.user;
+
+    const username =
+      currentUser.user_metadata?.username ||
+      currentUser.email?.split("@")[0] ||
+      "User";
+
+    document.getElementById(
+      "profileName"
+    ).textContent =
+      username;
+
+    document.getElementById(
+      "avatar"
+    ).textContent =
+      username
+        .charAt(0)
+        .toUpperCase();
+
+    await loadPosts();
+
+    await loadMessages();
+
+  }catch(error){
+
+    console.error(
+      "Website Error:",
+      error
+    );
+
+    document.getElementById(
+      "status"
+    ).textContent =
+      "Something went wrong. Please refresh.";
+
   }
-
-  currentUser = data.user;
-
-  const username =
-    currentUser.user_metadata?.username ||
-    currentUser.email.split("@")[0];
-
-  document.getElementById("profileName")
-    .textContent = username;
-
-  document.getElementById("avatar")
-    .textContent =
-      username.charAt(0).toUpperCase();
-
-  loadPosts();
-
-  loadMessages();
 
 }
 
 
-/* CREATE POST */
+/* =========================
+   CREATE POST
+========================= */
 
 async function createPost(){
 
+  if(!currentUser){
+
+    alert("Please login first.");
+
+    return;
+  }
+
   const input =
-    document.getElementById("postInput");
+    document.getElementById(
+      "postInput"
+    );
 
   const content =
     input.value.trim();
 
-  if(!content || !currentUser){
+  if(!content){
+
+    alert("Please write something.");
+
     return;
   }
 
   const username =
     currentUser.user_metadata?.username ||
-    currentUser.email.split("@")[0];
+    currentUser.email?.split("@")[0] ||
+    "User";
 
-  const {error} =
-    await supabaseClient
+  const {
+    error
+  } =
+  await supabaseClient
     .from("posts")
     .insert({
 
-      user_id:currentUser.id,
+      user_id:
+        currentUser.id,
 
-      username:username,
+      username:
+        username,
 
-      content:content
+      content:
+        content
 
     });
 
@@ -670,275 +689,349 @@ async function createPost(){
     return;
   }
 
-  input.value="";
+  input.value = "";
 
-  loadPosts();
+  await loadPosts();
 
 }
 
 
-/* LOAD POSTS */
+/* =========================
+   LOAD POSTS
+========================= */
 
 async function loadPosts(){
 
   const box =
-    document.getElementById("postsList");
-
-  /* GET BLOCKED USERS */
-
-  const {data:blockedRows,error:blockError} =
-    await supabaseClient
-    .from("user_blocks")
-    .select("blocked_id");
-
-  if(blockError){
-
-    box.innerHTML =
-      `<div class="empty">
-        ${escapeHtml(blockError.message)}
-      </div>`;
-
-    return;
-  }
-
-  const blockedIds =
-    new Set(
-      (blockedRows || [])
-      .map(row => row.blocked_id)
+    document.getElementById(
+      "postsList"
     );
 
+  try{
 
-  /* GET POSTS */
+    /* BLOCKED USERS */
 
-  const {data,error} =
+    const {
+      data:blockedRows,
+      error:blockError
+    } =
     await supabaseClient
-    .from("posts")
-    .select("*")
-    .order("created_at",{
-      ascending:false
-    });
+      .from("user_blocks")
+      .select("blocked_id");
 
-  if(error){
+    if(blockError){
 
-    box.innerHTML =
-      `<div class="empty">
-        ${escapeHtml(error.message)}
-      </div>`;
+      console.error(
+        "Block error:",
+        blockError
+      );
 
-    return;
-  }
+    }
 
-
-  /* HIDE BLOCKED USERS */
-
-  const visiblePosts =
-    (data || []).filter(
-      post => !blockedIds.has(post.user_id)
-    );
+    const blockedIds =
+      new Set(
+        (blockedRows || [])
+          .map(
+            row =>
+              row.blocked_id
+          )
+      );
 
 
-  if(visiblePosts.length===0){
+    /* POSTS */
 
-    box.innerHTML =
-      `<div class="empty">
-        No posts yet. Be the first to post! ✨
-      </div>`;
+    const {
+      data,
+      error
+    } =
+    await supabaseClient
+      .from("posts")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
 
-    return;
-  }
+    if(error){
 
+      box.innerHTML =
+        `<div class="empty">
+          ${escapeHtml(error.message)}
+        </div>`;
 
-  box.innerHTML="";
-
-
-  for(const post of visiblePosts){
-
-    const article =
-      document.createElement("div");
-
-    article.className="post";
-
-
-    const username =
-      post.username || "User";
-
-
-    const isMine =
-      post.user_id === currentUser.id;
+      return;
+    }
 
 
-    /* DELETE / BLOCK BUTTON */
+    const visiblePosts =
+      (data || []).filter(
+        post =>
+          !blockedIds.has(
+            post.user_id
+          )
+      );
 
-    const postOptions = isMine
 
-      ? `
+    if(
+      visiblePosts.length === 0
+    ){
+
+      box.innerHTML =
+        `<div class="empty">
+          No posts yet.<br>
+          Be the first to post! ✨
+        </div>`;
+
+      return;
+    }
+
+
+    box.innerHTML = "";
+
+
+    for(
+      const post
+      of visiblePosts
+    ){
+
+      const article =
+        document.createElement(
+          "div"
+        );
+
+      article.className =
+        "post";
+
+
+      const username =
+        post.username ||
+        "User";
+
+
+      const isMine =
+        post.user_id ===
+        currentUser.id;
+
+
+      const postOptions =
+        isMine
+
+        ?
+
+        `
         <button
           class="post-action"
           onclick="deletePost(${post.id})"
         >
           🗑️ Delete
         </button>
-      `
+        `
 
-      : `
+        :
+
+        `
         <button
           class="post-action"
           onclick="blockUser('${post.user_id}')"
         >
           🚫 Block
         </button>
-      `;
+        `;
 
 
-    const time =
-      new Date(post.created_at)
-      .toLocaleString([],{
+      const time =
+        new Date(
+          post.created_at
+        ).toLocaleString(
+          [],
+          {
+            day:"2-digit",
+            month:"short",
+            hour:"2-digit",
+            minute:"2-digit"
+          }
+        );
 
-        day:"2-digit",
-        month:"short",
-        hour:"2-digit",
-        minute:"2-digit"
 
-      });
+      article.innerHTML = `
+
+        <div class="post-head">
+
+          <div class="post-avatar">
+            ${escapeHtml(
+              username
+                .charAt(0)
+                .toUpperCase()
+            )}
+          </div>
+
+          <div>
+
+            <div class="post-user">
+              ${escapeHtml(username)}
+            </div>
+
+            <div class="post-time">
+              ● Active · ${time}
+            </div>
+
+          </div>
+
+        </div>
 
 
-    article.innerHTML = `
-
-      <div class="post-head">
-
-        <div class="post-avatar">
+        <div class="post-content">
           ${escapeHtml(
-            username.charAt(0).toUpperCase()
+            post.content
           )}
         </div>
 
-        <div>
 
-          <div class="post-user">
-            ${escapeHtml(username)}
-          </div>
+        <div
+          class="post-actions"
+          id="actions-${post.id}"
+        >
 
-          <div class="post-time">
-            ● Active · ${time}
-          </div>
+          <button
+            class="post-action"
+            onclick="
+              togglePostAction(
+                ${post.id},
+                'jhappi'
+              )
+            "
+          >
+            🤗 Jhappi
+            <span id="jhappi-${post.id}">
+              0
+            </span>
+          </button>
+
+
+          <button
+            class="post-action"
+            onclick="
+              togglePostAction(
+                ${post.id},
+                'chupair'
+              )
+            "
+          >
+            👋 Chupair
+            <span id="chupair-${post.id}">
+              0
+            </span>
+          </button>
+
+
+          <button
+            class="post-action"
+            onclick="
+              replyToPost(
+                '${escapeAttribute(username)}'
+              )
+            "
+          >
+            ↩️ Reply
+          </button>
+
+
+          ${postOptions}
 
         </div>
 
-      </div>
+      `;
 
 
-      <div class="post-content">
-        ${escapeHtml(post.content)}
-      </div>
+      box.appendChild(
+        article
+      );
 
 
-      <div
-        class="post-actions"
-        id="actions-${post.id}"
-      >
+      loadPostActions(
+        post.id
+      );
 
-        <button
-          class="post-action"
-          onclick="
-            togglePostAction(
-              ${post.id},
-              'jhappi'
-            )
-          "
-        >
-          🤗 Jhappi
-          <span id="jhappi-${post.id}">
-            0
-          </span>
-        </button>
+    }
 
+  }catch(error){
 
-        <button
-          class="post-action"
-          onclick="
-            togglePostAction(
-              ${post.id},
-              'chupair'
-            )
-          "
-        >
-          👋 Chupair
-          <span id="chupair-${post.id}">
-            0
-          </span>
-        </button>
+    console.error(
+      "Load Posts Error:",
+      error
+    );
 
-
-        <button
-          class="post-action"
-          onclick="
-            replyToPost(
-              '${escapeAttribute(username)}'
-            )
-          "
-        >
-          ↩️ Reply
-        </button>
-
-
-        ${postOptions}
-
-      </div>
-
-    `;
-
-
-    box.appendChild(article);
-
-    loadPostActions(post.id);
+    box.innerHTML =
+      `<div class="empty">
+        ${escapeHtml(
+          error.message
+        )}
+      </div>`;
 
   }
 
 }
 
 
-/* DELETE POST */
+/* =========================
+   DELETE POST
+========================= */
 
-async function deletePost(postId){
+async function deletePost(
+  postId
+){
 
   if(!currentUser){
     return;
   }
 
-
   const confirmDelete =
-    confirm("Delete this post?");
-
+    confirm(
+      "Delete this post?"
+    );
 
   if(!confirmDelete){
     return;
   }
 
-
-  const {error} =
-    await supabaseClient
+  const {
+    error
+  } =
+  await supabaseClient
     .from("posts")
     .delete()
-    .eq("id",postId)
-    .eq("user_id",currentUser.id);
-
+    .eq(
+      "id",
+      postId
+    )
+    .eq(
+      "user_id",
+      currentUser.id
+    );
 
   if(error){
 
-    alert(error.message);
+    alert(
+      error.message
+    );
 
     return;
   }
 
-
-  loadPosts();
+  await loadPosts();
 
 }
 
 
-/* BLOCK USER */
+/* =========================
+   BLOCK USER
+========================= */
 
-async function blockUser(userId){
+async function blockUser(
+  userId
+){
 
   if(
     !currentUser ||
@@ -948,31 +1041,37 @@ async function blockUser(userId){
     return;
   }
 
-
   const confirmBlock =
-    confirm("Block this user?");
-
+    confirm(
+      "Block this user?"
+    );
 
   if(!confirmBlock){
     return;
   }
 
-
-  const {error} =
-    await supabaseClient
+  const {
+    error
+  } =
+  await supabaseClient
     .from("user_blocks")
     .insert({
 
-      blocker_id:currentUser.id,
+      blocker_id:
+        currentUser.id,
 
-      blocked_id:userId
+      blocked_id:
+        userId
 
     });
 
 
   if(error){
 
-    if(error.code === "23505"){
+    if(
+      error.code ===
+      "23505"
+    ){
 
       alert(
         "This user is already blocked."
@@ -980,7 +1079,9 @@ async function blockUser(userId){
 
     }else{
 
-      alert(error.message);
+      alert(
+        error.message
+      );
 
     }
 
@@ -993,22 +1094,32 @@ async function blockUser(userId){
   );
 
 
-  loadPosts();
+  await loadPosts();
 
 }
 
 
-/* LOAD ACTION COUNTS */
+/* =========================
+   POST ACTION COUNTS
+========================= */
 
-async function loadPostActions(postId){
+async function loadPostActions(
+  postId
+){
 
-  const {data,error} =
-    await supabaseClient
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
     .from("post_actions")
     .select(
       "user_id,action_type"
     )
-    .eq("post_id",postId);
+    .eq(
+      "post_id",
+      postId
+    );
 
 
   if(error){
@@ -1016,66 +1127,70 @@ async function loadPostActions(postId){
   }
 
 
-  let jhappiCount=0;
+  let jhappiCount = 0;
 
-  let chupairCount=0;
+  let chupairCount = 0;
 
-  let myJhappi=false;
+  let myJhappi = false;
 
-  let myChupair=false;
+  let myChupair = false;
 
 
-  data.forEach(action=>{
-
-    if(
-      action.action_type ===
-      "jhappi"
-    ){
-
-      jhappiCount++;
+  (data || []).forEach(
+    action => {
 
       if(
-        action.user_id ===
-        currentUser.id
+        action.action_type ===
+        "jhappi"
       ){
 
-        myJhappi=true;
+        jhappiCount++;
+
+        if(
+          action.user_id ===
+          currentUser.id
+        ){
+
+          myJhappi = true;
+
+        }
+
+      }
+
+
+      if(
+        action.action_type ===
+        "chupair"
+      ){
+
+        chupairCount++;
+
+        if(
+          action.user_id ===
+          currentUser.id
+        ){
+
+          myChupair = true;
+
+        }
 
       }
 
     }
-
-
-    if(
-      action.action_type ===
-      "chupair"
-    ){
-
-      chupairCount++;
-
-      if(
-        action.user_id ===
-        currentUser.id
-      ){
-
-        myChupair=true;
-
-      }
-
-    }
-
-  });
+  );
 
 
   const jhappi =
     document.getElementById(
-      "jhappi-"+postId
+      "jhappi-" +
+      postId
     );
 
 
   const chupair =
     document.getElementById(
-      "chupair-"+postId
+      "chupair-" +
+      postId
     );
 
 
@@ -1125,7 +1240,9 @@ async function loadPostActions(postId){
 }
 
 
-/* TOGGLE ACTION */
+/* =========================
+   TOGGLE ACTION
+========================= */
 
 async function togglePostAction(
   postId,
@@ -1137,8 +1254,11 @@ async function togglePostAction(
   }
 
 
-  const {data,error} =
-    await supabaseClient
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
     .from("post_actions")
     .select("id")
     .eq(
@@ -1158,7 +1278,9 @@ async function togglePostAction(
 
   if(error){
 
-    alert(error.message);
+    alert(
+      error.message
+    );
 
     return;
   }
@@ -1166,23 +1288,44 @@ async function togglePostAction(
 
   if(data){
 
+    const {
+      error:deleteError
+    } =
     await supabaseClient
       .from("post_actions")
       .delete()
-      .eq("id",data.id);
+      .eq(
+        "id",
+        data.id
+      );
+
+
+    if(deleteError){
+
+      alert(
+        deleteError.message
+      );
+
+      return;
+    }
 
   }else{
 
-    const {error:insertError} =
-      await supabaseClient
+    const {
+      error:insertError
+    } =
+    await supabaseClient
       .from("post_actions")
       .insert({
 
-        post_id:postId,
+        post_id:
+          postId,
 
-        user_id:currentUser.id,
+        user_id:
+          currentUser.id,
 
-        action_type:actionType
+        action_type:
+          actionType
 
       });
 
@@ -1199,58 +1342,64 @@ async function togglePostAction(
   }
 
 
-  loadPosts();
+  await loadPosts();
 
 }
 
 
-/* REPLY */
+/* =========================
+   REPLY
+========================= */
 
-function replyToPost(username){
+function replyToPost(
+  username
+){
 
   const input =
     document.getElementById(
       "postInput"
     );
 
-
   input.value =
-    "@"+username+" ";
-
+    "@" +
+    username +
+    " ";
 
   input.focus();
 
-
   window.scrollTo({
-
     top:0,
-
     behavior:"smooth"
-
   });
 
 }
 
 
-/* PUBLIC CHAT */
+/* =========================
+   PUBLIC CHAT
+========================= */
 
 async function loadMessages(){
 
-  const {data,error} =
-    await supabaseClient
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
     .from("messages")
     .select("*")
-    .order("created_at",{
-
-      ascending:true
-
-    });
+    .order(
+      "created_at",
+      {
+        ascending:true
+      }
+    );
 
 
   if(error){
 
     document.getElementById(
-      "status"
+      "messages"
     ).textContent =
       error.message;
 
@@ -1264,262 +1413,111 @@ async function loadMessages(){
     );
 
 
-  box.innerHTML="";
+  box.innerHTML = "";
 
 
-  data.forEach(msg=>{
+  (data || []).forEach(
+    msg => {
 
-    const row =
-      document.createElement(
-        "div"
+      const username =
+        msg.username ||
+        "User";
+
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+      div.className =
+        "message";
+
+
+      div.innerHTML = `
+
+        <div class="message-user">
+          ${escapeHtml(username)}
+        </div>
+
+        <div class="message-text">
+          ${escapeHtml(msg.message)}
+        </div>
+
+      `;
+
+
+      box.appendChild(
+        div
       );
 
-
-    const mine =
-      msg.user_id ===
-      currentUser.id;
-
-
-    row.className =
-      "message-row "+
-      (
-        mine
-          ? "mine"
-          : "other"
-      );
-
-
-    const bubble =
-      document.createElement(
-        "div"
-      );
-
-
-    bubble.className =
-      "message";
-
-
-    const username =
-      document.createElement(
-        "div"
-      );
-
-
-    username.className =
-      "username";
-
-
-    username.textContent =
-      msg.username ||
-      "User";
-
-
-    const text =
-      document.createElement(
-        "div"
-      );
-
-
-    text.className =
-      "text";
-
-
-    text.textContent =
-      msg.message;
-
-
-    const time =
-      document.createElement(
-        "div"
-      );
-
-
-    time.className =
-      "time";
-
-
-    time.textContent =
-      new Date(
-        msg.created_at
-      ).toLocaleTimeString(
-        [],
-        {
-          hour:"2-digit",
-          minute:"2-digit"
-        }
-      );
-
-
-    const reply =
-      document.createElement(
-        "button"
-      );
-
-
-    reply.className =
-      "reply";
-
-
-    reply.textContent =
-      "↩️ Reply";
-
-
-    reply.onclick=function(){
-
-      document.getElementById(
-        "postInput"
-      ).value =
-        "@"+
-        (
-          msg.username ||
-          "User"
-        )+
-        " ";
-
-
-      document.getElementById(
-        "postInput"
-      ).focus();
-
-    };
-
-
-    bubble.appendChild(
-      username
-    );
-
-    bubble.appendChild(
-      text
-    );
-
-    bubble.appendChild(
-      time
-    );
-
-    bubble.appendChild(
-      reply
-    );
-
-    row.appendChild(
-      bubble
-    );
-
-    box.appendChild(
-      row
-    );
-
-  });
-
-
-  box.scrollTop =
-    box.scrollHeight;
+    }
+  );
 
 }
 
 
-/* SEND CHAT */
+/* =========================
+   BUTTON ACTIONS
+========================= */
 
-async function sendMessage(){
+function showAction(
+  action
+){
 
   const input =
     document.getElementById(
-      "messageInput"
+      "postInput"
     );
 
+  input.value =
+    action + " ";
 
-  if(!input){
-    return;
-  }
-
-}
-
-
-/* TOP ACTION MESSAGE */
-
-function showAction(text){
-
-  const box =
-    document.getElementById(
-      "actionNote"
-    );
-
-
-  box.textContent =
-    text+" selected";
-
-
-  box.style.display =
-    "block";
-
-
-  setTimeout(function(){
-
-    box.style.display =
-      "none";
-
-  },1500);
+  input.focus();
 
 }
 
 
-/* HTML SAFETY */
+function showNotice(
+  message
+){
 
-function escapeHtml(text){
-
-  const div =
-    document.createElement(
-      "div"
-    );
-
-
-  div.textContent =
-    text;
-
-
-  return div.innerHTML;
+  alert(message);
 
 }
 
 
-function escapeAttribute(text){
+/* =========================
+   SECURITY HELPERS
+========================= */
 
-  return String(text)
-    .replace(/\\/g,"\\\\")
-    .replace(/'/g,"\\'")
-    .replace(/"/g,"&quot;");
+function escapeHtml(
+  value
+){
+
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 
 }
 
 
-/* POST BUTTON */
+function escapeAttribute(
+  value
+){
 
-document.getElementById(
-  "postBtn"
-).addEventListener(
-  "click",
-  createPost
-);
+  return String(value)
+    .replaceAll("\\","\\\\")
+    .replaceAll("'","\\'");
 
-
-/* ENTER */
-
-document.getElementById(
-  "postInput"
-).addEventListener(
-  "keydown",
-  function(e){
-
-    if(e.key === "Enter"){
-
-      createPost();
-
-    }
-
-  }
-);
+}
 
 
-/* START */
+/* =========================
+   START WEBSITE
+========================= */
 
 checkUser();
 
