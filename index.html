@@ -722,7 +722,23 @@ async function loadPosts(){
 
     const username =
       post.username || "User";
-
+const postOptions = isMine
+  ? `
+    <button
+      class="post-action delete-btn"
+      onclick="deletePost(${post.id})"
+    >
+      🗑️ Delete
+    </button>
+  `
+  : `
+    <button
+      class="post-action block-btn"
+      onclick="blockUser('${post.user_id}')"
+    >
+      🚫 Block
+    </button>
+  `;
     const isMine =
       post.user_id === currentUser.id;
 
