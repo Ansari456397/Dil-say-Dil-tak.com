@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -9,6 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 *{
   box-sizing:border-box;
 }
@@ -20,6 +22,10 @@ body{
   color:#222;
   padding-top:125px;
 }
+
+/* =========================
+   HEADER
+========================= */
 
 .header{
   position:fixed;
@@ -40,6 +46,10 @@ body{
   font-size:24px;
   font-weight:bold;
 }
+
+/* =========================
+   TOP MESSAGE BOX
+========================= */
 
 .home-message-box{
   position:fixed;
@@ -99,12 +109,27 @@ body{
   font-size:13px;
 }
 
+#recordStatus{
+  display:none;
+  color:#e74c3c;
+  font-size:12px;
+  margin-top:5px;
+}
+
+/* =========================
+   MAIN
+========================= */
+
 .container{
   width:100%;
   max-width:650px;
   margin:auto;
   padding:10px;
 }
+
+/* =========================
+   WELCOME
+========================= */
 
 .welcome{
   background:white;
@@ -118,6 +143,94 @@ body{
   margin:0 0 5px;
   color:#6c5ce7;
 }
+
+/* =========================
+   SIX OPTIONS
+========================= */
+
+.quick-menu{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+.menu-card{
+  border:0;
+  width:100%;
+  background:white;
+  border-radius:15px;
+  padding:14px 10px;
+  text-align:left;
+  box-shadow:0 2px 8px #0001;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.menu-card:active{
+  transform:scale(0.97);
+}
+
+.menu-icon{
+  font-size:24px;
+  display:block;
+  margin-bottom:6px;
+}
+
+.menu-title{
+  display:block;
+  font-size:15px;
+  font-weight:bold;
+  color:#333;
+}
+
+.menu-subtitle{
+  display:block;
+  font-size:11px;
+  color:#777;
+  margin-top:3px;
+}
+
+/* Purple accent */
+
+.menu-card:nth-child(1){
+  border-left:4px solid #6c5ce7;
+}
+
+.menu-card:nth-child(2){
+  border-left:4px solid #f1c40f;
+}
+
+.menu-card:nth-child(3){
+  border-left:4px solid #ff7675;
+}
+
+.menu-card:nth-child(4){
+  border-left:4px solid #3498db;
+}
+
+.menu-card:nth-child(5){
+  border-left:4px solid #2ecc71;
+}
+
+.menu-card:nth-child(6){
+  border-left:4px solid #9b59b6;
+}
+
+/* =========================
+   SECTION TITLE
+========================= */
+
+.section-title{
+  font-size:18px;
+  font-weight:bold;
+  color:#6c5ce7;
+  margin:10px 3px;
+}
+
+/* =========================
+   POSTS
+========================= */
 
 .post{
   background:white;
@@ -153,22 +266,48 @@ body{
   margin:10px;
 }
 
-#recordStatus{
-  display:none;
-  color:#e74c3c;
-  font-size:12px;
-  margin-top:5px;
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:400px){
+
+  .menu-card{
+    padding:12px 9px;
+  }
+
+  .menu-title{
+    font-size:14px;
+  }
+
+  .menu-subtitle{
+    font-size:10px;
+  }
+
+  .media-btn{
+    padding:7px 9px;
+    font-size:12px;
+  }
+
 }
+
 </style>
 </head>
 
 <body>
 
+<!-- =========================
+     HEADER
+========================= -->
+
 <div class="header">
   <div class="logo">Socialyte</div>
 </div>
 
-<!-- TOP MESSAGE BOX -->
+
+<!-- =========================
+     TOP MESSAGE BOX
+========================= -->
 
 <div class="home-message-box">
 
@@ -224,9 +363,14 @@ body{
 </div>
 
 
-<!-- MAIN CONTENT -->
+<!-- =========================
+     MAIN CONTENT
+========================= -->
 
 <div class="container">
+
+
+  <!-- WELCOME -->
 
   <div class="welcome">
 
@@ -239,6 +383,155 @@ body{
     </div>
 
   </div>
+
+
+  <!-- =========================
+       SIX OPTIONS
+  ========================= -->
+
+  <div class="quick-menu">
+
+
+    <!-- PRIVATE CHAT -->
+
+    <button
+      class="menu-card"
+      onclick="openPrivateChat()">
+
+      <span class="menu-icon">
+        💬
+      </span>
+
+      <span class="menu-title">
+        Private Chat
+      </span>
+
+      <span class="menu-subtitle">
+        Chat privately
+      </span>
+
+    </button>
+
+
+    <!-- STARS -->
+
+    <button
+      class="menu-card"
+      onclick="openStars()">
+
+      <span class="menu-icon">
+        ⭐
+      </span>
+
+      <span class="menu-title">
+        Stars
+      </span>
+
+      <span class="menu-subtitle">
+        Your stars
+      </span>
+
+    </button>
+
+
+    <!-- TRENDING POSTS -->
+
+    <button
+      class="menu-card"
+      onclick="openTrending()">
+
+      <span class="menu-icon">
+        🔥
+      </span>
+
+      <span class="menu-title">
+        Trending Posts
+      </span>
+
+      <span class="menu-subtitle">
+        Popular posts
+      </span>
+
+    </button>
+
+
+    <!-- NOTIFICATIONS -->
+
+    <button
+      class="menu-card"
+      onclick="openNotifications()">
+
+      <span class="menu-icon">
+        🔔
+      </span>
+
+      <span class="menu-title">
+        Notifications
+      </span>
+
+      <span class="menu-subtitle">
+        Your activity
+      </span>
+
+    </button>
+
+
+    <!-- ONLINE USERS -->
+
+    <button
+      class="menu-card"
+      onclick="openOnlineUsers()">
+
+      <span class="menu-icon">
+        👥
+      </span>
+
+      <span class="menu-title">
+        Online Users
+      </span>
+
+      <span class="menu-subtitle">
+        See who's online
+      </span>
+
+    </button>
+
+
+    <!-- PROFILE -->
+
+    <button
+      class="menu-card"
+      onclick="openProfile()">
+
+      <span class="menu-icon">
+        👤
+      </span>
+
+      <span class="menu-title">
+        Profile
+      </span>
+
+      <span class="menu-subtitle">
+        Your profile
+      </span>
+
+    </button>
+
+  </div>
+
+
+  <!-- =========================
+       POSTS TITLE
+  ========================= -->
+
+  <div class="section-title">
+    🔥 Trending Posts
+  </div>
+
+
+  <!-- =========================
+       POSTS
+  ========================= -->
 
   <div id="posts">
 
@@ -260,11 +553,8 @@ body{
 const SUPABASE_URL =
 "https://szmauhxiyjffjhrcruee.supabase.co";
 
-/*
-  APNI CURRENT SUPABASE_KEY YAHAN
-  WAHI RAKHNA JO TUMHARE CURRENT CODE
-  MEIN HAI.
-*/
+
+
 
 const SUPABASE_KEY =
 "sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
@@ -291,8 +581,6 @@ async function startApp(){
       data,
       error
     } = await supabaseClient.auth.getSession();
-
-    console.log("Session:",data);
 
     if(error){
 
@@ -402,8 +690,6 @@ async function loadPosts(){
       "post";
 
 
-    /* USERNAME */
-
     const user =
       document.createElement("div");
 
@@ -413,8 +699,6 @@ async function loadPosts(){
     user.textContent =
       post.username || "User";
 
-
-    /* TEXT */
 
     const text =
       document.createElement("div");
@@ -435,8 +719,6 @@ async function loadPosts(){
     }
 
 
-    /* IMAGE */
-
     if(post.image_url){
 
       const img =
@@ -453,16 +735,6 @@ async function loadPosts(){
 
       img.loading =
         "lazy";
-
-      img.onerror =
-        function(){
-
-          console.error(
-            "IMAGE LOAD ERROR:",
-            post.image_url
-          );
-
-        };
 
       div.appendChild(img);
 
@@ -569,10 +841,7 @@ async function sendImage(){
     return;
   }
 
-
   try{
-
-    /* FILE SIZE */
 
     if(
       file.size >
@@ -588,9 +857,6 @@ async function sendImage(){
       return;
     }
 
-
-    /* FILE NAME */
-
     const fileName =
       currentUser.id +
       "_" +
@@ -600,15 +866,6 @@ async function sendImage(){
         /[^a-zA-Z0-9._-]/g,
         "_"
       );
-
-
-    console.log(
-      "Uploading image:",
-      fileName
-    );
-
-
-    /* UPLOAD TO IMAGE BUCKET */
 
     const {
       data:uploadData,
@@ -627,7 +884,6 @@ async function sendImage(){
           }
         );
 
-
     if(uploadError){
 
       console.error(
@@ -645,15 +901,6 @@ async function sendImage(){
       return;
     }
 
-
-    console.log(
-      "Upload successful:",
-      uploadData
-    );
-
-
-    /* PUBLIC URL */
-
     const {
       data:urlData
     } =
@@ -663,7 +910,6 @@ async function sendImage(){
         .getPublicUrl(
           fileName
         );
-
 
     if(
       !urlData ||
@@ -679,18 +925,8 @@ async function sendImage(){
       return;
     }
 
-
     const imageUrl =
       urlData.publicUrl;
-
-
-    console.log(
-      "Image URL:",
-      imageUrl
-    );
-
-
-    /* SAVE IMAGE IN POSTS */
 
     const {
       error:postError
@@ -713,7 +949,6 @@ async function sendImage(){
 
         });
 
-
     if(postError){
 
       console.error(
@@ -729,16 +964,13 @@ async function sendImage(){
       return;
     }
 
-
     input.value = "";
 
     await loadPosts();
 
-
     alert(
       "Image successfully uploaded ✅"
     );
-
 
   }catch(error){
 
@@ -764,7 +996,6 @@ async function sendImage(){
 ========================= */
 
 let recognition = null;
-
 let isRecording = false;
 
 
@@ -784,7 +1015,6 @@ function toggleVoice(){
       "chatInput"
     );
 
-
   if(!SpeechRecognition){
 
     alert(
@@ -793,7 +1023,6 @@ function toggleVoice(){
 
     return;
   }
-
 
   if(isRecording){
 
@@ -807,7 +1036,6 @@ function toggleVoice(){
     return;
   }
 
-
   recognition =
     new SpeechRecognition();
 
@@ -819,7 +1047,6 @@ function toggleVoice(){
 
   recognition.interimResults =
     false;
-
 
   recognition.onresult =
   function(event){
@@ -849,7 +1076,6 @@ function toggleVoice(){
 
   };
 
-
   recognition.onerror =
   function(){
 
@@ -859,7 +1085,6 @@ function toggleVoice(){
       "none";
 
   };
-
 
   recognition.onend =
   function(){
@@ -871,13 +1096,72 @@ function toggleVoice(){
 
   };
 
-
   recognition.start();
 
   isRecording = true;
 
   status.style.display =
     "block";
+
+}
+
+
+/* =========================
+   SIX MENU FUNCTIONS
+========================= */
+
+function openPrivateChat(){
+
+  alert(
+    "💬 Private Chat\n\nPrivate chat section yahan open hoga."
+  );
+
+}
+
+
+function openStars(){
+
+  alert(
+    "⭐ Stars\n\nStars section yahan open hoga."
+  );
+
+}
+
+
+function openTrending(){
+
+  document.querySelector(
+    ".section-title"
+  ).scrollIntoView({
+    behavior:"smooth"
+  });
+
+}
+
+
+function openNotifications(){
+
+  alert(
+    "🔔 Notifications\n\nNotifications section yahan open hoga."
+  );
+
+}
+
+
+function openOnlineUsers(){
+
+  alert(
+    "👥 Online Users\n\nOnline users section yahan open hoga."
+  );
+
+}
+
+
+function openProfile(){
+
+  alert(
+    "👤 Profile\n\nProfile section yahan open hoga."
+  );
 
 }
 
