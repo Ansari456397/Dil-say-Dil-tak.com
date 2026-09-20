@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
+
 <html lang="en">
 <head>
 
@@ -23,9 +24,7 @@ body{
   padding-top:125px;
 }
 
-/* =========================
-   HEADER
-========================= */
+/* HEADER */
 
 .header{
   position:fixed;
@@ -47,9 +46,7 @@ body{
   font-weight:bold;
 }
 
-/* =========================
-   TOP MESSAGE BOX
-========================= */
+/* TOP MESSAGE BOX */
 
 .home-message-box{
   position:fixed;
@@ -116,9 +113,7 @@ body{
   margin-top:5px;
 }
 
-/* =========================
-   MAIN
-========================= */
+/* MAIN */
 
 .container{
   width:100%;
@@ -127,9 +122,7 @@ body{
   padding:10px;
 }
 
-/* =========================
-   WELCOME
-========================= */
+/* WELCOME */
 
 .welcome{
   background:white;
@@ -144,9 +137,7 @@ body{
   color:#6c5ce7;
 }
 
-/* =========================
-   SIX OPTIONS
-========================= */
+/* QUICK MENU */
 
 .quick-menu{
   display:grid;
@@ -191,7 +182,7 @@ body{
   margin-top:3px;
 }
 
-/* Purple accent */
+/* MENU COLORS */
 
 .menu-card:nth-child(1){
   border-left:4px solid #6c5ce7;
@@ -217,9 +208,7 @@ body{
   border-left:4px solid #9b59b6;
 }
 
-/* =========================
-   SECTION TITLE
-========================= */
+/* SECTION TITLE */
 
 .section-title{
   font-size:18px;
@@ -228,9 +217,7 @@ body{
   margin:10px 3px;
 }
 
-/* =========================
-   POSTS
-========================= */
+/* POST */
 
 .post{
   background:white;
@@ -259,6 +246,104 @@ body{
   border-radius:12px;
 }
 
+/* POST ACTIONS */
+
+.post-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px solid #eee;
+}
+
+.post-action{
+  border:0;
+  background:#f4f4f8;
+  border-radius:18px;
+  padding:7px 10px;
+  font-size:12px;
+  cursor:pointer;
+}
+
+.post-action:active{
+  transform:scale(.96);
+}
+
+.delete-btn{
+  background:#ffecec;
+  color:#e74c3c;
+}
+
+.like-btn{
+  color:#e74c3c;
+}
+
+.dislike-btn{
+  color:#555;
+}
+
+.reply-btn{
+  color:#6c5ce7;
+}
+
+/* COMMENTS */
+
+.comments-box{
+  display:none;
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid #eee;
+}
+
+.comment-input-row{
+  display:flex;
+  gap:6px;
+}
+
+.comment-input{
+  flex:1;
+  border:1px solid #ddd;
+  border-radius:18px;
+  padding:9px 12px;
+  outline:none;
+}
+
+.comment-send{
+  border:0;
+  background:#6c5ce7;
+  color:white;
+  border-radius:18px;
+  padding:0 13px;
+}
+
+.comment{
+  background:#f6f6fa;
+  padding:8px 10px;
+  border-radius:10px;
+  margin-top:7px;
+  font-size:13px;
+}
+
+.comment-user{
+  font-weight:bold;
+  color:#6c5ce7;
+  margin-bottom:3px;
+}
+
+.reply-area{
+  margin-top:6px;
+}
+
+.reply-input{
+  width:100%;
+  border:1px solid #ddd;
+  border-radius:15px;
+  padding:7px 10px;
+  font-size:12px;
+  outline:none;
+}
+
 .status{
   text-align:center;
   color:#777;
@@ -266,9 +351,7 @@ body{
   margin:10px;
 }
 
-/* =========================
-   MOBILE
-========================= */
+/* MOBILE */
 
 @media(max-width:400px){
 
@@ -289,25 +372,26 @@ body{
     font-size:12px;
   }
 
+  .post-action{
+    font-size:11px;
+    padding:7px 8px;
+  }
+
 }
 
 </style>
+
 </head>
 
 <body>
 
-<!-- =========================
-     HEADER
-========================= -->
+<!-- HEADER -->
 
 <div class="header">
   <div class="logo">Socialyte</div>
 </div>
 
-
-<!-- =========================
-     TOP MESSAGE BOX
-========================= -->
+<!-- TOP MESSAGE BOX -->
 
 <div class="home-message-box">
 
@@ -317,44 +401,49 @@ body{
 
   <div class="message-row">
 
-    <input
-      type="text"
-      id="chatInput"
-      placeholder="Write a message..."
-      onkeydown="if(event.key==='Enter') sendMessage()"
-    >
+```
+<input
+  type="text"
+  id="chatInput"
+  placeholder="Write a message..."
+  onkeydown="if(event.key==='Enter') sendMessage()"
+>
 
-    <button
-      class="chat-send"
-      onclick="sendMessage()">
-      ➤
-    </button>
+<button
+  class="chat-send"
+  onclick="sendMessage()">
+  ➤
+</button>
+```
 
   </div>
 
   <div class="media-row">
 
-    <button
-      class="media-btn"
-      onclick="document.getElementById('imageInput').click()">
-      🖼️ Upload Image
-    </button>
+```
+<button
+  class="media-btn"
+  onclick="document.getElementById('imageInput').click()">
+  🖼️ Upload Image
+</button>
 
-    <button
-      class="media-btn"
-      onclick="toggleVoice()">
-      🎤 Voice
-    </button>
+<button
+  class="media-btn"
+  onclick="toggleVoice()">
+  🎤 Voice
+</button>
+```
 
   </div>
 
-  <input
-    type="file"
-    id="imageInput"
-    accept="image/*"
-    style="display:none"
-    onchange="sendImage()"
-  >
+<input
+type="file"
+id="imageInput"
+accept="image/*"
+style="display:none"
+onchange="sendImage()"
+
+>
 
   <div id="recordStatus">
     🎤 Listening... Tap Voice again to stop
@@ -362,199 +451,159 @@ body{
 
 </div>
 
-
-<!-- =========================
-     MAIN CONTENT
-========================= -->
+<!-- MAIN -->
 
 <div class="container">
-
 
   <!-- WELCOME -->
 
   <div class="welcome">
 
-    <h3>
-      Welcome to Socialyte 💜
-    </h3>
+```
+<h3>
+  Welcome to Socialyte 💜
+</h3>
 
-    <div id="userStatus">
-      Checking login...
-    </div>
+<div id="userStatus">
+  Checking login...
+</div>
+```
 
   </div>
 
-
-  <!-- =========================
-       SIX OPTIONS
-  ========================= -->
+  <!-- QUICK MENU -->
 
   <div class="quick-menu">
 
+```
+<button
+  class="menu-card"
+  onclick="openPrivateChat()">
 
-    <!-- PRIVATE CHAT -->
+  <span class="menu-icon">💬</span>
 
-    <button
-      class="menu-card"
-      onclick="openPrivateChat()">
+  <span class="menu-title">
+    Private Chat
+  </span>
 
-      <span class="menu-icon">
-        💬
-      </span>
+  <span class="menu-subtitle">
+    Chat privately
+  </span>
 
-      <span class="menu-title">
-        Private Chat
-      </span>
-
-      <span class="menu-subtitle">
-        Chat privately
-      </span>
-
-    </button>
+</button>
 
 
-    <!-- STARS -->
+<button
+  class="menu-card"
+  onclick="openStars()">
 
-    <button
-      class="menu-card"
-      onclick="openStars()">
+  <span class="menu-icon">⭐</span>
 
-      <span class="menu-icon">
-        ⭐
-      </span>
+  <span class="menu-title">
+    Stars
+  </span>
 
-      <span class="menu-title">
-        Stars
-      </span>
+  <span class="menu-subtitle">
+    Your stars
+  </span>
 
-      <span class="menu-subtitle">
-        Your stars
-      </span>
-
-    </button>
+</button>
 
 
-    <!-- TRENDING POSTS -->
+<button
+  class="menu-card"
+  onclick="openTrending()">
 
-    <button
-      class="menu-card"
-      onclick="openTrending()">
+  <span class="menu-icon">🔥</span>
 
-      <span class="menu-icon">
-        🔥
-      </span>
+  <span class="menu-title">
+    Trending Posts
+  </span>
 
-      <span class="menu-title">
-        Trending Posts
-      </span>
+  <span class="menu-subtitle">
+    Popular posts
+  </span>
 
-      <span class="menu-subtitle">
-        Popular posts
-      </span>
-
-    </button>
+</button>
 
 
-    <!-- NOTIFICATIONS -->
+<button
+  class="menu-card"
+  onclick="openNotifications()">
 
-    <button
-      class="menu-card"
-      onclick="openNotifications()">
+  <span class="menu-icon">🔔</span>
 
-      <span class="menu-icon">
-        🔔
-      </span>
+  <span class="menu-title">
+    Notifications
+  </span>
 
-      <span class="menu-title">
-        Notifications
-      </span>
+  <span class="menu-subtitle">
+    Your activity
+  </span>
 
-      <span class="menu-subtitle">
-        Your activity
-      </span>
-
-    </button>
+</button>
 
 
-    <!-- ONLINE USERS -->
+<button
+  class="menu-card"
+  onclick="openOnlineUsers()">
 
-    <button
-      class="menu-card"
-      onclick="openOnlineUsers()">
+  <span class="menu-icon">👥</span>
 
-      <span class="menu-icon">
-        👥
-      </span>
+  <span class="menu-title">
+    Online Users
+  </span>
 
-      <span class="menu-title">
-        Online Users
-      </span>
+  <span class="menu-subtitle">
+    See who's online
+  </span>
 
-      <span class="menu-subtitle">
-        See who's online
-      </span>
-
-    </button>
+</button>
 
 
-    <!-- PROFILE -->
+<button
+  class="menu-card"
+  onclick="openProfile()">
 
-    <button
-      class="menu-card"
-      onclick="openProfile()">
+  <span class="menu-icon">👤</span>
 
-      <span class="menu-icon">
-        👤
-      </span>
+  <span class="menu-title">
+    Profile
+  </span>
 
-      <span class="menu-title">
-        Profile
-      </span>
+  <span class="menu-subtitle">
+    Your profile
+  </span>
 
-      <span class="menu-subtitle">
-        Your profile
-      </span>
-
-    </button>
+</button>
+```
 
   </div>
 
-
-  <!-- =========================
-       POSTS TITLE
-  ========================= -->
+  <!-- POSTS -->
 
   <div class="section-title">
     🔥 Trending Posts
   </div>
 
-
-  <!-- =========================
-       POSTS
-  ========================= -->
-
   <div id="posts">
 
-    <div class="status">
-      Loading posts...
-    </div>
+```
+<div class="status">
+  Loading posts...
+</div>
+```
 
   </div>
 
 </div>
 
-
 <script>
 
-/* =========================
-   SUPABASE
-========================= */
+/* SUPABASE */
 
 const SUPABASE_URL =
 "https://szmauhxiyjffjhrcruee.supabase.co";
-
-
-
 
 const SUPABASE_KEY =
 "sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
@@ -569,9 +618,7 @@ let currentUser = null;
 let currentUsername = "User";
 
 
-/* =========================
-   CHECK LOGIN
-========================= */
+/* CHECK LOGIN */
 
 async function startApp(){
 
@@ -584,10 +631,7 @@ async function startApp(){
 
     if(error){
 
-      console.error(
-        "Session error:",
-        error
-      );
+      console.error(error);
 
       document.getElementById(
         "userStatus"
@@ -623,10 +667,7 @@ async function startApp(){
 
   }catch(err){
 
-    console.error(
-      "START ERROR:",
-      err
-    );
+    console.error(err);
 
     document.getElementById(
       "userStatus"
@@ -638,9 +679,7 @@ async function startApp(){
 }
 
 
-/* =========================
-   LOAD POSTS
-========================= */
+/* LOAD POSTS */
 
 async function loadPosts(){
 
@@ -660,10 +699,7 @@ async function loadPosts(){
 
   if(error){
 
-    console.error(
-      "POST ERROR:",
-      error
-    );
+    console.error(error);
 
     postsBox.innerHTML =
       '<div class="status">Posts load nahi ho rahe.</div>';
@@ -673,7 +709,7 @@ async function loadPosts(){
 
   postsBox.innerHTML = "";
 
-  if(!data || data.length===0){
+  if(!data || data.length === 0){
 
     postsBox.innerHTML =
       '<div class="status">Abhi koi post nahi hai.</div>';
@@ -683,22 +719,36 @@ async function loadPosts(){
 
   data.forEach(function(post){
 
-    const div =
-      document.createElement("div");
+    createPostElement(post,postsBox);
 
-    div.className =
-      "post";
+  });
+
+}
 
 
-    const user =
-      document.createElement("div");
+/* CREATE POST */
 
-    user.className =
-      "post-user";
+function createPostElement(post,postsBox){
 
-    user.textContent =
-      post.username || "User";
+  const div =
+    document.createElement("div");
 
+  div.className =
+    "post";
+
+  const user =
+    document.createElement("div");
+
+  user.className =
+    "post-user";
+
+  user.textContent =
+    post.username || "User";
+
+  div.appendChild(user);
+
+
+  if(post.content){
 
     const text =
       document.createElement("div");
@@ -707,50 +757,653 @@ async function loadPosts(){
       "post-text";
 
     text.textContent =
-      post.content || "";
+      post.content;
+
+    div.appendChild(text);
+
+  }
 
 
-    div.appendChild(user);
+  if(post.image_url){
 
-    if(post.content){
+    const img =
+      document.createElement("img");
 
-      div.appendChild(text);
+    img.className =
+      "post-image";
+
+    img.src =
+      post.image_url;
+
+    img.alt =
+      "Uploaded image";
+
+    img.loading =
+      "lazy";
+
+    div.appendChild(img);
+
+  }
+
+
+  /* ACTION BUTTONS */
+
+  const actions =
+    document.createElement("div");
+
+  actions.className =
+    "post-actions";
+
+
+  const like =
+    document.createElement("button");
+
+  like.className =
+    "post-action like-btn";
+
+  like.textContent =
+    "❤️ Like";
+
+  like.onclick =
+    function(){
+
+      likePost(post.id);
+
+    };
+
+
+  const dislike =
+    document.createElement("button");
+
+  dislike.className =
+    "post-action dislike-btn";
+
+  dislike.textContent =
+    "👎 Dislike";
+
+  dislike.onclick =
+    function(){
+
+      dislikePost(post.id);
+
+    };
+
+
+  const comments =
+    document.createElement("button");
+
+  comments.className =
+    "post-action";
+
+  comments.textContent =
+    "💬 Comments";
+
+  comments.onclick =
+    function(){
+
+      toggleComments(post.id);
+
+    };
+
+
+  const reply =
+    document.createElement("button");
+
+  reply.className =
+    "post-action reply-btn";
+
+  reply.textContent =
+    "↩️ Reply";
+
+  reply.onclick =
+    function(){
+
+      toggleComments(post.id);
+
+    };
+
+
+  actions.appendChild(like);
+  actions.appendChild(dislike);
+  actions.appendChild(comments);
+  actions.appendChild(reply);
+
+
+  /* DELETE ONLY OWN POST */
+
+  if(
+    currentUser &&
+    post.user_id === currentUser.id
+  ){
+
+    const deleteBtn =
+      document.createElement("button");
+
+    deleteBtn.className =
+      "post-action delete-btn";
+
+    deleteBtn.textContent =
+      "🗑️ Delete Post";
+
+    deleteBtn.onclick =
+      function(){
+
+        deletePost(post.id);
+
+      };
+
+    actions.appendChild(deleteBtn);
+
+  }
+
+
+  div.appendChild(actions);
+
+
+  /* COMMENTS AREA */
+
+  const commentsBox =
+    document.createElement("div");
+
+  commentsBox.className =
+    "comments-box";
+
+  commentsBox.id =
+    "comments-" + post.id;
+
+
+  const commentRow =
+    document.createElement("div");
+
+  commentRow.className =
+    "comment-input-row";
+
+
+  const commentInput =
+    document.createElement("input");
+
+  commentInput.className =
+    "comment-input";
+
+  commentInput.id =
+    "comment-input-" + post.id;
+
+  commentInput.placeholder =
+    "Write a comment...";
+
+
+  const commentSend =
+    document.createElement("button");
+
+  commentSend.className =
+    "comment-send";
+
+  commentSend.textContent =
+    "➤";
+
+  commentSend.onclick =
+    function(){
+
+      addComment(post.id);
+
+    };
+
+
+  commentRow.appendChild(commentInput);
+  commentRow.appendChild(commentSend);
+
+  commentsBox.appendChild(commentRow);
+
+
+  div.appendChild(commentsBox);
+
+  postsBox.appendChild(div);
+
+}
+
+
+/* DELETE POST */
+
+async function deletePost(postId){
+
+  if(!currentUser)
+    return;
+
+  const confirmDelete =
+    confirm(
+      "Kya aap ye post delete karna chahte hain?"
+    );
+
+  if(!confirmDelete)
+    return;
+
+  const {
+    error
+  } = await supabaseClient
+    .from("posts")
+    .delete()
+    .eq("id",postId)
+    .eq("user_id",currentUser.id);
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "Post delete nahi hui.\n\n" +
+      error.message
+    );
+
+    return;
+  }
+
+  await loadPosts();
+
+}
+
+
+/* LIKE */
+
+async function likePost(postId){
+
+  if(!currentUser){
+
+    alert("Please login first.");
+
+    return;
+
+  }
+
+  const {
+    error
+  } = await supabaseClient
+    .from("post_actions")
+    .insert({
+
+      post_id:postId,
+
+      user_id:currentUser.id,
+
+      action_type:"like"
+
+    });
+
+  if(error){
+
+    if(error.code === "23505"){
+
+      alert(
+        "Aap already Like kar chuke hain ❤️"
+      );
+
+    }else{
+
+      console.error(error);
+
+      alert(
+        "Like nahi hua.\n\n" +
+        error.message
+      );
 
     }
 
+    return;
+  }
 
-    if(post.image_url){
+  alert("❤️ Liked!");
 
-      const img =
-        document.createElement("img");
+}
 
-      img.className =
-        "post-image";
 
-      img.src =
-        post.image_url;
+/* DISLIKE */
 
-      img.alt =
-        "Uploaded image";
+async function dislikePost(postId){
 
-      img.loading =
-        "lazy";
+  if(!currentUser){
 
-      div.appendChild(img);
+    alert("Please login first.");
+
+    return;
+
+  }
+
+  const {
+    error
+  } = await supabaseClient
+    .from("post_actions")
+    .insert({
+
+      post_id:postId,
+
+      user_id:currentUser.id,
+
+      action_type:"dislike"
+
+    });
+
+  if(error){
+
+    if(error.code === "23505"){
+
+      alert(
+        "Aap already Dislike kar chuke hain."
+      );
+
+    }else{
+
+      console.error(error);
+
+      alert(
+        "Dislike nahi hua.\n\n" +
+        error.message
+      );
 
     }
 
+    return;
+  }
 
-    postsBox.appendChild(div);
+  alert("👎 Disliked");
+
+}
+
+
+/* COMMENTS */
+
+function toggleComments(postId){
+
+  const box =
+    document.getElementById(
+      "comments-" + postId
+    );
+
+  if(!box)
+    return;
+
+  if(box.style.display === "block"){
+
+    box.style.display =
+      "none";
+
+  }else{
+
+    box.style.display =
+      "block";
+
+    loadComments(postId);
+
+    const input =
+      document.getElementById(
+        "comment-input-" + postId
+      );
+
+    if(input)
+      input.focus();
+
+  }
+
+}
+
+
+/* ADD COMMENT */
+
+async function addComment(postId){
+
+  if(!currentUser){
+
+    alert("Please login first.");
+
+    return;
+  }
+
+  const input =
+    document.getElementById(
+      "comment-input-" + postId
+    );
+
+  const text =
+    input.value.trim();
+
+  if(!text)
+    return;
+
+
+  const {
+    error
+  } = await supabaseClient
+    .from("comments")
+    .insert({
+
+      post_id:postId,
+
+      user_id:currentUser.id,
+
+      username:currentUsername,
+
+      content:text
+
+    });
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "Comment save nahi hua.\n\n" +
+      error.message
+    );
+
+    return;
+  }
+
+  input.value = "";
+
+  await loadComments(postId);
+
+}
+
+
+/* LOAD COMMENTS */
+
+async function loadComments(postId){
+
+  const box =
+    document.getElementById(
+      "comments-" + postId
+    );
+
+  if(!box)
+    return;
+
+
+  const oldComments =
+    box.querySelectorAll(
+      ".comment"
+    );
+
+  oldComments.forEach(
+    function(item){
+
+      item.remove();
+
+    }
+  );
+
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("comments")
+    .select("*")
+    .eq("post_id",postId)
+    .order("id",{ascending:true});
+
+
+  if(error){
+
+    console.error(error);
+
+    return;
+
+  }
+
+
+  if(!data || data.length === 0){
+
+    return;
+
+  }
+
+
+  data.forEach(function(comment){
+
+    const commentDiv =
+      document.createElement("div");
+
+    commentDiv.className =
+      "comment";
+
+
+    const commentUser =
+      document.createElement("div");
+
+    commentUser.className =
+      "comment-user";
+
+    commentUser.textContent =
+      comment.username || "User";
+
+
+    const commentText =
+      document.createElement("div");
+
+    commentText.textContent =
+      comment.content || "";
+
+
+    commentDiv.appendChild(
+      commentUser
+    );
+
+    commentDiv.appendChild(
+      commentText
+    );
+
+
+    /* REPLY INPUT */
+
+    const replyArea =
+      document.createElement("div");
+
+    replyArea.className =
+      "reply-area";
+
+
+    const replyInput =
+      document.createElement("input");
+
+    replyInput.className =
+      "reply-input";
+
+    replyInput.placeholder =
+      "Reply...";
+
+
+    replyInput.onkeydown =
+      function(event){
+
+        if(event.key === "Enter"){
+
+          addReply(
+            comment.id,
+            replyInput
+          );
+
+        }
+
+      };
+
+
+    replyArea.appendChild(
+      replyInput
+    );
+
+    commentDiv.appendChild(
+      replyArea
+    );
+
+
+    box.appendChild(
+      commentDiv
+    );
 
   });
 
 }
 
 
-/* =========================
-   SEND MESSAGE
-========================= */
+/* REPLY */
+
+async function addReply(
+  commentId,
+  input
+){
+
+  if(!currentUser){
+
+    alert("Please login first.");
+
+    return;
+
+  }
+
+  const text =
+    input.value.trim();
+
+  if(!text)
+    return;
+
+
+  const {
+    error
+  } = await supabaseClient
+    .from("comment_replies")
+    .insert({
+
+      comment_id:commentId,
+
+      user_id:currentUser.id,
+
+      username:currentUsername,
+
+      content:text
+
+    });
+
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "Reply save nahi hui.\n\n" +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  input.value = "";
+
+  alert("↩️ Reply added!");
+
+}
+
+
+/* SEND MESSAGE */
 
 async function sendMessage(){
 
@@ -774,6 +1427,7 @@ async function sendMessage(){
     return;
   }
 
+
   const {
     error
   } = await supabaseClient
@@ -791,12 +1445,10 @@ async function sendMessage(){
 
     });
 
+
   if(error){
 
-    console.error(
-      "SEND ERROR:",
-      error
-    );
+    console.error(error);
 
     alert(
       "Message send nahi hua.\n\n" +
@@ -806,6 +1458,7 @@ async function sendMessage(){
     return;
   }
 
+
   input.value = "";
 
   await loadPosts();
@@ -813,9 +1466,7 @@ async function sendMessage(){
 }
 
 
-/* =========================
-   IMAGE UPLOAD
-========================= */
+/* IMAGE UPLOAD */
 
 async function sendImage(){
 
@@ -830,6 +1481,7 @@ async function sendImage(){
   if(!file)
     return;
 
+
   if(!currentUser){
 
     alert(
@@ -839,7 +1491,9 @@ async function sendImage(){
     input.value = "";
 
     return;
+
   }
+
 
   try{
 
@@ -855,7 +1509,9 @@ async function sendImage(){
       input.value = "";
 
       return;
+
     }
+
 
     const fileName =
       currentUser.id +
@@ -866,6 +1522,7 @@ async function sendImage(){
         /[^a-zA-Z0-9._-]/g,
         "_"
       );
+
 
     const {
       data:uploadData,
@@ -884,12 +1541,10 @@ async function sendImage(){
           }
         );
 
+
     if(uploadError){
 
-      console.error(
-        "UPLOAD ERROR:",
-        uploadError
-      );
+      console.error(uploadError);
 
       alert(
         "Image upload nahi hui.\n\n" +
@@ -899,7 +1554,9 @@ async function sendImage(){
       input.value = "";
 
       return;
+
     }
+
 
     const {
       data:urlData
@@ -911,22 +1568,10 @@ async function sendImage(){
           fileName
         );
 
-    if(
-      !urlData ||
-      !urlData.publicUrl
-    ){
-
-      alert(
-        "Image URL generate nahi ho saka."
-      );
-
-      input.value = "";
-
-      return;
-    }
 
     const imageUrl =
       urlData.publicUrl;
+
 
     const {
       error:postError
@@ -949,12 +1594,10 @@ async function sendImage(){
 
         });
 
+
     if(postError){
 
-      console.error(
-        "IMAGE POST ERROR:",
-        postError
-      );
+      console.error(postError);
 
       alert(
         "Image save nahi hui.\n\n" +
@@ -962,22 +1605,23 @@ async function sendImage(){
       );
 
       return;
+
     }
+
 
     input.value = "";
 
     await loadPosts();
 
+
     alert(
       "Image successfully uploaded ✅"
     );
 
+
   }catch(error){
 
-    console.error(
-      "IMAGE ERROR:",
-      error
-    );
+    console.error(error);
 
     alert(
       "Image error:\n\n" +
@@ -991,9 +1635,7 @@ async function sendImage(){
 }
 
 
-/* =========================
-   VOICE TYPING
-========================= */
+/* VOICE TYPING */
 
 let recognition = null;
 let isRecording = false;
@@ -1015,6 +1657,7 @@ function toggleVoice(){
       "chatInput"
     );
 
+
   if(!SpeechRecognition){
 
     alert(
@@ -1022,7 +1665,9 @@ function toggleVoice(){
     );
 
     return;
+
   }
+
 
   if(isRecording){
 
@@ -1034,7 +1679,9 @@ function toggleVoice(){
       "none";
 
     return;
+
   }
+
 
   recognition =
     new SpeechRecognition();
@@ -1047,6 +1694,7 @@ function toggleVoice(){
 
   recognition.interimResults =
     false;
+
 
   recognition.onresult =
   function(event){
@@ -1076,6 +1724,7 @@ function toggleVoice(){
 
   };
 
+
   recognition.onerror =
   function(){
 
@@ -1085,6 +1734,7 @@ function toggleVoice(){
       "none";
 
   };
+
 
   recognition.onend =
   function(){
@@ -1096,6 +1746,7 @@ function toggleVoice(){
 
   };
 
+
   recognition.start();
 
   isRecording = true;
@@ -1106,9 +1757,7 @@ function toggleVoice(){
 }
 
 
-/* =========================
-   SIX MENU FUNCTIONS
-========================= */
+/* MENU */
 
 function openPrivateChat(){
 
@@ -1166,9 +1815,7 @@ function openProfile(){
 }
 
 
-/* =========================
-   START APP
-========================= */
+/* START */
 
 startApp();
 
