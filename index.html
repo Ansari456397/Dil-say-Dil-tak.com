@@ -9,7 +9,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
@@ -166,9 +168,13 @@ body{
   <div class="logo">Socialyte</div>
 </div>
 
+<!-- TOP MESSAGE BOX -->
+
 <div class="home-message-box">
 
-  <div class="message-title">💬 Message</div>
+  <div class="message-title">
+    💬 Message
+  </div>
 
   <div class="message-row">
 
@@ -218,6 +224,8 @@ body{
 </div>
 
 
+<!-- MAIN CONTENT -->
+
 <div class="container">
 
   <div class="welcome">
@@ -252,6 +260,12 @@ body{
 const SUPABASE_URL =
 "https://szmauhxiyjffjhrcruee.supabase.co";
 
+/*
+  APNI CURRENT SUPABASE_KEY YAHAN
+  WAHI RAKHNA JO TUMHARE CURRENT CODE
+  MEIN HAI.
+*/
+
 const SUPABASE_KEY =
 "sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
 
@@ -282,9 +296,14 @@ async function startApp(){
 
     if(error){
 
-      console.error("Session error:",error);
+      console.error(
+        "Session error:",
+        error
+      );
 
-      document.getElementById("userStatus").textContent =
+      document.getElementById(
+        "userStatus"
+      ).textContent =
         "Login check failed.";
 
       return;
@@ -292,7 +311,8 @@ async function startApp(){
 
     if(!data.session){
 
-      window.location.href = "login.html";
+      window.location.href =
+        "login.html";
 
       return;
     }
@@ -305,16 +325,24 @@ async function startApp(){
       currentUser.email?.split("@")[0] ||
       "User";
 
-    document.getElementById("userStatus").textContent =
-      "Logged in as " + currentUsername;
+    document.getElementById(
+      "userStatus"
+    ).textContent =
+      "Logged in as " +
+      currentUsername;
 
     await loadPosts();
 
   }catch(err){
 
-    console.error("START ERROR:",err);
+    console.error(
+      "START ERROR:",
+      err
+    );
 
-    document.getElementById("userStatus").textContent =
+    document.getElementById(
+      "userStatus"
+    ).textContent =
       "Something went wrong.";
 
   }
@@ -344,7 +372,10 @@ async function loadPosts(){
 
   if(error){
 
-    console.error("POST ERROR:",error);
+    console.error(
+      "POST ERROR:",
+      error
+    );
 
     postsBox.innerHTML =
       '<div class="status">Posts load nahi ho rahe.</div>';
@@ -367,7 +398,8 @@ async function loadPosts(){
     const div =
       document.createElement("div");
 
-    div.className="post";
+    div.className =
+      "post";
 
 
     /* USERNAME */
@@ -375,7 +407,8 @@ async function loadPosts(){
     const user =
       document.createElement("div");
 
-    user.className="post-user";
+    user.className =
+      "post-user";
 
     user.textContent =
       post.username || "User";
@@ -386,7 +419,8 @@ async function loadPosts(){
     const text =
       document.createElement("div");
 
-    text.className="post-text";
+    text.className =
+      "post-text";
 
     text.textContent =
       post.content || "";
@@ -408,7 +442,8 @@ async function loadPosts(){
       const img =
         document.createElement("img");
 
-      img.className="post-image";
+      img.className =
+        "post-image";
 
       img.src =
         post.image_url;
@@ -418,6 +453,16 @@ async function loadPosts(){
 
       img.loading =
         "lazy";
+
+      img.onerror =
+        function(){
+
+          console.error(
+            "IMAGE LOAD ERROR:",
+            post.image_url
+          );
+
+        };
 
       div.appendChild(img);
 
@@ -438,7 +483,9 @@ async function loadPosts(){
 async function sendMessage(){
 
   const input =
-    document.getElementById("chatInput");
+    document.getElementById(
+      "chatInput"
+    );
 
   const text =
     input.value.trim();
@@ -448,7 +495,9 @@ async function sendMessage(){
 
   if(!currentUser){
 
-    alert("Please login first.");
+    alert(
+      "Please login first."
+    );
 
     return;
   }
@@ -485,7 +534,7 @@ async function sendMessage(){
     return;
   }
 
-  input.value="";
+  input.value = "";
 
   await loadPosts();
 
@@ -499,7 +548,9 @@ async function sendMessage(){
 async function sendImage(){
 
   const input =
-    document.getElementById("imageInput");
+    document.getElementById(
+      "imageInput"
+    );
 
   const file =
     input.files[0];
@@ -509,134 +560,201 @@ async function sendImage(){
 
   if(!currentUser){
 
-    alert("Please login first.");
-
-    input.value="";
-
-    return;
-  }
-
-
-  /* IMAGE SIZE CHECK */
-
-  if(file.size > 50 * 1024 * 1024){
-
     alert(
-      "Image 50 MB se choti honi chahiye."
+      "Please login first."
     );
 
-    input.value="";
+    input.value = "";
 
     return;
   }
 
 
-  /* UNIQUE FILE NAME */
+  try{
 
-  const fileName =
-    currentUser.id +
-    "_" +
-    Date.now() +
-    "_" +
-    file.name.replace(
-      /[^a-zA-Z0-9._-]/g,
-      "_"
-    );
+    /* FILE SIZE */
+
+    if(
+      file.size >
+      50 * 1024 * 1024
+    ){
+
+      alert(
+        "Image 50 MB se choti honi chahiye."
+      );
+
+      input.value = "";
+
+      return;
+    }
 
 
-  /* UPLOAD TO STORAGE */
+    /* FILE NAME */
 
-  const {
-    error:uploadError
-  } =
-    await supabaseClient
-      .storage
-      .from("Image")
-      .upload(
-        fileName,
-        file,
-        {
-          cacheControl:"3600",
-          upsert:false
-        }
+    const fileName =
+      currentUser.id +
+      "_" +
+      Date.now() +
+      "_" +
+      file.name.replace(
+        /[^a-zA-Z0-9._-]/g,
+        "_"
       );
 
 
-  if(uploadError){
+    console.log(
+      "Uploading image:",
+      fileName
+    );
+
+
+    /* UPLOAD TO IMAGE BUCKET */
+
+    const {
+      data:uploadData,
+      error:uploadError
+    } =
+      await supabaseClient
+        .storage
+        .from("Image")
+        .upload(
+          fileName,
+          file,
+          {
+            cacheControl:"3600",
+            upsert:false,
+            contentType:file.type
+          }
+        );
+
+
+    if(uploadError){
+
+      console.error(
+        "UPLOAD ERROR:",
+        uploadError
+      );
+
+      alert(
+        "Image upload nahi hui.\n\n" +
+        uploadError.message
+      );
+
+      input.value = "";
+
+      return;
+    }
+
+
+    console.log(
+      "Upload successful:",
+      uploadData
+    );
+
+
+    /* PUBLIC URL */
+
+    const {
+      data:urlData
+    } =
+      supabaseClient
+        .storage
+        .from("Image")
+        .getPublicUrl(
+          fileName
+        );
+
+
+    if(
+      !urlData ||
+      !urlData.publicUrl
+    ){
+
+      alert(
+        "Image URL generate nahi ho saka."
+      );
+
+      input.value = "";
+
+      return;
+    }
+
+
+    const imageUrl =
+      urlData.publicUrl;
+
+
+    console.log(
+      "Image URL:",
+      imageUrl
+    );
+
+
+    /* SAVE IMAGE IN POSTS */
+
+    const {
+      error:postError
+    } =
+      await supabaseClient
+        .from("posts")
+        .insert({
+
+          user_id:
+            currentUser.id,
+
+          username:
+            currentUsername,
+
+          content:
+            "🖼️ Image",
+
+          image_url:
+            imageUrl
+
+        });
+
+
+    if(postError){
+
+      console.error(
+        "IMAGE POST ERROR:",
+        postError
+      );
+
+      alert(
+        "Image save nahi hui.\n\n" +
+        postError.message
+      );
+
+      return;
+    }
+
+
+    input.value = "";
+
+    await loadPosts();
+
+
+    alert(
+      "Image successfully uploaded ✅"
+    );
+
+
+  }catch(error){
 
     console.error(
-      "UPLOAD ERROR:",
-      uploadError
+      "IMAGE ERROR:",
+      error
     );
 
     alert(
-      "Image upload nahi hui.\n\n" +
-      uploadError.message
+      "Image error:\n\n" +
+      error.message
     );
 
-    input.value="";
+    input.value = "";
 
-    return;
   }
-
-
-  /* GET PUBLIC URL */
-
-  const {
-    data:urlData
-  } =
-    supabaseClient
-      .storage
-      .from("Image")
-      .getPublicUrl(fileName);
-
-  const imageUrl =
-    urlData.publicUrl;
-
-
-  /* SAVE IMAGE URL IN POSTS */
-
-  const {
-    error:postError
-  } =
-    await supabaseClient
-      .from("posts")
-      .insert({
-
-        user_id:
-          currentUser.id,
-
-        username:
-          currentUsername,
-
-        content:
-          "🖼️ Image",
-
-        image_url:
-          imageUrl
-
-      });
-
-
-  if(postError){
-
-    console.error(
-      "IMAGE POST ERROR:",
-      postError
-    );
-
-    alert(
-      "Image save nahi hui.\n\n" +
-      postError.message
-    );
-
-    return;
-  }
-
-
-  input.value="";
-
-  await loadPosts();
 
 }
 
@@ -645,9 +763,9 @@ async function sendImage(){
    VOICE TYPING
 ========================= */
 
-let recognition=null;
+let recognition = null;
 
-let isRecording=false;
+let isRecording = false;
 
 
 function toggleVoice(){
@@ -681,9 +799,10 @@ function toggleVoice(){
 
     recognition.stop();
 
-    isRecording=false;
+    isRecording = false;
 
-    status.style.display="none";
+    status.style.display =
+      "none";
 
     return;
   }
@@ -692,21 +811,24 @@ function toggleVoice(){
   recognition =
     new SpeechRecognition();
 
-  recognition.lang="ur-PK";
+  recognition.lang =
+    "ur-PK";
 
-  recognition.continuous=true;
+  recognition.continuous =
+    true;
 
-  recognition.interimResults=false;
+  recognition.interimResults =
+    false;
 
 
   recognition.onresult =
   function(event){
 
-    let result="";
+    let result = "";
 
     for(
-      let i=event.resultIndex;
-      i<event.results.length;
+      let i = event.resultIndex;
+      i < event.results.length;
       i++
     ){
 
@@ -731,9 +853,10 @@ function toggleVoice(){
   recognition.onerror =
   function(){
 
-    isRecording=false;
+    isRecording = false;
 
-    status.style.display="none";
+    status.style.display =
+      "none";
 
   };
 
@@ -741,18 +864,20 @@ function toggleVoice(){
   recognition.onend =
   function(){
 
-    isRecording=false;
+    isRecording = false;
 
-    status.style.display="none";
+    status.style.display =
+      "none";
 
   };
 
 
   recognition.start();
 
-  isRecording=true;
+  isRecording = true;
 
-  status.style.display="block";
+  status.style.display =
+    "block";
 
 }
 
