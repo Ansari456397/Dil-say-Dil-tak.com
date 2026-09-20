@@ -62,7 +62,7 @@ body{
   max-width:650px;
   margin:auto;
   padding:12px;
-  padding-bottom:90px;
+  padding-bottom:100px;
 }
 
 .profile-card{
@@ -254,8 +254,6 @@ body{
   font-weight:bold;
 }
 
-/* COMMENTS */
-
 .comment-box{
   margin-top:10px;
   padding-top:10px;
@@ -319,31 +317,116 @@ body{
   color:#777;
 }
 
+/* =========================
+   CHAT
+========================= */
+
 .chat-box{
   background:white;
   border-radius:18px;
-  padding:15px;
+  padding:12px;
   box-shadow:0 3px 12px rgba(0,0,0,.06);
   margin-top:15px;
 }
 
 .messages{
-  max-height:280px;
+  max-height:360px;
+  min-height:80px;
   overflow-y:auto;
+  padding:4px;
 }
 
 .message{
-  padding:8px 0;
+  padding:10px;
   border-bottom:1px solid #eee;
 }
 
 .message-user{
   font-weight:bold;
   color:#6c5ce7;
+  font-size:14px;
 }
 
 .message-text{
-  margin-top:3px;
+  margin-top:4px;
+  line-height:1.4;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+
+.chat-image{
+  width:100%;
+  max-width:280px;
+  max-height:300px;
+  object-fit:cover;
+  border-radius:14px;
+  margin-top:7px;
+  display:block;
+}
+
+.chat-audio{
+  width:100%;
+  max-width:300px;
+  margin-top:7px;
+}
+
+.chat-time{
+  color:#999;
+  font-size:10px;
+  margin-top:5px;
+}
+
+.chat-tools{
+  display:flex;
+  gap:7px;
+  margin-top:10px;
+  align-items:center;
+}
+
+.chat-input{
+  flex:1;
+  min-width:0;
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:11px;
+  outline:none;
+  font-size:14px;
+}
+
+.chat-input:focus{
+  border-color:#6c5ce7;
+}
+
+.chat-btn{
+  border:0;
+  width:43px;
+  height:43px;
+  border-radius:12px;
+  background:#f0edff;
+  font-size:19px;
+}
+
+.chat-send{
+  background:#6c5ce7;
+  color:white;
+}
+
+.chat-btn.recording{
+  background:#e74c3c;
+  color:white;
+}
+
+.chat-file{
+  display:none;
+}
+
+.record-status{
+  display:none;
+  font-size:12px;
+  color:#e74c3c;
+  margin-top:6px;
+  text-align:center;
+  font-weight:bold;
 }
 
 .bottom-nav{
@@ -389,6 +472,15 @@ body{
   .post-action{
     padding:8px 8px;
     font-size:11px;
+  }
+
+  .chat-tools{
+    gap:4px;
+  }
+
+  .chat-btn{
+    width:39px;
+    height:39px;
   }
 
 }
@@ -505,7 +597,7 @@ body{
 
   <div class="menu">
 
-    <button onclick="showNotice('Public Chat')">
+    <button onclick="scrollToChat()">
       💬 Public Chat
     </button>
 
@@ -549,7 +641,10 @@ body{
 
   <!-- PUBLIC CHAT -->
 
-  <div class="section-title">
+  <div
+    class="section-title"
+    id="publicChatTitle"
+  >
     💬 Public Chat
   </div>
 
@@ -560,6 +655,72 @@ body{
       id="messages"
     >
       Loading messages...
+    </div>
+
+
+    <div
+      class="record-status"
+      id="recordStatus"
+    >
+      🔴 Recording... Tap 🎤 again to stop
+    </div>
+
+
+    <div class="chat-tools">
+
+      <!-- IMAGE -->
+
+      <input
+        type="file"
+        id="imageInput"
+        class="chat-file"
+        accept="image/*"
+        onchange="sendImage()"
+      >
+
+      <button
+        class="chat-btn"
+        onclick="document.getElementById('imageInput').click()"
+        title="Send image"
+      >
+        🖼️
+      </button>
+
+
+      <!-- TEXT -->
+
+      <input
+        type="text"
+        id="chatInput"
+        class="chat-input"
+        placeholder="Write a message..."
+        maxlength="1000"
+        onkeydown="if(event.key==='Enter') sendTextMessage()"
+      >
+
+
+      <!-- VOICE -->
+
+      <button
+        class="chat-btn"
+        id="voiceBtn"
+        onclick="toggleRecording()"
+        title="Voice message"
+      >
+        🎤
+      </button>
+
+
+      <!-- SEND -->
+
+      <button
+        class="chat-btn chat-send"
+        onclick="sendTextMessage()"
+        title="Send"
+      >
+        ➤
+      </button>
+
     </div>
 
   </div>
@@ -624,6 +785,10 @@ window.supabase.createClient(
 );
 
 let currentUser = null;
+
+let mediaRecorder = null;
+let audioChunks = [];
+let isRecording = false;
 
 
 /* =========================
@@ -1022,8 +1187,6 @@ async function loadPosts(){
 
         </div>
 
-
-        <!-- COMMENT BOX -->
 
         <div
           class="comment-box"
@@ -1922,8 +2085,13 @@ function replyToPost(
 }
 
 
-/* =========================
+/* =====================================================
    PUBLIC CHAT
+===================================================== */
+
+
+/* =========================
+   LOAD CHAT MESSAGES
 ========================= */
 
 async function loadMessages(){
@@ -1943,22 +2111,22 @@ async function loadMessages(){
     );
 
 
-  if(error){
-
-    document.getElementById(
-      "messages"
-    ).textContent =
-      error.message;
-
-    return;
-
-  }
-
-
   const box =
     document.getElementById(
       "messages"
     );
+
+
+  if(error){
+
+    box.innerHTML =
+      `<div class="empty">
+        ${escapeHtml(error.message)}
+      </div>`;
+
+    return;
+
+  }
 
 
   box.innerHTML = "";
@@ -1967,40 +2135,855 @@ async function loadMessages(){
   (data || []).forEach(
     msg => {
 
-      const username =
-        msg.username ||
-        "User";
-
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-
-      div.className =
-        "message";
-
-
-      div.innerHTML = `
-
-        <div class="message-user">
-          ${escapeHtml(username)}
-        </div>
-
-        <div class="message-text">
-          ${escapeHtml(msg.message)}
-        </div>
-
-      `;
-
-
-      box.appendChild(
-        div
+      renderMessage(
+        msg,
+        box
       );
 
     }
   );
+
+
+  scrollChatToBottom();
+
+}
+
+
+/* =========================
+   RENDER MESSAGE
+========================= */
+
+function renderMessage(
+  msg,
+  box
+){
+
+  const username =
+    msg.username ||
+    "User";
+
+
+  const div =
+    document.createElement(
+      "div"
+    );
+
+
+  div.className =
+    "message";
+
+
+  let content = "";
+
+
+  const messageType =
+    msg.message_type ||
+    "text";
+
+
+  if(
+    messageType === "image" &&
+    msg.media_url
+  ){
+
+    content = `
+
+      <img
+        class="chat-image"
+        src="${escapeAttribute(msg.media_url)}"
+        alt="Chat image"
+        loading="lazy"
+      >
+
+    `;
+
+  }
+
+  else if(
+    messageType === "voice" &&
+    msg.media_url
+  ){
+
+    content = `
+
+      <audio
+        class="chat-audio"
+        controls
+        preload="metadata"
+        src="${escapeAttribute(msg.media_url)}"
+      ></audio>
+
+    `;
+
+  }
+
+  else{
+
+    content = `
+
+      <div class="message-text">
+        ${escapeHtml(msg.message || "")}
+      </div>
+
+    `;
+
+  }
+
+
+  let time = "";
+
+  if(msg.created_at){
+
+    time =
+      new Date(
+        msg.created_at
+      ).toLocaleTimeString(
+        [],
+        {
+          hour:"2-digit",
+          minute:"2-digit"
+        }
+      );
+
+  }
+
+
+  div.innerHTML = `
+
+    <div class="message-user">
+      ${escapeHtml(username)}
+    </div>
+
+    ${content}
+
+    <div class="chat-time">
+      ${escapeHtml(time)}
+    </div>
+
+  `;
+
+
+  box.appendChild(
+    div
+  );
+
+}
+
+
+/* =========================
+   SEND TEXT MESSAGE
+========================= */
+
+async function sendTextMessage(){
+
+  if(!currentUser){
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+
+  const input =
+    document.getElementById(
+      "chatInput"
+    );
+
+
+  const message =
+    input.value.trim();
+
+
+  if(!message){
+    return;
+  }
+
+
+  const username =
+    getUsername();
+
+
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("messages")
+    .insert({
+
+      user_id:
+        currentUser.id,
+
+      username:
+        username,
+
+      message:
+        message,
+
+      message_type:
+        "text",
+
+      media_url:
+        null
+
+    });
+
+
+  if(error){
+
+    alert(
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  input.value = "";
+
+
+  await loadMessages();
+
+}
+
+
+/* =========================
+   SEND IMAGE
+========================= */
+
+async function sendImage(){
+
+  if(!currentUser){
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+
+  const input =
+    document.getElementById(
+      "imageInput"
+    );
+
+
+  const file =
+    input.files[0];
+
+
+  if(!file){
+    return;
+  }
+
+
+  if(
+    !file.type.startsWith(
+      "image/"
+    )
+  ){
+
+    alert(
+      "Please select an image."
+    );
+
+    input.value = "";
+
+    return;
+
+  }
+
+
+  /* 10 MB limit */
+
+  if(
+    file.size >
+    10 * 1024 * 1024
+  ){
+
+    alert(
+      "Image must be smaller than 10 MB."
+    );
+
+    input.value = "";
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    "status"
+  ).textContent =
+    "Uploading image...";
+
+
+  const filePath =
+    currentUser.id +
+    "/" +
+    Date.now() +
+    "_" +
+    cleanFileName(file.name);
+
+
+  const {
+    error:uploadError
+  } =
+  await supabaseClient
+    .storage
+    .from("chat-images")
+    .upload(
+      filePath,
+      file,
+      {
+        contentType:file.type,
+        upsert:false
+      }
+    );
+
+
+  if(uploadError){
+
+    alert(
+      "Image upload failed: " +
+      uploadError.message
+    );
+
+    document.getElementById(
+      "status"
+    ).textContent = "";
+
+    input.value = "";
+
+    return;
+
+  }
+
+
+  const {
+    data:urlData
+  } =
+  supabaseClient
+    .storage
+    .from("chat-images")
+    .getPublicUrl(
+      filePath
+    );
+
+
+  const imageUrl =
+    urlData.publicUrl;
+
+
+  const {
+    error:messageError
+  } =
+  await supabaseClient
+    .from("messages")
+    .insert({
+
+      user_id:
+        currentUser.id,
+
+      username:
+        getUsername(),
+
+      message:
+        "📷 Image",
+
+      message_type:
+        "image",
+
+      media_url:
+        imageUrl
+
+    });
+
+
+  if(messageError){
+
+    alert(
+      "Message save failed: " +
+      messageError.message
+    );
+
+    return;
+
+  }
+
+
+  input.value = "";
+
+
+  document.getElementById(
+    "status"
+  ).textContent = "";
+
+
+  await loadMessages();
+
+}
+
+
+/* =========================
+   VOICE RECORDING
+========================= */
+
+async function toggleRecording(){
+
+  if(!currentUser){
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+
+  if(isRecording){
+
+    stopRecording();
+
+  }else{
+
+    await startRecording();
+
+  }
+
+}
+
+
+/* =========================
+   START RECORDING
+========================= */
+
+async function startRecording(){
+
+  if(
+    !navigator.mediaDevices ||
+    !navigator.mediaDevices.getUserMedia
+  ){
+
+    alert(
+      "Voice recording is not supported by this browser."
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    const stream =
+      await navigator.mediaDevices
+        .getUserMedia({
+          audio:true
+        });
+
+
+    audioChunks = [];
+
+
+    let options = {};
+
+
+    if(
+      MediaRecorder.isTypeSupported(
+        "audio/webm"
+      )
+    ){
+
+      options.mimeType =
+        "audio/webm";
+
+    }
+
+
+    mediaRecorder =
+      new MediaRecorder(
+        stream,
+        options
+      );
+
+
+    mediaRecorder.ondataavailable =
+      event => {
+
+        if(
+          event.data &&
+          event.data.size > 0
+        ){
+
+          audioChunks.push(
+            event.data
+          );
+
+        }
+
+      };
+
+
+    mediaRecorder.onstop =
+      async () => {
+
+        stream
+          .getTracks()
+          .forEach(
+            track =>
+              track.stop()
+          );
+
+
+        const mimeType =
+          mediaRecorder.mimeType ||
+          "audio/webm";
+
+
+        const audioBlob =
+          new Blob(
+            audioChunks,
+            {
+              type:mimeType
+            }
+          );
+
+
+        if(
+          audioBlob.size === 0
+        ){
+
+          alert(
+            "Voice recording empty hai."
+          );
+
+          return;
+
+        }
+
+
+        await uploadVoice(
+          audioBlob,
+          mimeType
+        );
+
+      };
+
+
+    mediaRecorder.start();
+
+    isRecording = true;
+
+
+    const btn =
+      document.getElementById(
+        "voiceBtn"
+      );
+
+
+    btn.classList.add(
+      "recording"
+    );
+
+
+    btn.textContent =
+      "⏹️";
+
+
+    document.getElementById(
+      "recordStatus"
+    ).style.display =
+      "block";
+
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+    alert(
+      "Microphone permission allow karein."
+    );
+
+  }
+
+}
+
+
+/* =========================
+   STOP RECORDING
+========================= */
+
+function stopRecording(){
+
+  if(
+    mediaRecorder &&
+    isRecording
+  ){
+
+    isRecording = false;
+
+
+    mediaRecorder.stop();
+
+
+    const btn =
+      document.getElementById(
+        "voiceBtn"
+      );
+
+
+    btn.classList.remove(
+      "recording"
+    );
+
+
+    btn.textContent =
+      "🎤";
+
+
+    document.getElementById(
+      "recordStatus"
+    ).style.display =
+      "none";
+
+  }
+
+}
+
+
+/* =========================
+   UPLOAD VOICE
+========================= */
+
+async function uploadVoice(
+  audioBlob,
+  mimeType
+){
+
+  if(!currentUser){
+    return;
+  }
+
+
+  document.getElementById(
+    "status"
+  ).textContent =
+    "Uploading voice...";
+
+
+  let extension =
+    "webm";
+
+
+  if(
+    mimeType.includes(
+      "mp4"
+    )
+  ){
+
+    extension =
+      "mp4";
+
+  }
+
+  else if(
+    mimeType.includes(
+      "ogg"
+    )
+  ){
+
+    extension =
+      "ogg";
+
+  }
+
+
+  const filePath =
+    currentUser.id +
+    "/" +
+    Date.now() +
+    "_voice." +
+    extension;
+
+
+  const {
+    error:uploadError
+  } =
+  await supabaseClient
+    .storage
+    .from("chat-voice")
+    .upload(
+      filePath,
+      audioBlob,
+      {
+        contentType:
+          mimeType,
+        upsert:false
+      }
+    );
+
+
+  if(uploadError){
+
+    alert(
+      "Voice upload failed: " +
+      uploadError.message
+    );
+
+    document.getElementById(
+      "status"
+    ).textContent = "";
+
+    return;
+
+  }
+
+
+  const {
+    data:urlData
+  } =
+  supabaseClient
+    .storage
+    .from("chat-voice")
+    .getPublicUrl(
+      filePath
+    );
+
+
+  const voiceUrl =
+    urlData.publicUrl;
+
+
+  const {
+    error:messageError
+  } =
+  await supabaseClient
+    .from("messages")
+    .insert({
+
+      user_id:
+        currentUser.id,
+
+      username:
+        getUsername(),
+
+      message:
+        "🎤 Voice message",
+
+      message_type:
+        "voice",
+
+      media_url:
+        voiceUrl
+
+    });
+
+
+  if(messageError){
+
+    alert(
+      "Voice message save failed: " +
+      messageError.message
+    );
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    "status"
+  ).textContent = "";
+
+
+  await loadMessages();
+
+}
+
+
+/* =========================
+   CHAT SCROLL
+========================= */
+
+function scrollChatToBottom(){
+
+  const box =
+    document.getElementById(
+      "messages"
+    );
+
+  if(box){
+
+    box.scrollTop =
+      box.scrollHeight;
+
+  }
+
+}
+
+
+function scrollToChat(){
+
+  const title =
+    document.getElementById(
+      "publicChatTitle"
+    );
+
+  if(title){
+
+    title.scrollIntoView({
+      behavior:"smooth"
+    });
+
+  }
+
+}
+
+
+/* =========================
+   USERNAME
+========================= */
+
+function getUsername(){
+
+  if(!currentUser){
+
+    return "User";
+
+  }
+
+
+  return (
+    currentUser.user_metadata?.username ||
+    currentUser.email?.split("@")[0] ||
+    "User"
+  );
+
+}
+
+
+/* =========================
+   CLEAN FILE NAME
+========================= */
+
+function cleanFileName(
+  name
+){
+
+  return String(name)
+    .replace(
+      /[^a-zA-Z0-9._-]/g,
+      "_"
+    );
 
 }
 
@@ -2045,7 +3028,7 @@ function escapeHtml(
   value
 ){
 
-  return String(value)
+  return String(value ?? "")
     .replaceAll(
       "&",
       "&amp;"
@@ -2074,14 +3057,22 @@ function escapeAttribute(
   value
 ){
 
-  return String(value)
+  return String(value ?? "")
     .replaceAll(
-      "\\",
-      "\\\\"
+      "&",
+      "&amp;"
     )
     .replaceAll(
-      "'",
-      "\\'"
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
     );
 
 }
