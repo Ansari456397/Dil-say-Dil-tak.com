@@ -183,12 +183,6 @@ header{
   margin:12px;
 }
 
-.section-title{
-  font-size:18px;
-  font-weight:bold;
-  margin:18px 0 10px;
-}
-
 .post{
   background:white;
   border-radius:18px;
@@ -238,10 +232,12 @@ header{
   gap:5px;
   border-top:1px solid #eee;
   padding-top:10px;
+  flex-wrap:wrap;
 }
 
 .post-action{
   flex:1;
+  min-width:70px;
   border:0;
   background:#f5f6f8;
   border-radius:10px;
@@ -459,19 +455,23 @@ header{
 
   <div class="actions">
 
-    <button class="action" onclick="showAction('🤗 Jhappi')">
+    <button class="action"
+      onclick="showAction('🤗 Jhappi')">
       🤗<br>Jhappi
     </button>
 
-    <button class="action" onclick="showAction('👋 Chupair')">
+    <button class="action"
+      onclick="showAction('👋 Chupair')">
       👋<br>Chupair
     </button>
 
-    <button class="action" onclick="showAction('❤️ Love')">
+    <button class="action"
+      onclick="showAction('❤️ Love')">
       ❤️<br>Love
     </button>
 
-    <button class="action" onclick="showAction('😂 Haha')">
+    <button class="action"
+      onclick="showAction('😂 Haha')">
       😂<br>Haha
     </button>
 
@@ -513,9 +513,6 @@ header{
 <!-- POSTS -->
 
 <div class="posts">
-
-  
-  </div>
 
   <div id="postsList">
 
@@ -583,12 +580,13 @@ const SUPABASE_URL =
 "https://szmauhxiyjffjhrcruee.supabase.co";
 
 /*
-  YAHAN APNI EXISTING WORKING
-  SUPABASE PUBLISHABLE KEY PASTE KAREIN
+  IMPORTANT:
+  Apni existing working Supabase Publishable Key
+  yahan paste karein.
 */
 
 const SUPABASE_KEY =
-"sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
+"YOUR_EXISTING_SUPABASE_PUBLISHABLE_KEY";
 
 const supabaseClient =
 window.supabase.createClient(
@@ -645,7 +643,6 @@ async function createPost(){
     input.value.trim();
 
   if(!content || !currentUser){
-
     return;
   }
 
@@ -687,21 +684,60 @@ async function loadPosts(){
   const box =
     document.getElementById("postsList");
 
-  const {data,error} =
-    await supabaseClient
-    .from("posts")
-    .select("*")
-    .order("created_at",{ascending:false});
+  /* GET BLOCKED USERS */
 
-  if(error){
+  const {data:blockedRows,error:blockError} =
+    await supabaseClient
+    .from("user_blocks")
+    .select("blocked_id");
+
+  if(blockError){
 
     box.innerHTML =
-      `<div class="empty">${escapeHtml(error.message)}</div>`;
+      `<div class="empty">
+        ${escapeHtml(blockError.message)}
+      </div>`;
 
     return;
   }
 
-  if(!data || data.length===0){
+  const blockedIds =
+    new Set(
+      (blockedRows || [])
+      .map(row => row.blocked_id)
+    );
+
+
+  /* GET POSTS */
+
+  const {data,error} =
+    await supabaseClient
+    .from("posts")
+    .select("*")
+    .order("created_at",{
+      ascending:false
+    });
+
+  if(error){
+
+    box.innerHTML =
+      `<div class="empty">
+        ${escapeHtml(error.message)}
+      </div>`;
+
+    return;
+  }
+
+
+  /* HIDE BLOCKED USERS */
+
+  const visiblePosts =
+    (data || []).filter(
+      post => !blockedIds.has(post.user_id)
+    );
+
+
+  if(visiblePosts.length===0){
 
     box.innerHTML =
       `<div class="empty">
@@ -711,52 +747,69 @@ async function loadPosts(){
     return;
   }
 
+
   box.innerHTML="";
 
-  for(const post of data){
+
+  for(const post of visiblePosts){
 
     const article =
       document.createElement("div");
 
     article.className="post";
 
+
     const username =
       post.username || "User";
-const postOptions = isMine
-  ? `
-    <button
-      class="post-action delete-btn"
-      onclick="deletePost(${post.id})"
-    >
-      🗑️ Delete
-    </button>
-  `
-  : `
-    <button
-      class="post-action block-btn"
-      onclick="blockUser('${post.user_id}')"
-    >
-      🚫 Block
-    </button>
-  `;
+
+
     const isMine =
       post.user_id === currentUser.id;
+
+
+    /* DELETE / BLOCK BUTTON */
+
+    const postOptions = isMine
+
+      ? `
+        <button
+          class="post-action"
+          onclick="deletePost(${post.id})"
+        >
+          🗑️ Delete
+        </button>
+      `
+
+      : `
+        <button
+          class="post-action"
+          onclick="blockUser('${post.user_id}')"
+        >
+          🚫 Block
+        </button>
+      `;
+
 
     const time =
       new Date(post.created_at)
       .toLocaleString([],{
+
         day:"2-digit",
         month:"short",
         hour:"2-digit",
         minute:"2-digit"
+
       });
+
 
     article.innerHTML = `
 
       <div class="post-head">
 
         <div class="post-avatar">
-          ${escapeHtml(username.charAt(0).toUpperCase())}
+          ${escapeHtml(
+            username.charAt(0).toUpperCase()
+          )}
         </div>
 
         <div>
@@ -773,9 +826,11 @@ const postOptions = isMine
 
       </div>
 
+
       <div class="post-content">
         ${escapeHtml(post.content)}
       </div>
+
 
       <div
         class="post-actions"
@@ -784,34 +839,161 @@ const postOptions = isMine
 
         <button
           class="post-action"
-          onclick="togglePostAction(${post.id},'jhappi')"
+          onclick="
+            togglePostAction(
+              ${post.id},
+              'jhappi'
+            )
+          "
         >
-          🤗 Jhappi <span id="jhappi-${post.id}">0</span>
+          🤗 Jhappi
+          <span id="jhappi-${post.id}">
+            0
+          </span>
         </button>
+
 
         <button
           class="post-action"
-          onclick="togglePostAction(${post.id},'chupair')"
+          onclick="
+            togglePostAction(
+              ${post.id},
+              'chupair'
+            )
+          "
         >
-          👋 Chupair <span id="chupair-${post.id}">0</span>
+          👋 Chupair
+          <span id="chupair-${post.id}">
+            0
+          </span>
         </button>
+
 
         <button
           class="post-action"
-          onclick="replyToPost('${escapeAttribute(username)}')"
+          onclick="
+            replyToPost(
+              '${escapeAttribute(username)}'
+            )
+          "
         >
           ↩️ Reply
         </button>
 
+
+        ${postOptions}
+
       </div>
 
     `;
+
 
     box.appendChild(article);
 
     loadPostActions(post.id);
 
   }
+
+}
+
+
+/* DELETE POST */
+
+async function deletePost(postId){
+
+  if(!currentUser){
+    return;
+  }
+
+
+  const confirmDelete =
+    confirm("Delete this post?");
+
+
+  if(!confirmDelete){
+    return;
+  }
+
+
+  const {error} =
+    await supabaseClient
+    .from("posts")
+    .delete()
+    .eq("id",postId)
+    .eq("user_id",currentUser.id);
+
+
+  if(error){
+
+    alert(error.message);
+
+    return;
+  }
+
+
+  loadPosts();
+
+}
+
+
+/* BLOCK USER */
+
+async function blockUser(userId){
+
+  if(
+    !currentUser ||
+    userId === currentUser.id
+  ){
+
+    return;
+  }
+
+
+  const confirmBlock =
+    confirm("Block this user?");
+
+
+  if(!confirmBlock){
+    return;
+  }
+
+
+  const {error} =
+    await supabaseClient
+    .from("user_blocks")
+    .insert({
+
+      blocker_id:currentUser.id,
+
+      blocked_id:userId
+
+    });
+
+
+  if(error){
+
+    if(error.code === "23505"){
+
+      alert(
+        "This user is already blocked."
+      );
+
+    }else{
+
+      alert(error.message);
+
+    }
+
+    return;
+  }
+
+
+  alert(
+    "User blocked successfully."
+  );
+
+
+  loadPosts();
 
 }
 
@@ -823,38 +1005,61 @@ async function loadPostActions(postId){
   const {data,error} =
     await supabaseClient
     .from("post_actions")
-    .select("user_id,action_type")
+    .select(
+      "user_id,action_type"
+    )
     .eq("post_id",postId);
 
-  if(error){
 
+  if(error){
     return;
   }
 
+
   let jhappiCount=0;
+
   let chupairCount=0;
 
   let myJhappi=false;
+
   let myChupair=false;
+
 
   data.forEach(action=>{
 
-    if(action.action_type==="jhappi"){
+    if(
+      action.action_type ===
+      "jhappi"
+    ){
 
       jhappiCount++;
 
-      if(action.user_id===currentUser.id){
+      if(
+        action.user_id ===
+        currentUser.id
+      ){
+
         myJhappi=true;
+
       }
 
     }
 
-    if(action.action_type==="chupair"){
+
+    if(
+      action.action_type ===
+      "chupair"
+    ){
 
       chupairCount++;
 
-      if(action.user_id===currentUser.id){
+      if(
+        action.user_id ===
+        currentUser.id
+      ){
+
         myChupair=true;
+
       }
 
     }
@@ -867,17 +1072,26 @@ async function loadPostActions(postId){
       "jhappi-"+postId
     );
 
+
   const chupair =
     document.getElementById(
       "chupair-"+postId
     );
 
+
   if(jhappi){
-    jhappi.textContent=jhappiCount;
+
+    jhappi.textContent =
+      jhappiCount;
+
   }
 
+
   if(chupair){
-    chupair.textContent=chupairCount;
+
+    chupair.textContent =
+      chupairCount;
+
   }
 
 
@@ -886,14 +1100,24 @@ async function loadPostActions(postId){
       `#actions-${postId} .post-action`
     );
 
-  if(buttons.length>=2){
+
+  if(buttons.length >= 2){
 
     if(myJhappi){
-      buttons[0].classList.add("active");
+
+      buttons[0]
+        .classList
+        .add("active");
+
     }
 
+
     if(myChupair){
-      buttons[1].classList.add("active");
+
+      buttons[1]
+        .classList
+        .add("active");
+
     }
 
   }
@@ -917,9 +1141,18 @@ async function togglePostAction(
     await supabaseClient
     .from("post_actions")
     .select("id")
-    .eq("post_id",postId)
-    .eq("user_id",currentUser.id)
-    .eq("action_type",actionType)
+    .eq(
+      "post_id",
+      postId
+    )
+    .eq(
+      "user_id",
+      currentUser.id
+    )
+    .eq(
+      "action_type",
+      actionType
+    )
     .maybeSingle();
 
 
@@ -953,14 +1186,18 @@ async function togglePostAction(
 
       });
 
+
     if(insertError){
 
-      alert(insertError.message);
+      alert(
+        insertError.message
+      );
 
       return;
     }
 
   }
+
 
   loadPosts();
 
@@ -972,16 +1209,24 @@ async function togglePostAction(
 function replyToPost(username){
 
   const input =
-    document.getElementById("postInput");
+    document.getElementById(
+      "postInput"
+    );
+
 
   input.value =
     "@"+username+" ";
 
+
   input.focus();
 
+
   window.scrollTo({
+
     top:0,
+
     behavior:"smooth"
+
   });
 
 }
@@ -996,84 +1241,141 @@ async function loadMessages(){
     .from("messages")
     .select("*")
     .order("created_at",{
+
       ascending:true
+
     });
+
 
   if(error){
 
-    document.getElementById("status")
-      .textContent=error.message;
+    document.getElementById(
+      "status"
+    ).textContent =
+      error.message;
 
     return;
   }
 
+
   const box =
-    document.getElementById("messages");
+    document.getElementById(
+      "messages"
+    );
+
 
   box.innerHTML="";
+
 
   data.forEach(msg=>{
 
     const row =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
+
 
     const mine =
-      msg.user_id === currentUser.id;
+      msg.user_id ===
+      currentUser.id;
+
 
     row.className =
       "message-row "+
-      (mine ? "mine":"other");
+      (
+        mine
+          ? "mine"
+          : "other"
+      );
 
 
     const bubble =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
-    bubble.className="message";
+
+    bubble.className =
+      "message";
 
 
     const username =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
-    username.className="username";
+
+    username.className =
+      "username";
+
 
     username.textContent =
-      msg.username || "User";
+      msg.username ||
+      "User";
 
 
     const text =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
-    text.className="text";
 
-    text.textContent=msg.message;
+    text.className =
+      "text";
+
+
+    text.textContent =
+      msg.message;
 
 
     const time =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
-    time.className="time";
+
+    time.className =
+      "time";
+
 
     time.textContent =
-      new Date(msg.created_at)
-      .toLocaleTimeString([],{
-        hour:"2-digit",
-        minute:"2-digit"
-      });
+      new Date(
+        msg.created_at
+      ).toLocaleTimeString(
+        [],
+        {
+          hour:"2-digit",
+          minute:"2-digit"
+        }
+      );
 
 
     const reply =
-      document.createElement("button");
+      document.createElement(
+        "button"
+      );
 
-    reply.className="reply";
 
-    reply.textContent="↩️ Reply";
+    reply.className =
+      "reply";
+
+
+    reply.textContent =
+      "↩️ Reply";
+
 
     reply.onclick=function(){
 
       document.getElementById(
         "postInput"
       ).value =
-        "@"+(msg.username || "User")+" ";
+        "@"+
+        (
+          msg.username ||
+          "User"
+        )+
+        " ";
+
 
       document.getElementById(
         "postInput"
@@ -1082,19 +1384,32 @@ async function loadMessages(){
     };
 
 
-    bubble.appendChild(username);
+    bubble.appendChild(
+      username
+    );
 
-    bubble.appendChild(text);
+    bubble.appendChild(
+      text
+    );
 
-    bubble.appendChild(time);
+    bubble.appendChild(
+      time
+    );
 
-    bubble.appendChild(reply);
+    bubble.appendChild(
+      reply
+    );
 
-    row.appendChild(bubble);
+    row.appendChild(
+      bubble
+    );
 
-    box.appendChild(row);
+    box.appendChild(
+      row
+    );
 
   });
+
 
   box.scrollTop =
     box.scrollHeight;
@@ -1107,7 +1422,10 @@ async function loadMessages(){
 async function sendMessage(){
 
   const input =
-    document.getElementById("messageInput");
+    document.getElementById(
+      "messageInput"
+    );
+
 
   if(!input){
     return;
@@ -1125,14 +1443,19 @@ function showAction(text){
       "actionNote"
     );
 
+
   box.textContent =
     text+" selected";
 
-  box.style.display="block";
+
+  box.style.display =
+    "block";
+
 
   setTimeout(function(){
 
-    box.style.display="none";
+    box.style.display =
+      "none";
 
   },1500);
 
@@ -1144,9 +1467,14 @@ function showAction(text){
 function escapeHtml(text){
 
   const div =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
-  div.textContent=text;
+
+  div.textContent =
+    text;
+
 
   return div.innerHTML;
 
@@ -1155,7 +1483,7 @@ function escapeHtml(text){
 
 function escapeAttribute(text){
 
-  return text
+  return String(text)
     .replace(/\\/g,"\\\\")
     .replace(/'/g,"\\'")
     .replace(/"/g,"&quot;");
@@ -1163,10 +1491,11 @@ function escapeAttribute(text){
 }
 
 
-/* BUTTON */
+/* POST BUTTON */
 
-document.getElementById("postBtn")
-.addEventListener(
+document.getElementById(
+  "postBtn"
+).addEventListener(
   "click",
   createPost
 );
@@ -1174,12 +1503,13 @@ document.getElementById("postBtn")
 
 /* ENTER */
 
-document.getElementById("postInput")
-.addEventListener(
+document.getElementById(
+  "postInput"
+).addEventListener(
   "keydown",
   function(e){
 
-    if(e.key==="Enter"){
+    if(e.key === "Enter"){
 
       createPost();
 
