@@ -1,10 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Socialyte</title>
 
@@ -150,10 +150,6 @@ body{
   padding:10px 5px;
   font-size:13px;
   box-shadow:0 2px 8px rgba(0,0,0,.06);
-}
-
-.action:first-line{
-  font-size:20px;
 }
 
 .menu{
@@ -334,6 +330,7 @@ body{
   </div>
 
   <div class="header-buttons">
+
     <button onclick="showNotice('Notifications coming soon 🔔')">
       🔔
     </button>
@@ -341,6 +338,7 @@ body{
     <button onclick="showNotice('Settings coming soon ⚙️')">
       ⚙️
     </button>
+
   </div>
 
 </header>
@@ -355,6 +353,7 @@ body{
     </div>
 
     <div>
+
       <div class="profile-name" id="profileName">
         Loading...
       </div>
@@ -362,6 +361,7 @@ body{
       <div class="status">
         🟢 Online
       </div>
+
     </div>
 
   </div>
@@ -539,14 +539,13 @@ const SUPABASE_URL =
 "https://szmauhxiyjffjhrcruee.supabase.co";
 
 const SUPABASE_KEY =
-"sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
+"YOUR_SUPABASE_PUBLISHABLE_KEY";
 
 const supabaseClient =
 window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
-
 
 let currentUser = null;
 
@@ -606,9 +605,7 @@ async function checkUser(){
     document.getElementById(
       "avatar"
     ).textContent =
-      username
-        .charAt(0)
-        .toUpperCase();
+      username.charAt(0).toUpperCase();
 
     await loadPosts();
 
@@ -640,8 +637,8 @@ async function createPost(){
   if(!currentUser){
 
     alert("Please login first.");
-
     return;
+
   }
 
   const input =
@@ -655,8 +652,8 @@ async function createPost(){
   if(!content){
 
     alert("Please write something.");
-
     return;
+
   }
 
   const username =
@@ -671,22 +668,19 @@ async function createPost(){
     .from("posts")
     .insert({
 
-      user_id:
-        currentUser.id,
+      user_id:currentUser.id,
 
-      username:
-        username,
+      username:username,
 
-      content:
-        content
+      content:content
 
     });
 
   if(error){
 
     alert(error.message);
-
     return;
+
   }
 
   input.value = "";
@@ -709,8 +703,6 @@ async function loadPosts(){
 
   try{
 
-    /* BLOCKED USERS */
-
     const {
       data:blockedRows,
       error:blockError
@@ -732,13 +724,10 @@ async function loadPosts(){
       new Set(
         (blockedRows || [])
           .map(
-            row =>
-              row.blocked_id
+            row => row.blocked_id
           )
       );
 
-
-    /* POSTS */
 
     const {
       data,
@@ -762,6 +751,7 @@ async function loadPosts(){
         </div>`;
 
       return;
+
     }
 
 
@@ -785,6 +775,7 @@ async function loadPosts(){
         </div>`;
 
       return;
+
     }
 
 
@@ -1039,6 +1030,7 @@ async function blockUser(
   ){
 
     return;
+
   }
 
   const confirmBlock =
@@ -1100,7 +1092,7 @@ async function blockUser(
 
 
 /* =========================
-   POST ACTION COUNTS
+   LOAD ACTION COUNTS
 ========================= */
 
 async function loadPostActions(
@@ -1128,11 +1120,9 @@ async function loadPostActions(
 
 
   let jhappiCount = 0;
-
   let chupairCount = 0;
 
   let myJhappi = false;
-
   let myChupair = false;
 
 
@@ -1182,15 +1172,12 @@ async function loadPostActions(
 
   const jhappi =
     document.getElementById(
-      "jhappi-" +
-      postId
+      "jhappi-" + postId
     );
-
 
   const chupair =
     document.getElementById(
-      "chupair-" +
-      postId
+      "chupair-" + postId
     );
 
 
@@ -1226,7 +1213,6 @@ async function loadPostActions(
 
     }
 
-
     if(myChupair){
 
       buttons[1]
@@ -1250,7 +1236,13 @@ async function togglePostAction(
 ){
 
   if(!currentUser){
+
+    alert(
+      "Please login first."
+    );
+
     return;
+
   }
 
 
@@ -1283,8 +1275,11 @@ async function togglePostAction(
     );
 
     return;
+
   }
 
+
+  /* REMOVE */
 
   if(data){
 
@@ -1307,9 +1302,15 @@ async function togglePostAction(
       );
 
       return;
+
     }
 
-  }else{
+  }
+
+
+  /* ADD */
+
+  else{
 
     const {
       error:insertError
@@ -1337,12 +1338,159 @@ async function togglePostAction(
       );
 
       return;
+
     }
 
   }
 
 
-  await loadPosts();
+  /* TURANT COUNT UPDATE */
+
+  await updateActionCount(
+    postId,
+    actionType
+  );
+
+}
+
+
+/* =========================
+   UPDATE ACTION COUNT
+========================= */
+
+async function updateActionCount(
+  postId,
+  actionType
+){
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .from("post_actions")
+    .select("id")
+    .eq(
+      "post_id",
+      postId
+    )
+    .eq(
+      "action_type",
+      actionType
+    );
+
+
+  if(error){
+
+    console.error(
+      error
+    );
+
+    return;
+
+  }
+
+
+  const count =
+    (data || []).length;
+
+
+  const counter =
+    document.getElementById(
+      actionType +
+      "-" +
+      postId
+    );
+
+
+  if(counter){
+
+    counter.textContent =
+      count;
+
+  }
+
+
+  /* BUTTON ACTIVE STATE */
+
+  const buttons =
+    document.querySelectorAll(
+      `#actions-${postId} .post-action`
+    );
+
+
+  if(
+    actionType ===
+    "jhappi" &&
+    buttons[0]
+  ){
+
+    const {
+      data:mine
+    } =
+    await supabaseClient
+      .from("post_actions")
+      .select("id")
+      .eq(
+        "post_id",
+        postId
+      )
+      .eq(
+        "user_id",
+        currentUser.id
+      )
+      .eq(
+        "action_type",
+        "jhappi"
+      )
+      .maybeSingle();
+
+
+    buttons[0]
+      .classList
+      .toggle(
+        "active",
+        !!mine
+      );
+
+  }
+
+
+  if(
+    actionType ===
+    "chupair" &&
+    buttons[1]
+  ){
+
+    const {
+      data:mine
+    } =
+    await supabaseClient
+      .from("post_actions")
+      .select("id")
+      .eq(
+        "post_id",
+        postId
+      )
+      .eq(
+        "user_id",
+        currentUser.id
+      )
+      .eq(
+        "action_type",
+        "chupair"
+      )
+      .maybeSingle();
+
+
+    buttons[1]
+      .classList
+      .toggle(
+        "active",
+        !!mine
+      );
+
+  }
 
 }
 
@@ -1404,6 +1552,7 @@ async function loadMessages(){
       error.message;
 
     return;
+
   }
 
 
@@ -1481,13 +1630,15 @@ function showNotice(
   message
 ){
 
-  alert(message);
+  alert(
+    message
+  );
 
 }
 
 
 /* =========================
-   SECURITY HELPERS
+   SECURITY
 ========================= */
 
 function escapeHtml(
@@ -1495,11 +1646,26 @@ function escapeHtml(
 ){
 
   return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 
 }
 
@@ -1509,14 +1675,20 @@ function escapeAttribute(
 ){
 
   return String(value)
-    .replaceAll("\\","\\\\")
-    .replaceAll("'","\\'");
+    .replaceAll(
+      "\\",
+      "\\\\"
+    )
+    .replaceAll(
+      "'",
+      "\\'"
+    );
 
 }
 
 
 /* =========================
-   START WEBSITE
+   START
 ========================= */
 
 checkUser();
