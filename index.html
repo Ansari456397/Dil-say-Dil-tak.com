@@ -4,7 +4,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Socialyte</title>
 
 <style>
@@ -27,7 +26,7 @@ body{
   width:100%;
   height:60px;
   z-index:1000;
-  background:#fff;
+  background:white;
   border-bottom:1px solid #ddd;
   display:flex;
   align-items:center;
@@ -40,7 +39,7 @@ body{
   color:#4f46e5;
 }
 
-/* FIXED MESSAGE BOX */
+/* TOP MESSAGE AREA */
 .message-area{
   position:fixed;
   top:60px;
@@ -48,76 +47,112 @@ body{
   width:100%;
   z-index:999;
   background:#f4f6fb;
-  padding:10px;
+  padding:8px;
   border-bottom:1px solid #ddd;
 }
 
+/* MESSAGE BOX */
 .message-box{
   max-width:650px;
   margin:auto;
-  background:#fff;
+  background:white;
   border-radius:14px;
   padding:10px;
-  box-shadow:0 2px 10px rgba(0,0,0,.10);
+  box-shadow:0 3px 12px rgba(0,0,0,.12);
 }
 
-.message-input{
-  width:100%;
-  height:60px;
-  resize:none;
-  border:1px solid #ddd;
-  border-radius:10px;
-  padding:11px;
+/* TITLE */
+.message-title{
   font-size:15px;
+  font-weight:bold;
+  margin-bottom:8px;
+  color:#4f46e5;
+}
+
+/* INPUT ROW */
+.message-row{
+  display:flex;
+  gap:7px;
+  align-items:center;
+}
+
+/* MESSAGE INPUT */
+.message-input{
+  flex:1;
+  height:44px;
+  border:1px solid #ddd;
+  border-radius:22px;
+  padding:0 15px;
+  font-size:14px;
   outline:none;
+  background:#f8f9fc;
 }
 
 .message-input:focus{
   border-color:#4f46e5;
+  background:white;
 }
 
-/* BUTTONS */
-.message-actions{
+/* SEND */
+.send-btn{
+  width:44px;
+  height:44px;
+  border:0;
+  border-radius:50%;
+  background:#4f46e5;
+  color:white;
+  font-size:20px;
+  cursor:pointer;
+}
+
+/* OPTIONS */
+.message-options{
   display:flex;
-  align-items:center;
-  justify-content:space-between;
+  gap:8px;
   margin-top:8px;
 }
 
-.action-buttons{
-  display:flex;
-  gap:7px;
-}
-
-.action-btn{
+.option-btn{
+  flex:1;
   border:1px solid #ddd;
-  background:#f8f8f8;
+  background:#f8f9fc;
   border-radius:9px;
-  padding:7px 10px;
+  padding:8px 5px;
+  font-size:12px;
   cursor:pointer;
 }
 
-.post-btn{
-  border:0;
-  background:#4f46e5;
-  color:#fff;
-  padding:8px 17px;
-  border-radius:9px;
-  cursor:pointer;
-  font-weight:bold;
+.option-btn:active{
+  transform:scale(.97);
 }
 
-/* POSTS AREA */
+/* RECORDING */
+.record-status{
+  display:none;
+  text-align:center;
+  color:#e53935;
+  font-size:12px;
+  margin-top:6px;
+}
+
+/* IMAGE PREVIEW */
+#imagePreview img{
+  width:100%;
+  max-height:150px;
+  object-fit:cover;
+  border-radius:10px;
+  margin-top:8px;
+}
+
+/* POSTS */
 .container{
   max-width:650px;
   margin:auto;
-
-  /* header + fixed message box ke liye space */
-  padding:185px 10px 20px;
+  padding:185px 10px 25px;
 }
 
 .post{
-  background:#fff;
+  background:white;
   border-radius:14px;
   padding:15px;
   margin-bottom:12px;
@@ -127,6 +162,7 @@ body{
 .post-user{
   font-weight:bold;
   margin-bottom:8px;
+  color:#4f46e5;
 }
 
 .post-text{
@@ -142,41 +178,28 @@ body{
   margin-top:10px;
 }
 
-/* IMAGE PREVIEW */
-#imagePreview img{
-  width:100%;
-  max-height:180px;
-  object-fit:cover;
-  border-radius:10px;
-  margin-top:8px;
-}
-
 /* MOBILE */
 @media(max-width:500px){
 
-  .message-area{
-    padding:7px;
-  }
-
   .message-box{
-    border-radius:11px;
+    border-radius:12px;
   }
 
-  .message-input{
-    height:55px;
+  .message-title{
+    font-size:14px;
+  }
+
+  .message-options{
+    gap:5px;
+  }
+
+  .option-btn{
+    font-size:11px;
+    padding:8px 3px;
   }
 
   .container{
-    padding-top:175px;
-  }
-
-  .action-btn{
-    font-size:12px;
-    padding:7px 8px;
-  }
-
-  .post-btn{
-    padding:8px 14px;
+    padding-top:180px;
   }
 }
 </style>
@@ -190,47 +213,67 @@ body{
 </div>
 
 
-<!-- FIXED MESSAGE BOX -->
+<!-- =========================
+     MESSAGE BOX - SAB SE UPAR
+========================= -->
+
 <div class="message-area">
 
   <div class="message-box">
 
-    <textarea
-      id="messageInput"
-      class="message-input"
-      placeholder="What's on your mind?"
-    ></textarea>
+    <div class="message-title">
+      💬 Message
+    </div>
 
-    <div class="message-actions">
+    <div class="message-row">
 
-      <div class="action-buttons">
+      <input
+        type="text"
+        id="messageInput"
+        class="message-input"
+        placeholder="Write a message..."
+        onkeydown="handleEnter(event)"
+      >
 
-        <button
-          class="action-btn"
-          onclick="document.getElementById('imageInput').click()">
-          🖼️ Image
-        </button>
-
-        <button
-          class="action-btn"
-          onclick="startVoice()">
-          🎤 Voice
-        </button>
-
-      </div>
-
-      <button class="post-btn" onclick="addPost()">
-        Post
+      <button
+        class="send-btn"
+        onclick="sendMessage()">
+        ➤
       </button>
 
     </div>
+
+
+    <div class="message-options">
+
+      <!-- IMAGE -->
+      <button
+        class="option-btn"
+        onclick="document.getElementById('imageInput').click()">
+        🖼️ Upload Image
+      </button>
+
+      <!-- VOICE -->
+      <button
+        class="option-btn"
+        onclick="toggleVoice()">
+        🎤 Voice
+      </button>
+
+    </div>
+
+
+    <div id="recordStatus" class="record-status">
+      🔴 Recording... Tap Voice again to stop
+    </div>
+
 
     <input
       type="file"
       id="imageInput"
       accept="image/*"
       style="display:none"
-      onchange="previewImage(event)"
+      onchange="sendImage(event)"
     >
 
     <div id="imagePreview"></div>
@@ -240,17 +283,24 @@ body{
 </div>
 
 
-<!-- POSTS -->
+<!-- =========================
+     POSTS
+========================= -->
+
 <div class="container">
 
   <div id="posts">
 
     <div class="post">
-      <div class="post-user">Socialyte</div>
+
+      <div class="post-user">
+        Socialyte
+      </div>
 
       <div class="post-text">
         Welcome to Socialyte 💙
       </div>
+
     </div>
 
   </div>
@@ -260,110 +310,213 @@ body{
 
 <script>
 
-let selectedImage = "";
+/* =========================
+   MESSAGE
+========================= */
 
+function sendMessage(){
 
-/* IMAGE */
-function previewImage(event){
+  const input =
+    document.getElementById("messageInput");
 
-  const file = event.target.files[0];
+  const text =
+    input.value.trim();
 
-  if(!file) return;
-
-  const reader = new FileReader();
-
-  reader.onload = function(e){
-
-    selectedImage = e.target.result;
-
-    document.getElementById("imagePreview").innerHTML =
-      `<img src="${selectedImage}">`;
-
-  };
-
-  reader.readAsDataURL(file);
-}
-
-
-/* ADD POST */
-function addPost(){
-
-  const input = document.getElementById("messageInput");
-
-  const text = input.value.trim();
-
-  if(!text && !selectedImage){
-
-    alert("Message ya image add karein.");
-
+  if(!text){
     return;
   }
 
-  const post = document.createElement("div");
+  const post =
+    document.createElement("div");
 
   post.className = "post";
 
   post.innerHTML = `
-    <div class="post-user">You</div>
+    <div class="post-user">
+      You
+    </div>
 
-    ${
-      text
-      ? `<div class="post-text">${escapeHTML(text)}</div>`
-      : ""
-    }
-
-    ${
-      selectedImage
-      ? `<img class="post-image" src="${selectedImage}">`
-      : ""
-    }
+    <div class="post-text">
+      ${escapeHTML(text)}
+    </div>
   `;
 
-  document.getElementById("posts").prepend(post);
+  document
+    .getElementById("posts")
+    .prepend(post);
 
   input.value = "";
-
-  selectedImage = "";
-
-  document.getElementById("imagePreview").innerHTML = "";
-
-  document.getElementById("imageInput").value = "";
 }
 
 
-/* SECURITY */
-function escapeHTML(text){
+/* ENTER SEND */
 
-  const div = document.createElement("div");
+function handleEnter(event){
 
-  div.textContent = text;
+  if(event.key === "Enter"){
 
-  return div.innerHTML;
+    event.preventDefault();
+
+    sendMessage();
+
+  }
+
 }
 
 
-/* VOICE */
-function startVoice(){
+/* =========================
+   IMAGE
+========================= */
+
+function sendImage(event){
+
+  const file =
+    event.target.files[0];
+
+  if(!file){
+    return;
+  }
+
+  const reader =
+    new FileReader();
+
+  reader.onload =
+    function(e){
+
+      const image =
+        e.target.result;
+
+      const post =
+        document.createElement("div");
+
+      post.className = "post";
+
+      post.innerHTML = `
+        <div class="post-user">
+          You
+        </div>
+
+        <img
+          class="post-image"
+          src="${image}">
+      `;
+
+      document
+        .getElementById("posts")
+        .prepend(post);
+
+      document
+        .getElementById("imagePreview")
+        .innerHTML = "";
+
+      document
+        .getElementById("imageInput")
+        .value = "";
+
+    };
+
+  reader.readAsDataURL(file);
+
+}
+
+
+/* =========================
+   VOICE
+========================= */
+
+let recognition = null;
+let isRecording = false;
+
+function toggleVoice(){
 
   if(!("webkitSpeechRecognition" in window)){
 
-    alert("Voice typing is not supported on this browser.");
+    alert(
+      "Voice typing is not supported in this browser."
+    );
 
     return;
   }
 
-  const recognition = new webkitSpeechRecognition();
+
+  if(isRecording){
+
+    recognition.stop();
+
+    isRecording = false;
+
+    document
+      .getElementById("recordStatus")
+      .style.display = "none";
+
+    return;
+  }
+
+
+  recognition =
+    new webkitSpeechRecognition();
 
   recognition.lang = "ur-PK";
 
+  recognition.continuous = false;
+
+  recognition.interimResults = false;
+
+
+  recognition.onstart =
+    function(){
+
+      isRecording = true;
+
+      document
+        .getElementById("recordStatus")
+        .style.display = "block";
+
+    };
+
+
+  recognition.onresult =
+    function(event){
+
+      const text =
+        event.results[0][0].transcript;
+
+      document
+        .getElementById("messageInput")
+        .value = text;
+
+    };
+
+
+  recognition.onend =
+    function(){
+
+      isRecording = false;
+
+      document
+        .getElementById("recordStatus")
+        .style.display = "none";
+
+    };
+
+
   recognition.start();
 
-  recognition.onresult = function(event){
+}
 
-    document.getElementById("messageInput").value =
-      event.results[0][0].transcript;
 
-  };
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHTML(text){
+
+  const div =
+    document.createElement("div");
+
+  div.textContent = text;
+
+  return div.innerHTML;
 
 }
 
