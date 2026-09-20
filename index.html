@@ -9,9 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
   margin:0;
@@ -21,7 +19,6 @@ body{
   padding-top:125px;
 }
 
-/* HEADER */
 .header{
   position:fixed;
   top:0;
@@ -42,7 +39,6 @@ body{
   font-weight:bold;
 }
 
-/* TOP MESSAGE BOX */
 .home-message-box{
   position:fixed;
   top:60px;
@@ -101,7 +97,6 @@ body{
   font-size:13px;
 }
 
-/* CONTENT */
 .container{
   width:100%;
   max-width:650px;
@@ -122,7 +117,6 @@ body{
   color:#6c5ce7;
 }
 
-/* POSTS */
 .post{
   background:white;
   border-radius:14px;
@@ -140,12 +134,6 @@ body{
 .post-text{
   white-space:pre-wrap;
   word-break:break-word;
-}
-
-.post-image{
-  max-width:100%;
-  border-radius:12px;
-  margin-top:8px;
 }
 
 .status{
@@ -170,7 +158,6 @@ body{
   <div class="logo">Socialyte</div>
 </div>
 
-<!-- MESSAGE BOX TOP PAR -->
 <div class="home-message-box">
 
   <div class="message-title">💬 Message</div>
@@ -196,7 +183,6 @@ body{
 
     <button
       class="media-btn"
-      id="voiceBtn"
       onclick="toggleVoice()">
       🎤 Voice
     </button>
@@ -211,16 +197,17 @@ body{
     onchange="sendImage()"
   >
 
-  <div id="recordStatus">🎤 Listening... Tap Voice again to stop</div>
+  <div id="recordStatus">
+    🎤 Listening... Tap Voice again to stop
+  </div>
 
 </div>
-
 
 <div class="container">
 
   <div class="welcome">
     <h3>Welcome to Socialyte 💜</h3>
-    <div id="userStatus">Loading...</div>
+    <div id="userStatus">Checking login...</div>
   </div>
 
   <div id="posts">
@@ -228,7 +215,6 @@ body{
   </div>
 
 </div>
-
 
 <script>
 
@@ -239,10 +225,8 @@ body{
 const SUPABASE_URL =
 "https://szmauhxiyjffjhrcruee.supabase.co";
 
-
-  
-
-const SUPABASE_KEY ="sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
+const SUPABASE_KEY =
+"sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
 
 const supabaseClient =
 window.supabase.createClient(
@@ -255,33 +239,58 @@ let currentUsername = "User";
 
 
 /* =========================
-   START APP
+   CHECK LOGIN
 ========================= */
 
 async function startApp(){
 
-  const {
-    data,
-    error
-  } = await supabaseClient.auth.getUser();
+  try{
 
-  if(error || !data.user){
+    const {
+      data,
+      error
+    } = await supabaseClient.auth.getSession();
 
-    window.location.href = "login.html";
-    return;
+    console.log("Session:", data);
+
+    if(error){
+
+      console.error("Session error:", error);
+
+      document.getElementById("userStatus").textContent =
+        "Login check failed.";
+
+      return;
+    }
+
+    if(!data.session){
+
+      window.location.href = "login.html";
+      return;
+    }
+
+    currentUser =
+      data.session.user;
+
+    currentUsername =
+      currentUser.user_metadata?.username ||
+      currentUser.email?.split("@")[0] ||
+      "User";
+
+    document.getElementById("userStatus").textContent =
+      "Logged in as " + currentUsername;
+
+    await loadPosts();
+
+  }catch(err){
+
+    console.error("START ERROR:",err);
+
+    document.getElementById("userStatus").textContent =
+      "Something went wrong.";
+
   }
 
-  currentUser = data.user;
-
-  currentUsername =
-    data.user.user_metadata?.username ||
-    data.user.email?.split("@")[0] ||
-    "User";
-
-  document.getElementById("userStatus").textContent =
-    "Logged in as " + currentUsername;
-
-  loadPosts();
 }
 
 
@@ -303,11 +312,11 @@ async function loadPosts(){
   } = await supabaseClient
     .from("posts")
     .select("*")
-    .order("id", {ascending:false});
+    .order("id",{ascending:false});
 
   if(error){
 
-    console.error(error);
+    console.error("POST ERROR:",error);
 
     postsBox.innerHTML =
       '<div class="status">Posts load nahi ho rahe.</div>';
@@ -317,7 +326,7 @@ async function loadPosts(){
 
   postsBox.innerHTML = "";
 
-  if(!data || data.length === 0){
+  if(!data || data.length===0){
 
     postsBox.innerHTML =
       '<div class="status">Abhi koi post nahi hai.</div>';
@@ -325,17 +334,17 @@ async function loadPosts(){
     return;
   }
 
-  data.forEach(post => {
+  data.forEach(function(post){
 
     const div =
       document.createElement("div");
 
-    div.className = "post";
+    div.className="post";
 
     const user =
       document.createElement("div");
 
-    user.className = "post-user";
+    user.className="post-user";
 
     user.textContent =
       post.username || "User";
@@ -343,7 +352,7 @@ async function loadPosts(){
     const text =
       document.createElement("div");
 
-    text.className = "post-text";
+    text.className="post-text";
 
     text.textContent =
       post.content || "";
@@ -354,6 +363,7 @@ async function loadPosts(){
     postsBox.appendChild(div);
 
   });
+
 }
 
 
@@ -369,7 +379,8 @@ async function sendMessage(){
   const text =
     input.value.trim();
 
-  if(!text) return;
+  if(!text)
+    return;
 
   if(!currentUser){
 
@@ -382,21 +393,28 @@ async function sendMessage(){
   } = await supabaseClient
     .from("posts")
     .insert({
-      user_id: currentUser.id,
-      username: currentUsername,
-      content: text
+
+      user_id:currentUser.id,
+
+      username:currentUsername,
+
+      content:text
+
     });
 
   if(error){
 
-    console.error(error);
+    console.error("SEND ERROR:",error);
 
-    alert("Message send nahi hua.");
+    alert(
+      "Message send nahi hua.\n\n" +
+      error.message
+    );
 
     return;
   }
 
-  input.value = "";
+  input.value="";
 
   await loadPosts();
 
@@ -407,7 +425,7 @@ async function sendMessage(){
    IMAGE
 ========================= */
 
-async function sendImage(){
+function sendImage(){
 
   const input =
     document.getElementById("imageInput");
@@ -415,42 +433,37 @@ async function sendImage(){
   const file =
     input.files[0];
 
-  if(!file) return;
-
-  /*
-    Abhi image ko database mein permanently
-    save nahi kar rahe.
-    Pehle Storage setup karna hoga.
-  */
+  if(!file)
+    return;
 
   alert(
-    "Image option ready hai 👍\n\n" +
-    "Image ko permanently save karne ke liye " +
-    "Supabase Storage setup karna hoga."
+    "🖼️ Image selected!\n\n" +
+    "Permanent image sending ke liye " +
+    "Supabase Storage next step mein connect karenge."
   );
 
-  input.value = "";
+  input.value="";
 }
 
 
 /* =========================
-   VOICE / SPEECH TO TEXT
+   VOICE TYPING
 ========================= */
 
-let recognition = null;
-let isRecording = false;
+let recognition=null;
+let isRecording=false;
 
 function toggleVoice(){
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
 
   const status =
     document.getElementById("recordStatus");
 
   const input =
     document.getElementById("chatInput");
-
-  const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
 
   if(!SpeechRecognition){
 
@@ -465,9 +478,9 @@ function toggleVoice(){
 
     recognition.stop();
 
-    isRecording = false;
+    isRecording=false;
 
-    status.style.display = "none";
+    status.style.display="none";
 
     return;
   }
@@ -475,19 +488,19 @@ function toggleVoice(){
   recognition =
     new SpeechRecognition();
 
-  recognition.lang = "ur-PK";
+  recognition.lang="ur-PK";
 
-  recognition.continuous = true;
+  recognition.continuous=true;
 
-  recognition.interimResults = false;
+  recognition.interimResults=false;
 
-  recognition.onresult = function(event){
+  recognition.onresult=function(event){
 
-    let result = "";
+    let result="";
 
     for(
-      let i = event.resultIndex;
-      i < event.results.length;
+      let i=event.resultIndex;
+      i<event.results.length;
       i++
     ){
 
@@ -496,36 +509,40 @@ function toggleVoice(){
         result +=
           event.results[i][0].transcript + " ";
       }
+
     }
 
     input.value += result;
 
   };
 
-  recognition.onerror = function(){
+  recognition.onerror=function(){
 
-    isRecording = false;
+    isRecording=false;
 
-    status.style.display = "none";
+    status.style.display="none";
+
   };
 
-  recognition.onend = function(){
+  recognition.onend=function(){
 
-    isRecording = false;
+    isRecording=false;
 
-    status.style.display = "none";
+    status.style.display="none";
+
   };
 
   recognition.start();
 
-  isRecording = true;
+  isRecording=true;
 
-  status.style.display = "block";
+  status.style.display="block";
+
 }
 
 
 /* =========================
-   START
+   START APP
 ========================= */
 
 startApp();
