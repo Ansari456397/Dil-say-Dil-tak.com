@@ -1,5 +1,4 @@
- <!DOCTYPE html>
-
+  <!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -21,10 +20,10 @@ body{
   font-family:Arial,sans-serif;
   background:#f4f6fb;
   color:#222;
-  padding-top:125px;
+  padding-top:155px;
 }
 
-/* HEADER */
+/* ================= HEADER ================= */
 
 .header{
   position:fixed;
@@ -42,11 +41,32 @@ body{
 }
 
 .logo{
-  font-size:24px;
+  font-size:23px;
   font-weight:bold;
 }
 
-/* TOP MESSAGE BOX */
+.header-side{
+  position:absolute;
+  top:0;
+  height:60px;
+  border:0;
+  background:transparent;
+  color:white;
+  font-size:13px;
+  font-weight:bold;
+  cursor:pointer;
+  padding:0 10px;
+}
+
+.header-side:first-child{
+  left:0;
+}
+
+.header-side:last-child{
+  right:0;
+}
+
+/* ================= TOP MESSAGE ================= */
 
 .home-message-box{
   position:fixed;
@@ -113,7 +133,7 @@ body{
   margin-top:5px;
 }
 
-/* MAIN */
+/* ================= MAIN ================= */
 
 .container{
   width:100%;
@@ -122,7 +142,7 @@ body{
   padding:10px;
 }
 
-/* WELCOME */
+/* ================= WELCOME ================= */
 
 .welcome{
   background:white;
@@ -137,7 +157,7 @@ body{
   color:#6c5ce7;
 }
 
-/* QUICK MENU */
+/* ================= QUICK MENU ================= */
 
 .quick-menu{
   display:grid;
@@ -159,7 +179,7 @@ body{
 }
 
 .menu-card:active{
-  transform:scale(0.97);
+  transform:scale(.97);
 }
 
 .menu-icon{
@@ -182,8 +202,6 @@ body{
   margin-top:3px;
 }
 
-/* MENU COLORS */
-
 .menu-card:nth-child(1){
   border-left:4px solid #6c5ce7;
 }
@@ -200,15 +218,7 @@ body{
   border-left:4px solid #3498db;
 }
 
-.menu-card:nth-child(5){
-  border-left:4px solid #2ecc71;
-}
-
-.menu-card:nth-child(6){
-  border-left:4px solid #9b59b6;
-}
-
-/* SECTION TITLE */
+/* ================= SECTION ================= */
 
 .section-title{
   font-size:18px;
@@ -217,7 +227,7 @@ body{
   margin:10px 3px;
 }
 
-/* POST */
+/* ================= POST ================= */
 
 .post{
   background:white;
@@ -246,7 +256,7 @@ body{
   border-radius:12px;
 }
 
-/* POST ACTIONS */
+/* ================= POST ACTIONS ================= */
 
 .post-actions{
   display:flex;
@@ -287,7 +297,7 @@ body{
   color:#6c5ce7;
 }
 
-/* COMMENTS */
+/* ================= COMMENTS ================= */
 
 .comments-box{
   display:none;
@@ -351,9 +361,18 @@ body{
   margin:10px;
 }
 
-/* MOBILE */
+/* ================= MOBILE ================= */
 
 @media(max-width:400px){
+
+  .logo{
+    font-size:21px;
+  }
+
+  .header-side{
+    font-size:12px;
+    padding:0 7px;
+  }
 
   .menu-card{
     padding:12px 9px;
@@ -385,13 +404,30 @@ body{
 
 <body>
 
-<!-- HEADER -->
+<!-- ================= HEADER ================= -->
 
 <div class="header">
-  <div class="logo">Socialyte</div>
+
+  <button
+    class="header-side"
+    onclick="openOnlineUsers()">
+    👥 Online
+  </button>
+
+  <div class="logo">
+    Socialyte
+  </div>
+
+  <button
+    class="header-side"
+    onclick="openStars()">
+    ⭐ Stars
+  </button>
+
 </div>
 
-<!-- TOP MESSAGE BOX -->
+
+<!-- ================= TOP MESSAGE BOX ================= -->
 
 <div class="home-message-box">
 
@@ -401,49 +437,44 @@ body{
 
   <div class="message-row">
 
-```
-<input
-  type="text"
-  id="chatInput"
-  placeholder="Write a message..."
-  onkeydown="if(event.key==='Enter') sendMessage()"
->
+    <input
+      type="text"
+      id="chatInput"
+      placeholder="Write a message..."
+      onkeydown="if(event.key==='Enter') sendMessage()"
+    >
 
-<button
-  class="chat-send"
-  onclick="sendMessage()">
-  ➤
-</button>
-```
+    <button
+      class="chat-send"
+      onclick="sendMessage()">
+      ➤
+    </button>
 
   </div>
 
   <div class="media-row">
 
-```
-<button
-  class="media-btn"
-  onclick="document.getElementById('imageInput').click()">
-  🖼️ Upload Image
-</button>
+    <button
+      class="media-btn"
+      onclick="document.getElementById('imageInput').click()">
+      🖼️ Upload Image
+    </button>
 
-<button
-  class="media-btn"
-  onclick="toggleVoice()">
-  🎤 Voice
-</button>
-```
+    <button
+      class="media-btn"
+      onclick="toggleVoice()">
+      🎤 Voice
+    </button>
 
   </div>
 
-<input
-type="file"
-id="imageInput"
-accept="image/*"
-style="display:none"
-onchange="sendImage()"
-
->
+  <input
+    type="file"
+    id="imageInput"
+    accept="image/*"
+    style="display:none"
+    onchange="sendImage()"
+  >
 
   <div id="recordStatus">
     🎤 Listening... Tap Voice again to stop
@@ -451,7 +482,8 @@ onchange="sendImage()"
 
 </div>
 
-<!-- MAIN -->
+
+<!-- ================= MAIN ================= -->
 
 <div class="container">
 
@@ -459,128 +491,92 @@ onchange="sendImage()"
 
   <div class="welcome">
 
-```
-<h3>
-  Welcome to Socialyte 💜
-</h3>
+    <h3>
+      Welcome to Socialyte 💜
+    </h3>
 
-<div id="userStatus">
-  Checking login...
-</div>
-```
+    <div id="userStatus">
+      Checking login...
+    </div>
 
   </div>
 
-  <!-- QUICK MENU -->
+
+  <!-- ================= QUICK MENU ================= -->
 
   <div class="quick-menu">
 
-```
-<button
-  class="menu-card"
-  onclick="openPrivateChat()">
+    <button
+      class="menu-card"
+      onclick="openPrivateChat()">
 
-  <span class="menu-icon">💬</span>
+      <span class="menu-icon">💬</span>
 
-  <span class="menu-title">
-    Private Chat
-  </span>
+      <span class="menu-title">
+        Private Chat
+      </span>
 
-  <span class="menu-subtitle">
-    Chat privately
-  </span>
+      <span class="menu-subtitle">
+        Chat privately
+      </span>
 
-</button>
-
-
-<button
-  class="menu-card"
-  onclick="openStars()">
-
-  <span class="menu-icon">⭐</span>
-
-  <span class="menu-title">
-    Stars
-  </span>
-
-  <span class="menu-subtitle">
-    Your stars
-  </span>
-
-</button>
+    </button>
 
 
-<button
-  class="menu-card"
-  onclick="openTrending()">
+    <button
+      class="menu-card"
+      onclick="openTrending()">
 
-  <span class="menu-icon">🔥</span>
+      <span class="menu-icon">🔥</span>
 
-  <span class="menu-title">
-    Trending Posts
-  </span>
+      <span class="menu-title">
+        Trending Posts
+      </span>
 
-  <span class="menu-subtitle">
-    Popular posts
-  </span>
+      <span class="menu-subtitle">
+        Popular posts
+      </span>
 
-</button>
-
-
-<button
-  class="menu-card"
-  onclick="openNotifications()">
-
-  <span class="menu-icon">🔔</span>
-
-  <span class="menu-title">
-    Notifications
-  </span>
-
-  <span class="menu-subtitle">
-    Your activity
-  </span>
-
-</button>
+    </button>
 
 
-<button
-  class="menu-card"
-  onclick="openOnlineUsers()">
+    <button
+      class="menu-card"
+      onclick="openNotifications()">
 
-  <span class="menu-icon">👥</span>
+      <span class="menu-icon">🔔</span>
 
-  <span class="menu-title">
-    Online Users
-  </span>
+      <span class="menu-title">
+        Notifications
+      </span>
 
-  <span class="menu-subtitle">
-    See who's online
-  </span>
+      <span class="menu-subtitle">
+        Your activity
+      </span>
 
-</button>
+    </button>
 
 
-<button
-  class="menu-card"
-  onclick="openProfile()">
+    <button
+      class="menu-card"
+      onclick="openProfile()">
 
-  <span class="menu-icon">👤</span>
+      <span class="menu-icon">👤</span>
 
-  <span class="menu-title">
-    Profile
-  </span>
+      <span class="menu-title">
+        Profile
+      </span>
 
-  <span class="menu-subtitle">
-    Your profile
-  </span>
+      <span class="menu-subtitle">
+        Your profile
+      </span>
 
-</button>
-```
+    </button>
 
   </div>
 
-  <!-- POSTS -->
+
+  <!-- ================= POSTS ================= -->
 
   <div class="section-title">
     🔥 Trending Posts
@@ -588,19 +584,18 @@ onchange="sendImage()"
 
   <div id="posts">
 
-```
-<div class="status">
-  Loading posts...
-</div>
-```
+    <div class="status">
+      Loading posts...
+    </div>
 
   </div>
 
 </div>
 
+
 <script>
 
-/* SUPABASE */
+/* ================= SUPABASE ================= */
 
 const SUPABASE_URL =
 "https://szmauhxiyjffjhrcruee.supabase.co";
@@ -618,7 +613,7 @@ let currentUser = null;
 let currentUsername = "User";
 
 
-/* CHECK LOGIN */
+/* ================= CHECK LOGIN ================= */
 
 async function startApp(){
 
@@ -679,7 +674,7 @@ async function startApp(){
 }
 
 
-/* LOAD POSTS */
+/* ================= LOAD POSTS ================= */
 
 async function loadPosts(){
 
@@ -719,22 +714,29 @@ async function loadPosts(){
 
   data.forEach(function(post){
 
-    createPostElement(post,postsBox);
+    createPostElement(
+      post,
+      postsBox
+    );
 
   });
 
 }
 
 
-/* CREATE POST */
+/* ================= CREATE POST ================= */
 
-function createPostElement(post,postsBox){
+function createPostElement(
+  post,
+  postsBox
+){
 
   const div =
     document.createElement("div");
 
   div.className =
     "post";
+
 
   const user =
     document.createElement("div");
@@ -869,7 +871,7 @@ function createPostElement(post,postsBox){
   actions.appendChild(reply);
 
 
-  /* DELETE ONLY OWN POST */
+  /* DELETE OWN POST */
 
   if(
     currentUser &&
@@ -900,7 +902,7 @@ function createPostElement(post,postsBox){
   div.appendChild(actions);
 
 
-  /* COMMENTS AREA */
+  /* COMMENTS */
 
   const commentsBox =
     document.createElement("div");
@@ -932,6 +934,18 @@ function createPostElement(post,postsBox){
     "Write a comment...";
 
 
+  commentInput.onkeydown =
+    function(event){
+
+      if(event.key === "Enter"){
+
+        addComment(post.id);
+
+      }
+
+    };
+
+
   const commentSend =
     document.createElement("button");
 
@@ -949,20 +963,30 @@ function createPostElement(post,postsBox){
     };
 
 
-  commentRow.appendChild(commentInput);
-  commentRow.appendChild(commentSend);
+  commentRow.appendChild(
+    commentInput
+  );
 
-  commentsBox.appendChild(commentRow);
+  commentRow.appendChild(
+    commentSend
+  );
 
+  commentsBox.appendChild(
+    commentRow
+  );
 
-  div.appendChild(commentsBox);
+  div.appendChild(
+    commentsBox
+  );
 
-  postsBox.appendChild(div);
+  postsBox.appendChild(
+    div
+  );
 
 }
 
 
-/* DELETE POST */
+/* ================= DELETE POST ================= */
 
 async function deletePost(postId){
 
@@ -977,6 +1001,7 @@ async function deletePost(postId){
   if(!confirmDelete)
     return;
 
+
   const {
     error
   } = await supabaseClient
@@ -984,6 +1009,7 @@ async function deletePost(postId){
     .delete()
     .eq("id",postId)
     .eq("user_id",currentUser.id);
+
 
   if(error){
 
@@ -1002,7 +1028,7 @@ async function deletePost(postId){
 }
 
 
-/* LIKE */
+/* ================= LIKE ================= */
 
 async function likePost(postId){
 
@@ -1013,6 +1039,7 @@ async function likePost(postId){
     return;
 
   }
+
 
   const {
     error
@@ -1027,6 +1054,7 @@ async function likePost(postId){
       action_type:"like"
 
     });
+
 
   if(error){
 
@@ -1055,7 +1083,7 @@ async function likePost(postId){
 }
 
 
-/* DISLIKE */
+/* ================= DISLIKE ================= */
 
 async function dislikePost(postId){
 
@@ -1066,6 +1094,7 @@ async function dislikePost(postId){
     return;
 
   }
+
 
   const {
     error
@@ -1080,6 +1109,7 @@ async function dislikePost(postId){
       action_type:"dislike"
 
     });
+
 
   if(error){
 
@@ -1108,7 +1138,7 @@ async function dislikePost(postId){
 }
 
 
-/* COMMENTS */
+/* ================= COMMENTS ================= */
 
 function toggleComments(postId){
 
@@ -1119,6 +1149,7 @@ function toggleComments(postId){
 
   if(!box)
     return;
+
 
   if(box.style.display === "block"){
 
@@ -1145,7 +1176,7 @@ function toggleComments(postId){
 }
 
 
-/* ADD COMMENT */
+/* ================= ADD COMMENT ================= */
 
 async function addComment(postId){
 
@@ -1154,7 +1185,9 @@ async function addComment(postId){
     alert("Please login first.");
 
     return;
+
   }
+
 
   const input =
     document.getElementById(
@@ -1184,6 +1217,7 @@ async function addComment(postId){
 
     });
 
+
   if(error){
 
     console.error(error);
@@ -1194,7 +1228,9 @@ async function addComment(postId){
     );
 
     return;
+
   }
+
 
   input.value = "";
 
@@ -1203,7 +1239,7 @@ async function addComment(postId){
 }
 
 
-/* LOAD COMMENTS */
+/* ================= LOAD COMMENTS ================= */
 
 async function loadComments(postId){
 
@@ -1291,7 +1327,7 @@ async function loadComments(postId){
     );
 
 
-    /* REPLY INPUT */
+    /* REPLY */
 
     const replyArea =
       document.createElement("div");
@@ -1343,7 +1379,7 @@ async function loadComments(postId){
 }
 
 
-/* REPLY */
+/* ================= REPLY ================= */
 
 async function addReply(
   commentId,
@@ -1357,6 +1393,7 @@ async function addReply(
     return;
 
   }
+
 
   const text =
     input.value.trim();
@@ -1403,7 +1440,7 @@ async function addReply(
 }
 
 
-/* SEND MESSAGE */
+/* ================= SEND MESSAGE ================= */
 
 async function sendMessage(){
 
@@ -1415,8 +1452,10 @@ async function sendMessage(){
   const text =
     input.value.trim();
 
+
   if(!text)
     return;
+
 
   if(!currentUser){
 
@@ -1425,6 +1464,7 @@ async function sendMessage(){
     );
 
     return;
+
   }
 
 
@@ -1456,6 +1496,7 @@ async function sendMessage(){
     );
 
     return;
+
   }
 
 
@@ -1466,7 +1507,7 @@ async function sendMessage(){
 }
 
 
-/* IMAGE UPLOAD */
+/* ================= IMAGE ================= */
 
 async function sendImage(){
 
@@ -1477,6 +1518,7 @@ async function sendImage(){
 
   const file =
     input.files[0];
+
 
   if(!file)
     return;
@@ -1635,7 +1677,7 @@ async function sendImage(){
 }
 
 
-/* VOICE TYPING */
+/* ================= VOICE TYPING ================= */
 
 let recognition = null;
 let isRecording = false;
@@ -1647,10 +1689,12 @@ function toggleVoice(){
     window.SpeechRecognition ||
     window.webkitSpeechRecognition;
 
+
   const status =
     document.getElementById(
       "recordStatus"
     );
+
 
   const input =
     document.getElementById(
@@ -1686,6 +1730,7 @@ function toggleVoice(){
   recognition =
     new SpeechRecognition();
 
+
   recognition.lang =
     "ur-PK";
 
@@ -1700,6 +1745,7 @@ function toggleVoice(){
   function(event){
 
     let result = "";
+
 
     for(
       let i = event.resultIndex;
@@ -1719,6 +1765,7 @@ function toggleVoice(){
       }
 
     }
+
 
     input.value += result;
 
@@ -1757,7 +1804,7 @@ function toggleVoice(){
 }
 
 
-/* MENU */
+/* ================= MENU ================= */
 
 function openPrivateChat(){
 
@@ -1815,7 +1862,7 @@ function openProfile(){
 }
 
 
-/* START */
+/* ================= START ================= */
 
 startApp();
 
