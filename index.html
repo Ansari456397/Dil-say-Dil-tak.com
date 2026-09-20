@@ -1,234 +1,581 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Socialyte</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f4f6fb;color:#222}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f6fb;
+  color:#222;
+}
 
 .header{
   background:linear-gradient(135deg,#6c5ce7,#8e44ad);
-  color:white;padding:16px;display:flex;justify-content:space-between;
-  align-items:center;position:sticky;top:0;z-index:20
-}
-.logo{font-size:24px;font-weight:bold}
-.logo span{color:#ffd6ff}
-.header-buttons{display:flex;gap:8px}
-.header-buttons button{
-  border:0;background:rgba(255,255,255,.18);color:white;
-  width:38px;height:38px;border-radius:50%;font-size:18px
+  color:white;
+  padding:16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:20;
 }
 
-.container{max-width:650px;margin:auto;padding:12px;padding-bottom:100px}
+.logo{
+  font-size:24px;
+  font-weight:bold;
+}
+
+.logo span{
+  color:#ffd6ff;
+}
+
+.header-buttons{
+  display:flex;
+  gap:8px;
+}
+
+.header-buttons button{
+  border:0;
+  background:rgba(255,255,255,.18);
+  color:white;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  font-size:18px;
+}
+
+.container{
+  max-width:650px;
+  margin:auto;
+  padding:12px;
+  padding-bottom:100px;
+}
 
 .profile-card{
-  background:white;border-radius:18px;padding:16px;display:flex;
-  align-items:center;gap:12px;box-shadow:0 3px 12px rgba(0,0,0,.06);margin-bottom:12px
+  background:white;
+  border-radius:18px;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
+  margin-bottom:12px;
 }
+
 .avatar{
-  width:55px;height:55px;border-radius:50%;
+  width:55px;
+  height:55px;
+  border-radius:50%;
   background:linear-gradient(135deg,#6c5ce7,#e056fd);
-  color:white;display:flex;justify-content:center;align-items:center;
-  font-size:24px;font-weight:bold
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:24px;
+  font-weight:bold;
 }
-.profile-name{font-size:18px;font-weight:bold}
-.status{font-size:13px;color:#28a745;margin-top:3px}
+
+.profile-name{
+  font-size:18px;
+  font-weight:bold;
+}
+
+.status{
+  font-size:13px;
+  color:#28a745;
+  margin-top:3px;
+}
 
 .create-box{
-  background:white;border-radius:18px;padding:15px;
-  box-shadow:0 3px 12px rgba(0,0,0,.06);margin-bottom:12px
+  background:white;
+  border-radius:18px;
+  padding:15px;
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
+  margin-bottom:12px;
 }
+
 .create-box textarea{
-  width:100%;min-height:80px;border:1px solid #e2e2e2;
-  border-radius:14px;padding:12px;resize:none;font-size:15px;outline:none
+  width:100%;
+  min-height:80px;
+  border:1px solid #e2e2e2;
+  border-radius:14px;
+  padding:12px;
+  resize:none;
+  font-size:15px;
+  outline:none;
 }
-.create-box textarea:focus{border-color:#6c5ce7}
+
+.create-box textarea:focus{
+  border-color:#6c5ce7;
+}
+
 .post-btn{
-  width:100%;border:0;background:linear-gradient(135deg,#6c5ce7,#8e44ad);
-  color:white;padding:12px;border-radius:12px;font-size:16px;font-weight:bold;margin-top:10px
+  width:100%;
+  border:0;
+  background:linear-gradient(135deg,#6c5ce7,#8e44ad);
+  color:white;
+  padding:12px;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:bold;
+  margin-top:10px;
 }
 
 .actions{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-bottom:14px;
 }
+
 .action{
-  background:white;border:0;border-radius:14px;padding:12px 5px;
-  box-shadow:0 2px 8px rgba(0,0,0,.06);display:flex;
-  flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:13px
+  background:white;
+  border:0;
+  border-radius:14px;
+  padding:12px 5px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  font-size:13px;
 }
-.action span{font-size:22px}
-.action small{font-size:12px;font-weight:600}
+
+.action span{
+  font-size:22px;
+}
+
+.action small{
+  font-size:12px;
+  font-weight:600;
+}
 
 .menu{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px
-}
-.menu button{
-  border:0;background:white;padding:12px 5px;border-radius:12px;
-  box-shadow:0 2px 8px rgba(0,0,0,.05);font-size:13px;min-height:48px
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:14px;
 }
 
-.section-title{font-size:19px;font-weight:bold;margin:16px 3px 10px}
+.menu button{
+  border:0;
+  background:white;
+  padding:12px 5px;
+  border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+  font-size:13px;
+  min-height:48px;
+}
+
+.section-title{
+  font-size:19px;
+  font-weight:bold;
+  margin:16px 3px 10px;
+}
 
 .post{
-  background:white;border-radius:18px;padding:15px;margin-bottom:12px;
-  box-shadow:0 3px 12px rgba(0,0,0,.06)
+  background:white;
+  border-radius:18px;
+  padding:15px;
+  margin-bottom:12px;
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
 }
-.post-head{display:flex;align-items:center;gap:10px}
-.post-avatar{
-  width:43px;height:43px;border-radius:50%;
-  background:linear-gradient(135deg,#6c5ce7,#e056fd);
-  color:white;display:flex;justify-content:center;align-items:center;
-  font-weight:bold;font-size:18px
-}
-.post-user{font-weight:bold;font-size:16px}
-.post-time{color:#777;font-size:12px;margin-top:3px}
-.post-content{margin:14px 0;line-height:1.5;white-space:pre-wrap}
-.post-actions{
-  display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid #eee;padding-top:10px
-}
-.post-action{
-  border:0;background:#f4f5fa;border-radius:10px;padding:8px 10px;font-size:12px
-}
-.post-action.active{background:#e9e2ff;color:#6c5ce7;font-weight:bold}
 
-.comment-box{margin-top:10px;padding-top:10px;border-top:1px solid #eee}
+.post-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.post-avatar{
+  width:43px;
+  height:43px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#6c5ce7,#e056fd);
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-weight:bold;
+  font-size:18px;
+}
+
+.post-user{
+  font-weight:bold;
+  font-size:16px;
+}
+
+.post-time{
+  color:#777;
+  font-size:12px;
+  margin-top:3px;
+}
+
+.post-content{
+  margin:14px 0;
+  line-height:1.5;
+  white-space:pre-wrap;
+}
+
+.post-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  border-top:1px solid #eee;
+  padding-top:10px;
+}
+
+.post-action{
+  border:0;
+  background:#f4f5fa;
+  border-radius:10px;
+  padding:8px 10px;
+  font-size:12px;
+}
+
+.post-action.active{
+  background:#e9e2ff;
+  color:#6c5ce7;
+  font-weight:bold;
+}
+
+.comment-box{
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid #eee;
+}
+
 .comment-input{
-  width:100%;min-height:55px;border:1px solid #ddd;border-radius:12px;
-  padding:10px;resize:none;outline:none;font-size:14px
+  width:100%;
+  min-height:55px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:10px;
+  resize:none;
+  outline:none;
+  font-size:14px;
 }
-.comment-input:focus{border-color:#6c5ce7}
+
+.comment-input:focus{
+  border-color:#6c5ce7;
+}
+
 .comment-submit{
-  width:100%;margin-top:7px;border:0;background:#6c5ce7;
-  color:white;padding:9px;border-radius:10px;font-weight:bold
+  width:100%;
+  margin-top:7px;
+  border:0;
+  background:#6c5ce7;
+  color:white;
+  padding:9px;
+  border-radius:10px;
+  font-weight:bold;
 }
-.comments-list{margin-top:10px}
-.comment{background:#f5f6fa;border-radius:12px;padding:9px 11px;margin-top:7px}
-.comment-user{font-weight:bold;font-size:13px;color:#6c5ce7}
-.comment-text{font-size:13px;margin-top:3px;white-space:pre-wrap}
+
+.comments-list{
+  margin-top:10px;
+}
+
+.comment{
+  background:#f5f6fa;
+  border-radius:12px;
+  padding:9px 11px;
+  margin-top:7px;
+}
+
+.comment-user{
+  font-weight:bold;
+  font-size:13px;
+  color:#6c5ce7;
+}
+
+.comment-text{
+  font-size:13px;
+  margin-top:3px;
+  white-space:pre-wrap;
+}
 
 .empty{
-  background:white;border-radius:16px;padding:25px;text-align:center;color:#777
+  background:white;
+  border-radius:16px;
+  padding:25px;
+  text-align:center;
+  color:#777;
 }
 
-/* HOME MESSAGE BOX */
 
-.home-message-box{
-  background:white;border-radius:18px;padding:12px;
+/* =========================
+   HOME MESSAGE BOX
+========================= */
+
+.chat-box{
+  background:white;
+  border-radius:18px;
+  padding:12px;
   box-shadow:0 3px 12px rgba(0,0,0,.06);
-  margin-top:15px;margin-bottom:15px
+  margin-top:15px;
+  margin-bottom:15px;
 }
 
-.message-row{
-  display:flex;gap:7px;align-items:center
+.chat-tools{
+  display:flex;
+  gap:7px;
+  align-items:center;
 }
 
 .chat-input{
-  flex:1;min-width:0;border:1px solid #ddd;border-radius:12px;
-  padding:12px;outline:none;font-size:14px
+  flex:1;
+  min-width:0;
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:12px;
+  outline:none;
+  font-size:14px;
 }
-.chat-input:focus{border-color:#6c5ce7}
+
+.chat-input:focus{
+  border-color:#6c5ce7;
+}
 
 .chat-btn{
-  border:0;width:43px;height:43px;border-radius:12px;
-  background:#f0edff;font-size:19px
+  border:0;
+  width:43px;
+  height:43px;
+  border-radius:12px;
+  background:#f0edff;
+  font-size:19px;
+  flex-shrink:0;
 }
-.chat-send{background:#6c5ce7;color:white}
+
+.chat-send{
+  background:#6c5ce7;
+  color:white;
+}
+
+.chat-btn.recording{
+  background:#e74c3c;
+  color:white;
+}
+
+.chat-file{
+  display:none;
+}
 
 .message-options{
-  display:flex;gap:8px;margin-top:9px
+  display:flex;
+  gap:8px;
+  margin-top:10px;
 }
 
 .message-option{
-  flex:1;border:0;background:#f3f1ff;color:#5d4bd8;
-  padding:11px 6px;border-radius:11px;font-size:13px;font-weight:bold
+  flex:1;
+  border:0;
+  background:#f3f1ff;
+  color:#5d4bd8;
+  padding:11px 6px;
+  border-radius:11px;
+  font-size:13px;
+  font-weight:bold;
+  cursor:pointer;
 }
-.message-option:active{transform:scale(.98)}
 
-.chat-file{display:none}
+.message-option:active{
+  transform:scale(.98);
+}
 
 .record-status{
-  display:none;font-size:12px;color:#e74c3c;
-  margin-top:6px;text-align:center;font-weight:bold
-}
-
-.voice-recording{
-  background:#e74c3c!important;
-  color:white!important
+  display:none;
+  font-size:12px;
+  color:#e74c3c;
+  margin-top:7px;
+  text-align:center;
+  font-weight:bold;
 }
 
 .bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;background:white;
-  display:flex;justify-content:space-around;padding:10px 5px;
-  box-shadow:0 -3px 12px rgba(0,0,0,.08);z-index:30
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  display:flex;
+  justify-content:space-around;
+  padding:10px 5px;
+  box-shadow:0 -3px 12px rgba(0,0,0,.08);
+  z-index:30;
 }
-.bottom-nav button{border:0;background:none;font-size:12px;color:#555}
-.bottom-nav button span{display:block;font-size:20px;margin-bottom:2px}
+
+.bottom-nav button{
+  border:0;
+  background:none;
+  font-size:12px;
+  color:#555;
+}
+
+.bottom-nav button span{
+  display:block;
+  font-size:20px;
+  margin-bottom:2px;
+}
 
 @media(max-width:400px){
-  .actions{gap:5px}
-  .action{font-size:11px}
-  .menu{grid-template-columns:repeat(2,1fr)}
-  .post-action{padding:8px;font-size:11px}
+
+  .actions{
+    gap:5px;
+  }
+
+  .action{
+    font-size:11px;
+  }
+
+  .menu{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .post-action{
+    padding:8px 8px;
+    font-size:11px;
+  }
+
+  .chat-tools{
+    gap:5px;
+  }
+
+  .chat-btn{
+    width:40px;
+    height:40px;
+  }
+
+  .message-option{
+    font-size:12px;
+    padding:10px 4px;
+  }
+
 }
+
 </style>
+
 </head>
 
 <body>
 
 <header class="header">
-  <div class="logo">Socia<span>lyte</span></div>
+
+  <div class="logo">
+    Socia<span>lyte</span>
+  </div>
 
   <div class="header-buttons">
-    <button onclick="showNotice('Notifications coming soon 🔔')">🔔</button>
-    <button onclick="showNotice('Settings coming soon ⚙️')">⚙️</button>
+
+    <button onclick="showNotice('Notifications coming soon 🔔')">
+      🔔
+    </button>
+
+    <button onclick="showNotice('Settings coming soon ⚙️')">
+      ⚙️
+    </button>
+
   </div>
+
 </header>
+
 
 <div class="container">
 
+  <!-- PROFILE -->
+
   <div class="profile-card">
-    <div class="avatar" id="avatar">U</div>
-    <div>
-      <div class="profile-name" id="profileName">Loading...</div>
-      <div class="status">🟢 Online</div>
+
+    <div class="avatar" id="avatar">
+      U
     </div>
+
+    <div>
+
+      <div class="profile-name" id="profileName">
+        Loading...
+      </div>
+
+      <div class="status">
+        🟢 Online
+      </div>
+
+    </div>
+
   </div>
+
 
   <!-- CREATE POST -->
 
   <div class="create-box">
-    <textarea id="postInput" placeholder="What's on your mind?"></textarea>
 
-    <button class="post-btn" onclick="createPost()">
+    <textarea
+      id="postInput"
+      placeholder="What's on your mind?"
+    ></textarea>
+
+    <button
+      class="post-btn"
+      onclick="createPost()"
+    >
       📝 Post
     </button>
+
   </div>
+
 
   <!-- ACTIONS -->
 
   <div class="actions">
 
-    <button class="action" onclick="showAction('🤗 Jhappi')">
-      <span>🤗</span><small>Jhappi</small>
+    <button
+      class="action"
+      onclick="showAction('🤗 Jhappi')"
+    >
+      <span>🤗</span>
+      <small>Jhappi</small>
     </button>
 
-    <button class="action" onclick="showAction('👋 Chupair')">
-      <span>👋</span><small>Chupair</small>
+    <button
+      class="action"
+      onclick="showAction('👋 Chupair')"
+    >
+      <span>👋</span>
+      <small>Chupair</small>
     </button>
 
-    <button class="action" onclick="showAction('❤️ Love')">
-      <span>❤️</span><small>Love</small>
+    <button
+      class="action"
+      onclick="showAction('❤️ Love')"
+    >
+      <span>❤️</span>
+      <small>Love</small>
     </button>
 
-    <button class="action" onclick="showAction('😂 Haha')">
-      <span>😂</span><small>Haha</small>
+    <button
+      class="action"
+      onclick="showAction('😂 Haha')"
+    >
+      <span>😂</span>
+      <small>Haha</small>
     </button>
 
   </div>
+
 
   <!-- MENU -->
 
@@ -256,6 +603,7 @@ body{margin:0;font-family:Arial,sans-serif;background:#f4f6fb;color:#222}
 
   </div>
 
+
   <!-- POSTS -->
 
   <div class="section-title">
@@ -263,8 +611,13 @@ body{margin:0;font-family:Arial,sans-serif;background:#f4f6fb;color:#222}
   </div>
 
   <div id="postsList">
-    <div class="empty">Loading posts...</div>
+
+    <div class="empty">
+      Loading posts...
+    </div>
+
   </div>
+
 
   <!-- HOME MESSAGE -->
 
@@ -272,9 +625,9 @@ body{margin:0;font-family:Arial,sans-serif;background:#f4f6fb;color:#222}
     💬 Message
   </div>
 
-  <div class="home-message-box">
+  <div class="chat-box">
 
-    <div class="message-row">
+    <div class="chat-tools">
 
       <input
         type="text"
@@ -288,19 +641,25 @@ body{margin:0;font-family:Arial,sans-serif;background:#f4f6fb;color:#222}
       <button
         class="chat-btn chat-send"
         onclick="sendTextMessage()"
+        title="Send"
       >
         ➤
       </button>
 
     </div>
 
-    <div id="recordStatus" class="record-status">
+
+    <div
+      class="record-status"
+      id="recordStatus"
+    >
       🔴 Recording... Tap 🎤 again to stop
     </div>
 
+
     <div class="message-options">
 
-      <!-- IMAGE -->
+      <!-- IMAGE INPUT -->
 
       <input
         type="file"
@@ -310,6 +669,9 @@ body{margin:0;font-family:Arial,sans-serif;background:#f4f6fb;color:#222}
         onchange="sendImage()"
       >
 
+
+      <!-- IMAGE BUTTON -->
+
       <button
         class="message-option"
         onclick="document.getElementById('imageInput').click()"
@@ -317,7 +679,8 @@ body{margin:0;font-family:Arial,sans-serif;background:#f4f6fb;color:#222}
         🖼️ Upload Image
       </button>
 
-      <!-- VOICE -->
+
+      <!-- VOICE BUTTON -->
 
       <button
         class="message-option"
@@ -331,38 +694,52 @@ body{margin:0;font-family:Arial,sans-serif;background:#f4f6fb;color:#222}
 
   </div>
 
+
   <div
     id="status"
-    style="text-align:center;color:#777;font-size:12px;margin-top:12px"
+    style="
+      text-align:center;
+      color:#777;
+      font-size:12px;
+      margin-top:12px;
+    "
   ></div>
 
 </div>
+
 
 <!-- BOTTOM NAV -->
 
 <div class="bottom-nav">
 
   <button onclick="window.scrollTo({top:0,behavior:'smooth'})">
-    <span>🏠</span>Home
+    <span>🏠</span>
+    Home
   </button>
 
   <button onclick="document.getElementById('postsList').scrollIntoView({behavior:'smooth'})">
-    <span>📝</span>Posts
+    <span>📝</span>
+    Posts
   </button>
 
   <button onclick="showNotice('Members coming soon')">
-    <span>👥</span>Members
+    <span>👥</span>
+    Members
   </button>
 
   <button onclick="showNotice('Profile coming soon')">
-    <span>👤</span>Profile
+    <span>👤</span>
+    Profile
   </button>
 
 </div>
 
+
 <script>
 
-/* SUPABASE */
+/* =========================
+   SUPABASE
+========================= */
 
 const SUPABASE_URL =
 "https://szmauhxiyjffjhrcruee.supabase.co";
@@ -382,51 +759,81 @@ let audioChunks = [];
 let isRecording = false;
 
 
-/* CHECK USER */
+/* =========================
+   CHECK LOGIN
+========================= */
 
 async function checkUser(){
 
   try{
 
-    const {data,error} =
-      await supabaseClient.auth.getUser();
+    const {
+      data,
+      error
+    } =
+    await supabaseClient.auth.getUser();
 
     if(error){
 
-      console.error(error);
+      console.error(
+        "Supabase Auth Error:",
+        error
+      );
 
-      document.getElementById("status").textContent =
+      document.getElementById(
+        "status"
+      ).textContent =
         "Login session error. Please login again.";
 
       return;
+
     }
 
-    if(!data || !data.user){
+    if(
+      !data ||
+      !data.user
+    ){
 
-      window.location.href = "login.html";
+      window.location.href =
+        "login.html";
+
       return;
+
     }
 
-    currentUser = data.user;
+    currentUser =
+      data.user;
 
     const username =
       currentUser.user_metadata?.username ||
       currentUser.email?.split("@")[0] ||
       "User";
 
-    document.getElementById("profileName").textContent =
+    document.getElementById(
+      "profileName"
+    ).textContent =
       username;
 
-    document.getElementById("avatar").textContent =
+    document.getElementById(
+      "avatar"
+    ).textContent =
       username.charAt(0).toUpperCase();
+
+
+    /* ONLY LOAD POSTS */
 
     await loadPosts();
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "Website Error:",
+      error
+    );
 
-    document.getElementById("status").textContent =
+    document.getElementById(
+      "status"
+    ).textContent =
       "Something went wrong. Please refresh.";
 
   }
@@ -434,88 +841,158 @@ async function checkUser(){
 }
 
 
-/* CREATE POST */
+/* =========================
+   CREATE POST
+========================= */
 
 async function createPost(){
 
   if(!currentUser){
-    alert("Please login first.");
+
+    alert(
+      "Please login first."
+    );
+
     return;
+
   }
 
   const input =
-    document.getElementById("postInput");
+    document.getElementById(
+      "postInput"
+    );
 
   const content =
     input.value.trim();
 
   if(!content){
-    alert("Please write something.");
+
+    alert(
+      "Please write something."
+    );
+
     return;
+
   }
 
-  const {error} =
-    await supabaseClient
-      .from("posts")
-      .insert({
-        user_id:currentUser.id,
-        username:getUsername(),
-        content:content
-      });
+  const username =
+    getUsername();
+
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("posts")
+    .insert({
+
+      user_id:
+        currentUser.id,
+
+      username:
+        username,
+
+      content:
+        content
+
+    });
 
   if(error){
-    alert(error.message);
+
+    alert(
+      error.message
+    );
+
     return;
+
   }
 
   input.value = "";
 
   await loadPosts();
+
 }
 
 
-/* LOAD POSTS */
+/* =========================
+   LOAD POSTS
+========================= */
 
 async function loadPosts(){
 
   const box =
-    document.getElementById("postsList");
+    document.getElementById(
+      "postsList"
+    );
 
   try{
 
-    const {data:blockedRows} =
-      await supabaseClient
-        .from("user_blocks")
-        .select("blocked_id");
+    const {
+      data:blockedRows,
+      error:blockError
+    } =
+    await supabaseClient
+      .from("user_blocks")
+      .select("blocked_id");
+
+    if(blockError){
+
+      console.error(
+        "Block error:",
+        blockError
+      );
+
+    }
 
     const blockedIds =
       new Set(
         (blockedRows || [])
-          .map(row => row.blocked_id)
+          .map(
+            row =>
+              row.blocked_id
+          )
       );
 
-    const {data,error} =
-      await supabaseClient
-        .from("posts")
-        .select("*")
-        .order("created_at",{ascending:false});
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient
+      .from("posts")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
 
     if(error){
 
       box.innerHTML =
         `<div class="empty">
-          ${escapeHtml(error.message)}
+          ${escapeHtml(
+            error.message
+          )}
         </div>`;
 
       return;
+
     }
+
 
     const visiblePosts =
       (data || []).filter(
-        post => !blockedIds.has(post.user_id)
+        post =>
+          !blockedIds.has(
+            post.user_id
+          )
       );
 
-    if(!visiblePosts.length){
+
+    if(
+      visiblePosts.length === 0
+    ){
 
       box.innerHTML =
         `<div class="empty">
@@ -524,44 +1001,72 @@ async function loadPosts(){
         </div>`;
 
       return;
+
     }
+
 
     box.innerHTML = "";
 
-    for(const post of visiblePosts){
+
+    for(
+      const post
+      of visiblePosts
+    ){
 
       const article =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
-      article.className = "post";
+      article.className =
+        "post";
+
 
       const username =
-        post.username || "User";
+        post.username ||
+        "User";
+
 
       const isMine =
-        post.user_id === currentUser.id;
+        post.user_id ===
+        currentUser.id;
+
 
       const postOptions =
         isMine
         ?
-        `<button class="post-action"
-          onclick="deletePost(${post.id})">
+        `
+        <button
+          class="post-action"
+          onclick="deletePost(${post.id})"
+        >
           🗑️ Delete
-        </button>`
+        </button>
+        `
         :
-        `<button class="post-action"
-          onclick="blockUser('${escapeAttribute(post.user_id)}')">
+        `
+        <button
+          class="post-action"
+          onclick="blockUser('${escapeAttribute(post.user_id)}')"
+        >
           🚫 Block
-        </button>`;
+        </button>
+        `;
+
 
       const time =
-        new Date(post.created_at)
-          .toLocaleString([],{
+        new Date(
+          post.created_at
+        ).toLocaleString(
+          [],
+          {
             day:"2-digit",
             month:"short",
             hour:"2-digit",
             minute:"2-digit"
-          });
+          }
+        );
+
 
       article.innerHTML = `
 
@@ -569,7 +1074,9 @@ async function loadPosts(){
 
           <div class="post-avatar">
             ${escapeHtml(
-              username.charAt(0).toUpperCase()
+              username
+                .charAt(0)
+                .toUpperCase()
             )}
           </div>
 
@@ -587,43 +1094,88 @@ async function loadPosts(){
 
         </div>
 
+
         <div class="post-content">
-          ${escapeHtml(post.content)}
+          ${escapeHtml(
+            post.content
+          )}
         </div>
 
-        <div class="post-actions"
-          id="actions-${post.id}">
 
-          <button class="post-action"
-            onclick="togglePostAction(${post.id},'jhappi')">
+        <div
+          class="post-actions"
+          id="actions-${post.id}"
+        >
+
+          <button
+            class="post-action"
+            onclick="
+              togglePostAction(
+                ${post.id},
+                'jhappi'
+              )
+            "
+          >
             🤗 Jhappi
-            <span id="jhappi-${post.id}">0</span>
+            <span id="jhappi-${post.id}">
+              0
+            </span>
           </button>
 
-          <button class="post-action"
-            onclick="togglePostAction(${post.id},'chupair')">
+
+          <button
+            class="post-action"
+            onclick="
+              togglePostAction(
+                ${post.id},
+                'chupair'
+              )
+            "
+          >
             👋 Chupair
-            <span id="chupair-${post.id}">0</span>
+            <span id="chupair-${post.id}">
+              0
+            </span>
           </button>
 
-          <button class="post-action"
-            onclick="toggleComments(${post.id})">
+
+          <button
+            class="post-action"
+            onclick="
+              toggleComments(
+                ${post.id}
+              )
+            "
+          >
             💬 Comment
-            <span id="comment-count-${post.id}">0</span>
+            <span id="comment-count-${post.id}">
+              0
+            </span>
           </button>
 
-          <button class="post-action"
-            onclick="replyToPost('${escapeAttribute(username)}')">
+
+          <button
+            class="post-action"
+            onclick="
+              replyToPost(
+                '${escapeAttribute(username)}'
+              )
+            "
+          >
             ↩️ Reply
           </button>
+
 
           ${postOptions}
 
         </div>
 
-        <div class="comment-box"
+
+        <div
+          class="comment-box"
           id="comment-box-${post.id}"
-          style="display:none">
+          style="display:none;"
+        >
 
           <textarea
             class="comment-input"
@@ -631,387 +1183,896 @@ async function loadPosts(){
             placeholder="Write a comment..."
           ></textarea>
 
-          <button class="comment-submit"
-            onclick="addComment(${post.id})">
+
+          <button
+            class="comment-submit"
+            onclick="
+              addComment(
+                ${post.id}
+              )
+            "
+          >
             💬 Post Comment
           </button>
 
+
           <div
             class="comments-list"
-            id="comments-${post.id}">
-          </div>
+            id="comments-${post.id}"
+          ></div>
 
         </div>
+
       `;
 
-      box.appendChild(article);
 
-      loadPostActions(post.id);
-      loadCommentCount(post.id);
+      box.appendChild(
+        article
+      );
+
+
+      loadPostActions(
+        post.id
+      );
+
+      loadCommentCount(
+        post.id
+      );
+
     }
+
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "Load Posts Error:",
+      error
+    );
 
     box.innerHTML =
       `<div class="empty">
-        ${escapeHtml(error.message)}
+        ${escapeHtml(
+          error.message
+        )}
       </div>`;
+
   }
+
 }
 
 
-/* DELETE */
+/* =========================
+   DELETE POST
+========================= */
 
-async function deletePost(postId){
+async function deletePost(
+  postId
+){
 
-  if(!currentUser)return;
-
-  if(!confirm("Delete this post?"))return;
-
-  const {error} =
-    await supabaseClient
-      .from("posts")
-      .delete()
-      .eq("id",postId)
-      .eq("user_id",currentUser.id);
-
-  if(error){
-    alert(error.message);
+  if(!currentUser){
     return;
   }
 
-  await loadPosts();
-}
+  if(
+    !confirm(
+      "Delete this post?"
+    )
+  ){
+    return;
+  }
 
 
-/* BLOCK */
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("posts")
+    .delete()
+    .eq(
+      "id",
+      postId
+    )
+    .eq(
+      "user_id",
+      currentUser.id
+    );
 
-async function blockUser(userId){
-
-  if(!currentUser || userId === currentUser.id)return;
-
-  if(!confirm("Block this user?"))return;
-
-  const {error} =
-    await supabaseClient
-      .from("user_blocks")
-      .insert({
-        blocker_id:currentUser.id,
-        blocked_id:userId
-      });
 
   if(error){
 
-    if(error.code === "23505"){
-      alert("This user is already blocked.");
+    alert(
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  await loadPosts();
+
+}
+
+
+/* =========================
+   BLOCK USER
+========================= */
+
+async function blockUser(
+  userId
+){
+
+  if(
+    !currentUser ||
+    userId === currentUser.id
+  ){
+    return;
+  }
+
+
+  if(
+    !confirm(
+      "Block this user?"
+    )
+  ){
+    return;
+  }
+
+
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("user_blocks")
+    .insert({
+
+      blocker_id:
+        currentUser.id,
+
+      blocked_id:
+        userId
+
+    });
+
+
+  if(error){
+
+    if(
+      error.code === "23505"
+    ){
+
+      alert(
+        "This user is already blocked."
+      );
+
     }else{
-      alert(error.message);
+
+      alert(
+        error.message
+      );
+
     }
 
     return;
+
   }
 
-  alert("User blocked successfully.");
+
+  alert(
+    "User blocked successfully."
+  );
+
 
   await loadPosts();
+
 }
 
 
-/* ACTIONS */
+/* =========================
+   ACTION COUNTS
+========================= */
 
-async function loadPostActions(postId){
+async function loadPostActions(
+  postId
+){
 
-  const {data,error} =
-    await supabaseClient
-      .from("post_actions")
-      .select("user_id,action_type")
-      .eq("post_id",postId);
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .from("post_actions")
+    .select(
+      "user_id,action_type"
+    )
+    .eq(
+      "post_id",
+      postId
+    );
 
-  if(error)return;
 
-  let jhappiCount=0;
-  let chupairCount=0;
-  let myJhappi=false;
-  let myChupair=false;
+  if(error){
+    return;
+  }
 
-  (data || []).forEach(action=>{
 
-    if(action.action_type==="jhappi"){
+  let jhappiCount = 0;
+  let chupairCount = 0;
+  let myJhappi = false;
+  let myChupair = false;
 
-      jhappiCount++;
 
-      if(action.user_id===currentUser.id)
-        myJhappi=true;
+  (data || []).forEach(
+    action => {
+
+      if(
+        action.action_type ===
+        "jhappi"
+      ){
+
+        jhappiCount++;
+
+        if(
+          action.user_id ===
+          currentUser.id
+        ){
+
+          myJhappi = true;
+
+        }
+
+      }
+
+
+      if(
+        action.action_type ===
+        "chupair"
+      ){
+
+        chupairCount++;
+
+        if(
+          action.user_id ===
+          currentUser.id
+        ){
+
+          myChupair = true;
+
+        }
+
+      }
+
     }
+  );
 
-    if(action.action_type==="chupair"){
 
-      chupairCount++;
+  const jhappi =
+    document.getElementById(
+      "jhappi-" +
+      postId
+    );
 
-      if(action.user_id===currentUser.id)
-        myChupair=true;
-    }
 
-  });
+  const chupair =
+    document.getElementById(
+      "chupair-" +
+      postId
+    );
 
-  const j =
-    document.getElementById("jhappi-"+postId);
 
-  const c =
-    document.getElementById("chupair-"+postId);
+  if(jhappi){
 
-  if(j)j.textContent=jhappiCount;
-  if(c)c.textContent=chupairCount;
+    jhappi.textContent =
+      jhappiCount;
+
+  }
+
+
+  if(chupair){
+
+    chupair.textContent =
+      chupairCount;
+
+  }
+
 
   const buttons =
     document.querySelectorAll(
       `#actions-${postId} .post-action`
     );
 
-  if(buttons.length>=2){
 
-    buttons[0].classList.toggle("active",myJhappi);
-    buttons[1].classList.toggle("active",myChupair);
+  if(
+    buttons.length >= 2
+  ){
+
+    buttons[0]
+      .classList
+      .toggle(
+        "active",
+        myJhappi
+      );
+
+
+    buttons[1]
+      .classList
+      .toggle(
+        "active",
+        myChupair
+      );
+
   }
+
 }
 
 
-async function togglePostAction(postId,actionType){
+/* =========================
+   TOGGLE ACTION
+========================= */
+
+async function togglePostAction(
+  postId,
+  actionType
+){
 
   if(!currentUser){
 
-    alert("Please login first.");
+    alert(
+      "Please login first."
+    );
+
     return;
+
   }
 
-  const {data,error} =
-    await supabaseClient
-      .from("post_actions")
-      .select("id")
-      .eq("post_id",postId)
-      .eq("user_id",currentUser.id)
-      .eq("action_type",actionType)
-      .maybeSingle();
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .from("post_actions")
+    .select("id")
+    .eq(
+      "post_id",
+      postId
+    )
+    .eq(
+      "user_id",
+      currentUser.id
+    )
+    .eq(
+      "action_type",
+      actionType
+    )
+    .maybeSingle();
+
 
   if(error){
 
-    alert(error.message);
+    alert(
+      error.message
+    );
+
     return;
+
   }
+
 
   if(data){
 
-    const {error:deleteError} =
-      await supabaseClient
-        .from("post_actions")
-        .delete()
-        .eq("id",data.id);
+    const {
+      error:deleteError
+    } =
+    await supabaseClient
+      .from("post_actions")
+      .delete()
+      .eq(
+        "id",
+        data.id
+      );
+
 
     if(deleteError){
-      alert(deleteError.message);
+
+      alert(
+        deleteError.message
+      );
+
       return;
+
     }
 
   }else{
 
-    const {error:insertError} =
-      await supabaseClient
-        .from("post_actions")
-        .insert({
-          post_id:postId,
-          user_id:currentUser.id,
-          action_type:actionType
-        });
+    const {
+      error:insertError
+    } =
+    await supabaseClient
+      .from("post_actions")
+      .insert({
+
+        post_id:
+          postId,
+
+        user_id:
+          currentUser.id,
+
+        action_type:
+          actionType
+
+      });
+
 
     if(insertError){
-      alert(insertError.message);
+
+      alert(
+        insertError.message
+      );
+
       return;
+
     }
+
   }
 
-  await loadPostActions(postId);
+
+  await updateActionCount(
+    postId,
+    actionType
+  );
+
 }
 
 
-async function updateActionCount(postId,actionType){
-  await loadPostActions(postId);
+/* =========================
+   UPDATE ACTION
+========================= */
+
+async function updateActionCount(
+  postId,
+  actionType
+){
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .from("post_actions")
+    .select("id")
+    .eq(
+      "post_id",
+      postId
+    )
+    .eq(
+      "action_type",
+      actionType
+    );
+
+
+  if(error){
+    return;
+  }
+
+
+  const count =
+    (data || []).length;
+
+
+  const counter =
+    document.getElementById(
+      actionType +
+      "-" +
+      postId
+    );
+
+
+  if(counter){
+
+    counter.textContent =
+      count;
+
+  }
+
+
+  const buttons =
+    document.querySelectorAll(
+      `#actions-${postId} .post-action`
+    );
+
+
+  const {
+    data:mine
+  } =
+  await supabaseClient
+    .from("post_actions")
+    .select("id")
+    .eq(
+      "post_id",
+      postId
+    )
+    .eq(
+      "user_id",
+      currentUser.id
+    )
+    .eq(
+      "action_type",
+      actionType
+    )
+    .maybeSingle();
+
+
+  if(
+    actionType === "jhappi" &&
+    buttons[0]
+  ){
+
+    buttons[0]
+      .classList
+      .toggle(
+        "active",
+        !!mine
+      );
+
+  }
+
+
+  if(
+    actionType === "chupair" &&
+    buttons[1]
+  ){
+
+    buttons[1]
+      .classList
+      .toggle(
+        "active",
+        !!mine
+      );
+
+  }
+
 }
 
 
-/* COMMENTS */
+/* =========================
+   COMMENTS
+========================= */
 
-async function toggleComments(postId){
+async function toggleComments(
+  postId
+){
 
   const box =
     document.getElementById(
-      "comment-box-"+postId
+      "comment-box-" +
+      postId
     );
 
-  if(!box)return;
 
-  if(box.style.display==="none"){
+  if(!box){
+    return;
+  }
 
-    box.style.display="block";
 
-    await loadComments(postId);
+  if(
+    box.style.display ===
+    "none"
+  ){
+
+    box.style.display =
+      "block";
+
+
+    await loadComments(
+      postId
+    );
+
 
     const input =
       document.getElementById(
-        "comment-input-"+postId
+        "comment-input-" +
+        postId
       );
 
-    if(input)input.focus();
+
+    if(input){
+
+      input.focus();
+
+    }
 
   }else{
 
-    box.style.display="none";
+    box.style.display =
+      "none";
+
   }
+
 }
 
 
-async function loadCommentCount(postId){
+async function loadCommentCount(
+  postId
+){
 
-  const {data,error} =
-    await supabaseClient
-      .from("comments")
-      .select("id")
-      .eq("post_id",postId);
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .from("comments")
+    .select("id")
+    .eq(
+      "post_id",
+      postId
+    );
 
-  if(error)return;
+
+  if(error){
+    return;
+  }
+
 
   const count =
     document.getElementById(
-      "comment-count-"+postId
+      "comment-count-" +
+      postId
     );
 
-  if(count)
-    count.textContent=(data||[]).length;
+
+  if(count){
+
+    count.textContent =
+      (data || []).length;
+
+  }
+
 }
 
 
-async function loadComments(postId){
+async function loadComments(
+  postId
+){
 
   const list =
     document.getElementById(
-      "comments-"+postId
+      "comments-" +
+      postId
     );
 
-  if(!list)return;
 
-  const {data,error} =
-    await supabaseClient
-      .from("comments")
-      .select("*")
-      .eq("post_id",postId)
-      .order("created_at",{ascending:true});
+  const count =
+    document.getElementById(
+      "comment-count-" +
+      postId
+    );
+
+
+  if(!list){
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .from("comments")
+    .select("*")
+    .eq(
+      "post_id",
+      postId
+    )
+    .order(
+      "created_at",
+      {
+        ascending:true
+      }
+    );
+
 
   if(error){
 
     list.innerHTML =
       `<div class="comment">
-        ${escapeHtml(error.message)}
+        ${escapeHtml(
+          error.message
+        )}
       </div>`;
 
     return;
+
   }
 
-  if(!data || !data.length){
+
+  if(count){
+
+    count.textContent =
+      (data || []).length;
+
+  }
+
+
+  if(
+    !data ||
+    data.length === 0
+  ){
 
     list.innerHTML =
-      `<div style="color:#777;font-size:12px;margin-top:8px">
+      `<div
+        style="
+          color:#777;
+          font-size:12px;
+          margin-top:8px;
+        "
+      >
         No comments yet.
       </div>`;
 
     return;
+
   }
 
-  list.innerHTML="";
 
-  data.forEach(item=>{
+  list.innerHTML = "";
 
-    const div =
-      document.createElement("div");
 
-    div.className="comment";
+  data.forEach(
+    item => {
 
-    div.innerHTML=`
-      <div class="comment-user">
-        ${escapeHtml(item.username||"User")}
-      </div>
+      const div =
+        document.createElement(
+          "div"
+        );
 
-      <div class="comment-text">
-        ${escapeHtml(item.comment)}
-      </div>
-    `;
 
-    list.appendChild(div);
-  });
+      div.className =
+        "comment";
+
+
+      div.innerHTML = `
+
+        <div class="comment-user">
+          ${escapeHtml(
+            item.username ||
+            "User"
+          )}
+        </div>
+
+        <div class="comment-text">
+          ${escapeHtml(
+            item.comment
+          )}
+        </div>
+
+      `;
+
+
+      list.appendChild(
+        div
+      );
+
+    }
+  );
+
 }
 
 
-async function addComment(postId){
+async function addComment(
+  postId
+){
 
   if(!currentUser){
 
-    alert("Please login first.");
+    alert(
+      "Please login first."
+    );
+
     return;
+
   }
+
 
   const input =
     document.getElementById(
-      "comment-input-"+postId
+      "comment-input-" +
+      postId
     );
 
-  if(!input)return;
+
+  if(!input){
+    return;
+  }
+
 
   const comment =
     input.value.trim();
 
+
   if(!comment){
 
-    alert("Please write a comment.");
+    alert(
+      "Please write a comment."
+    );
+
     return;
+
   }
 
-  const {error} =
-    await supabaseClient
-      .from("comments")
-      .insert({
-        post_id:postId,
-        user_id:currentUser.id,
-        username:getUsername(),
-        comment:comment
-      });
+
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("comments")
+    .insert({
+
+      post_id:
+        postId,
+
+      user_id:
+        currentUser.id,
+
+      username:
+        getUsername(),
+
+      comment:
+        comment
+
+    });
+
 
   if(error){
 
-    alert(error.message);
+    alert(
+      error.message
+    );
+
     return;
+
   }
 
-  input.value="";
 
-  await loadComments(postId);
-  await loadCommentCount(postId);
+  input.value = "";
+
+
+  await loadComments(
+    postId
+  );
+
 }
 
 
-/* REPLY */
+/* =========================
+   REPLY
+========================= */
 
-function replyToPost(username){
+function replyToPost(
+  username
+){
 
   const input =
-    document.getElementById("postInput");
+    document.getElementById(
+      "postInput"
+    );
 
-  input.value="@"+username+" ";
+
+  input.value =
+    "@" +
+    username +
+    " ";
+
+
   input.focus();
+
 
   window.scrollTo({
     top:0,
     behavior:"smooth"
   });
+
 }
 
 
@@ -1023,38 +2084,73 @@ async function sendTextMessage(){
 
   if(!currentUser){
 
-    alert("Please login first.");
+    alert(
+      "Please login first."
+    );
+
     return;
+
   }
 
+
   const input =
-    document.getElementById("chatInput");
+    document.getElementById(
+      "chatInput"
+    );
+
 
   const message =
     input.value.trim();
 
-  if(!message)return;
 
-  const {error} =
-    await supabaseClient
-      .from("messages")
-      .insert({
-        user_id:currentUser.id,
-        username:getUsername(),
-        message:message,
-        message_type:"text",
-        media_url:null
-      });
-
-  if(error){
-
-    alert(error.message);
+  if(!message){
     return;
   }
 
-  input.value="";
 
-  showStatus("Message sent ✓");
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("messages")
+    .insert({
+
+      user_id:
+        currentUser.id,
+
+      username:
+        getUsername(),
+
+      message:
+        message,
+
+      message_type:
+        "text",
+
+      media_url:
+        null
+
+    });
+
+
+  if(error){
+
+    alert(
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  input.value = "";
+
+
+  showMessageStatus(
+    "Message sent ✓"
+  );
+
 }
 
 
@@ -1066,100 +2162,174 @@ async function sendImage(){
 
   if(!currentUser){
 
-    alert("Please login first.");
+    alert(
+      "Please login first."
+    );
+
     return;
+
   }
 
+
   const input =
-    document.getElementById("imageInput");
+    document.getElementById(
+      "imageInput"
+    );
+
 
   const file =
     input.files[0];
 
-  if(!file)return;
 
-  if(!file.type.startsWith("image/")){
-
-    alert("Please select an image.");
-    input.value="";
+  if(!file){
     return;
   }
 
-  if(file.size>10*1024*1024){
 
-    alert("Image must be smaller than 10 MB.");
-    input.value="";
+  if(
+    !file.type.startsWith(
+      "image/"
+    )
+  ){
+
+    alert(
+      "Please select an image."
+    );
+
+    input.value = "";
+
     return;
+
   }
 
-  showStatus("Uploading image...");
+
+  if(
+    file.size >
+    10 * 1024 * 1024
+  ){
+
+    alert(
+      "Image must be smaller than 10 MB."
+    );
+
+    input.value = "";
+
+    return;
+
+  }
+
+
+  showMessageStatus(
+    "Uploading image..."
+  );
+
 
   const filePath =
-    currentUser.id+
-    "/"+
-    Date.now()+
-    "_"+
-    cleanFileName(file.name);
+    currentUser.id +
+    "/" +
+    Date.now() +
+    "_" +
+    cleanFileName(
+      file.name
+    );
 
-  const {error:uploadError} =
-    await supabaseClient
-      .storage
-      .from("chat-images")
-      .upload(
-        filePath,
-        file,
-        {
-          contentType:file.type,
-          upsert:false
-        }
-      );
+
+  const {
+    error:uploadError
+  } =
+  await supabaseClient
+    .storage
+    .from("chat-images")
+    .upload(
+      filePath,
+      file,
+      {
+        contentType:
+          file.type,
+
+        upsert:
+          false
+      }
+    );
+
 
   if(uploadError){
 
     alert(
-      "Image upload failed: "+
+      "Image upload failed: " +
       uploadError.message
     );
 
-    showStatus("");
-    input.value="";
+    document.getElementById(
+      "status"
+    ).textContent = "";
+
+    input.value = "";
+
     return;
+
   }
 
-  const {data:urlData} =
-    supabaseClient
-      .storage
-      .from("chat-images")
-      .getPublicUrl(filePath);
+
+  const {
+    data:urlData
+  } =
+  supabaseClient
+    .storage
+    .from("chat-images")
+    .getPublicUrl(
+      filePath
+    );
+
 
   const imageUrl =
     urlData.publicUrl;
 
-  const {error:messageError} =
-    await supabaseClient
-      .from("messages")
-      .insert({
-        user_id:currentUser.id,
-        username:getUsername(),
-        message:"📷 Image",
-        message_type:"image",
-        media_url:imageUrl
-      });
+
+  const {
+    error:messageError
+  } =
+  await supabaseClient
+    .from("messages")
+    .insert({
+
+      user_id:
+        currentUser.id,
+
+      username:
+        getUsername(),
+
+      message:
+        "📷 Image",
+
+      message_type:
+        "image",
+
+      media_url:
+        imageUrl
+
+    });
+
 
   if(messageError){
 
     alert(
-      "Message save failed: "+
+      "Message save failed: " +
       messageError.message
     );
 
-    showStatus("");
     return;
+
   }
 
-  input.value="";
 
-  showStatus("Image sent ✓");
+  input.value = "";
+
+
+  showMessageStatus(
+    "Image sent ✓"
+  );
+
 }
 
 
@@ -1171,9 +2341,14 @@ async function toggleRecording(){
 
   if(!currentUser){
 
-    alert("Please login first.");
+    alert(
+      "Please login first."
+    );
+
     return;
+
   }
+
 
   if(isRecording){
 
@@ -1182,7 +2357,9 @@ async function toggleRecording(){
   }else{
 
     await startRecording();
+
   }
+
 }
 
 
@@ -1198,18 +2375,24 @@ async function startRecording(){
     );
 
     return;
+
   }
+
 
   try{
 
     const stream =
-      await navigator.mediaDevices.getUserMedia({
-        audio:true
-      });
+      await navigator.mediaDevices
+        .getUserMedia({
+          audio:true
+        });
 
-    audioChunks=[];
 
-    let options={};
+    audioChunks = [];
+
+
+    let options = {};
+
 
     if(
       MediaRecorder.isTypeSupported(
@@ -1217,8 +2400,11 @@ async function startRecording(){
       )
     ){
 
-      options.mimeType="audio/webm";
+      options.mimeType =
+        "audio/webm";
+
     }
+
 
     mediaRecorder =
       new MediaRecorder(
@@ -1226,69 +2412,110 @@ async function startRecording(){
         options
       );
 
+
     mediaRecorder.ondataavailable =
-      event=>{
+      event => {
 
         if(
           event.data &&
-          event.data.size>0
+          event.data.size > 0
         ){
 
-          audioChunks.push(event.data);
+          audioChunks.push(
+            event.data
+          );
+
         }
+
       };
 
+
     mediaRecorder.onstop =
-      async()=>{
+      async () => {
 
         stream
           .getTracks()
-          .forEach(track=>track.stop());
+          .forEach(
+            track =>
+              track.stop()
+          );
+
 
         const mimeType =
           mediaRecorder.mimeType ||
           "audio/webm";
 
+
         const audioBlob =
           new Blob(
             audioChunks,
-            {type:mimeType}
+            {
+              type:mimeType
+            }
           );
 
-        if(audioBlob.size===0){
 
-          alert("Voice recording empty hai.");
+        if(
+          audioBlob.size === 0
+        ){
+
+          alert(
+            "Voice recording empty hai."
+          );
+
           return;
+
         }
+
 
         await uploadVoice(
           audioBlob,
           mimeType
         );
+
       };
+
 
     mediaRecorder.start();
 
-    isRecording=true;
+
+    isRecording = true;
+
 
     const btn =
-      document.getElementById("voiceBtn");
+      document.getElementById(
+        "voiceBtn"
+      );
 
-    btn.classList.add("voice-recording");
-    btn.textContent="⏹️";
+
+    btn.classList.add(
+      "recording"
+    );
+
+
+    btn.textContent =
+      "⏹️";
+
 
     document.getElementById(
       "recordStatus"
-    ).style.display="block";
+    ).style.display =
+      "block";
+
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
+
 
     alert(
       "Microphone permission allow karein."
     );
+
   }
+
 }
 
 
@@ -1299,193 +2526,354 @@ function stopRecording(){
     isRecording
   ){
 
-    isRecording=false;
+    isRecording = false;
+
 
     mediaRecorder.stop();
 
+
     const btn =
-      document.getElementById("voiceBtn");
+      document.getElementById(
+        "voiceBtn"
+      );
+
 
     btn.classList.remove(
-      "voice-recording"
+      "recording"
     );
 
-    btn.textContent="🎤";
+
+    btn.textContent =
+      "🎤";
+
 
     document.getElementById(
       "recordStatus"
-    ).style.display="none";
+    ).style.display =
+      "none";
+
   }
+
 }
 
 
-/* UPLOAD VOICE */
+/* =========================
+   UPLOAD VOICE
+========================= */
 
 async function uploadVoice(
   audioBlob,
   mimeType
 ){
 
-  if(!currentUser)return;
+  if(!currentUser){
+    return;
+  }
 
-  showStatus("Uploading voice...");
 
-  let extension="webm";
+  showMessageStatus(
+    "Uploading voice..."
+  );
 
-  if(mimeType.includes("mp4"))
-    extension="mp4";
 
-  else if(mimeType.includes("ogg"))
-    extension="ogg";
+  let extension =
+    "webm";
+
+
+  if(
+    mimeType.includes(
+      "mp4"
+    )
+  ){
+
+    extension =
+      "mp4";
+
+  }
+
+  else if(
+    mimeType.includes(
+      "ogg"
+    )
+  ){
+
+    extension =
+      "ogg";
+
+  }
+
 
   const filePath =
-    currentUser.id+
-    "/"+
-    Date.now()+
-    "_voice."+
+    currentUser.id +
+    "/" +
+    Date.now() +
+    "_voice." +
     extension;
 
-  const {error:uploadError} =
-    await supabaseClient
-      .storage
-      .from("chat-voice")
-      .upload(
-        filePath,
-        audioBlob,
-        {
-          contentType:mimeType,
-          upsert:false
-        }
-      );
+
+  const {
+    error:uploadError
+  } =
+  await supabaseClient
+    .storage
+    .from("chat-voice")
+    .upload(
+      filePath,
+      audioBlob,
+      {
+        contentType:
+          mimeType,
+
+        upsert:
+          false
+      }
+    );
+
 
   if(uploadError){
 
     alert(
-      "Voice upload failed: "+
+      "Voice upload failed: " +
       uploadError.message
     );
 
-    showStatus("");
+    document.getElementById(
+      "status"
+    ).textContent = "";
+
     return;
+
   }
 
-  const {data:urlData} =
-    supabaseClient
-      .storage
-      .from("chat-voice")
-      .getPublicUrl(filePath);
+
+  const {
+    data:urlData
+  } =
+  supabaseClient
+    .storage
+    .from("chat-voice")
+    .getPublicUrl(
+      filePath
+    );
+
 
   const voiceUrl =
     urlData.publicUrl;
 
-  const {error:messageError} =
-    await supabaseClient
-      .from("messages")
-      .insert({
-        user_id:currentUser.id,
-        username:getUsername(),
-        message:"🎤 Voice message",
-        message_type:"voice",
-        media_url:voiceUrl
-      });
+
+  const {
+    error:messageError
+  } =
+  await supabaseClient
+    .from("messages")
+    .insert({
+
+      user_id:
+        currentUser.id,
+
+      username:
+        getUsername(),
+
+      message:
+        "🎤 Voice message",
+
+      message_type:
+        "voice",
+
+      media_url:
+        voiceUrl
+
+    });
+
 
   if(messageError){
 
     alert(
-      "Voice message save failed: "+
+      "Voice message save failed: " +
       messageError.message
     );
 
-    showStatus("");
     return;
+
   }
 
-  showStatus("Voice sent ✓");
+
+  showMessageStatus(
+    "Voice sent ✓"
+  );
+
 }
 
 
-/* HELPERS */
+/* =========================
+   MESSAGE STATUS
+========================= */
+
+function showMessageStatus(
+  message
+){
+
+  const status =
+    document.getElementById(
+      "status"
+    );
+
+
+  status.textContent =
+    message;
+
+
+  setTimeout(
+    () => {
+
+      status.textContent = "";
+
+    },
+    2500
+  );
+
+}
+
+
+/* =========================
+   USERNAME
+========================= */
 
 function getUsername(){
 
-  if(!currentUser)return "User";
+  if(!currentUser){
 
-  return(
+    return "User";
+
+  }
+
+
+  return (
     currentUser.user_metadata?.username ||
     currentUser.email?.split("@")[0] ||
     "User"
   );
+
 }
 
 
-function cleanFileName(name){
+/* =========================
+   CLEAN FILE NAME
+========================= */
+
+function cleanFileName(
+  name
+){
 
   return String(name)
     .replace(
       /[^a-zA-Z0-9._-]/g,
       "_"
     );
+
 }
 
 
-function showAction(action){
+/* =========================
+   BUTTON ACTIONS
+========================= */
+
+function showAction(
+  action
+){
 
   const input =
-    document.getElementById("postInput");
+    document.getElementById(
+      "postInput"
+    );
 
-  input.value=action+" ";
+
+  input.value =
+    action +
+    " ";
+
+
   input.focus();
+
 }
 
 
-function showNotice(message){
-  alert(message);
+function showNotice(
+  message
+){
+
+  alert(
+    message
+  );
+
 }
 
 
-function showStatus(message){
+/* =========================
+   SECURITY
+========================= */
 
-  document.getElementById(
-    "status"
-  ).textContent=message;
+function escapeHtml(
+  value
+){
 
-  if(message){
+  return String(
+    value ?? ""
+  )
+  .replaceAll(
+    "&",
+    "&amp;"
+  )
+  .replaceAll(
+    "<",
+    "&lt;"
+  )
+  .replaceAll(
+    ">",
+    "&gt;"
+  )
+  .replaceAll(
+    '"',
+    "&quot;"
+  )
+  .replaceAll(
+    "'",
+    "&#039;"
+  );
 
-    setTimeout(()=>{
-
-      document.getElementById(
-        "status"
-      ).textContent="";
-
-    },2500);
-  }
 }
 
 
-/* SECURITY */
+function escapeAttribute(
+  value
+){
 
-function escapeHtml(value){
+  return String(
+    value ?? ""
+  )
+  .replaceAll(
+    "&",
+    "&amp;"
+  )
+  .replaceAll(
+    '"',
+    "&quot;"
+  )
+  .replaceAll(
+    "<",
+    "&lt;"
+  )
+  .replaceAll(
+    ">",
+    "&gt;"
+  );
 
-  return String(value??"")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
 }
 
 
-function escapeAttribute(value){
-
-  return String(value??"")
-    .replaceAll("&","&amp;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;");
-}
-
-
-/* START */
+/* =========================
+   START
+========================= */
 
 checkUser();
 
