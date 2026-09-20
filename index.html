@@ -136,6 +136,14 @@ body{
   word-break:break-word;
 }
 
+.post-image{
+  width:100%;
+  max-width:500px;
+  display:block;
+  margin-top:10px;
+  border-radius:12px;
+}
+
 .status{
   text-align:center;
   color:#777;
@@ -163,6 +171,7 @@ body{
   <div class="message-title">💬 Message</div>
 
   <div class="message-row">
+
     <input
       type="text"
       id="chatInput"
@@ -170,7 +179,12 @@ body{
       onkeydown="if(event.key==='Enter') sendMessage()"
     >
 
-    <button class="chat-send" onclick="sendMessage()">➤</button>
+    <button
+      class="chat-send"
+      onclick="sendMessage()">
+      ➤
+    </button>
+
   </div>
 
   <div class="media-row">
@@ -203,18 +217,31 @@ body{
 
 </div>
 
+
 <div class="container">
 
   <div class="welcome">
-    <h3>Welcome to Socialyte 💜</h3>
-    <div id="userStatus">Checking login...</div>
+
+    <h3>
+      Welcome to Socialyte 💜
+    </h3>
+
+    <div id="userStatus">
+      Checking login...
+    </div>
+
   </div>
 
   <div id="posts">
-    <div class="status">Loading posts...</div>
+
+    <div class="status">
+      Loading posts...
+    </div>
+
   </div>
 
 </div>
+
 
 <script>
 
@@ -251,11 +278,11 @@ async function startApp(){
       error
     } = await supabaseClient.auth.getSession();
 
-    console.log("Session:", data);
+    console.log("Session:",data);
 
     if(error){
 
-      console.error("Session error:", error);
+      console.error("Session error:",error);
 
       document.getElementById("userStatus").textContent =
         "Login check failed.";
@@ -266,6 +293,7 @@ async function startApp(){
     if(!data.session){
 
       window.location.href = "login.html";
+
       return;
     }
 
@@ -341,6 +369,9 @@ async function loadPosts(){
 
     div.className="post";
 
+
+    /* USERNAME */
+
     const user =
       document.createElement("div");
 
@@ -348,6 +379,9 @@ async function loadPosts(){
 
     user.textContent =
       post.username || "User";
+
+
+    /* TEXT */
 
     const text =
       document.createElement("div");
@@ -357,8 +391,38 @@ async function loadPosts(){
     text.textContent =
       post.content || "";
 
+
     div.appendChild(user);
-    div.appendChild(text);
+
+    if(post.content){
+
+      div.appendChild(text);
+
+    }
+
+
+    /* IMAGE */
+
+    if(post.image_url){
+
+      const img =
+        document.createElement("img");
+
+      img.className="post-image";
+
+      img.src =
+        post.image_url;
+
+      img.alt =
+        "Uploaded image";
+
+      img.loading =
+        "lazy";
+
+      div.appendChild(img);
+
+    }
+
 
     postsBox.appendChild(div);
 
@@ -385,6 +449,7 @@ async function sendMessage(){
   if(!currentUser){
 
     alert("Please login first.");
+
     return;
   }
 
@@ -394,17 +459,23 @@ async function sendMessage(){
     .from("posts")
     .insert({
 
-      user_id:currentUser.id,
+      user_id:
+        currentUser.id,
 
-      username:currentUsername,
+      username:
+        currentUsername,
 
-      content:text
+      content:
+        text
 
     });
 
   if(error){
 
-    console.error("SEND ERROR:",error);
+    console.error(
+      "SEND ERROR:",
+      error
+    );
 
     alert(
       "Message send nahi hua.\n\n" +
@@ -422,10 +493,10 @@ async function sendMessage(){
 
 
 /* =========================
-   IMAGE
+   IMAGE UPLOAD
 ========================= */
 
-function sendImage(){
+async function sendImage(){
 
   const input =
     document.getElementById("imageInput");
@@ -436,13 +507,137 @@ function sendImage(){
   if(!file)
     return;
 
-  alert(
-    "🖼️ Image selected!\n\n" +
-    "Permanent image sending ke liye " +
-    "Supabase Storage next step mein connect karenge."
-  );
+  if(!currentUser){
+
+    alert("Please login first.");
+
+    input.value="";
+
+    return;
+  }
+
+
+  /* IMAGE SIZE CHECK */
+
+  if(file.size > 50 * 1024 * 1024){
+
+    alert(
+      "Image 50 MB se choti honi chahiye."
+    );
+
+    input.value="";
+
+    return;
+  }
+
+
+  /* UNIQUE FILE NAME */
+
+  const fileName =
+    currentUser.id +
+    "_" +
+    Date.now() +
+    "_" +
+    file.name.replace(
+      /[^a-zA-Z0-9._-]/g,
+      "_"
+    );
+
+
+  /* UPLOAD TO STORAGE */
+
+  const {
+    error:uploadError
+  } =
+    await supabaseClient
+      .storage
+      .from("Image")
+      .upload(
+        fileName,
+        file,
+        {
+          cacheControl:"3600",
+          upsert:false
+        }
+      );
+
+
+  if(uploadError){
+
+    console.error(
+      "UPLOAD ERROR:",
+      uploadError
+    );
+
+    alert(
+      "Image upload nahi hui.\n\n" +
+      uploadError.message
+    );
+
+    input.value="";
+
+    return;
+  }
+
+
+  /* GET PUBLIC URL */
+
+  const {
+    data:urlData
+  } =
+    supabaseClient
+      .storage
+      .from("Image")
+      .getPublicUrl(fileName);
+
+  const imageUrl =
+    urlData.publicUrl;
+
+
+  /* SAVE IMAGE URL IN POSTS */
+
+  const {
+    error:postError
+  } =
+    await supabaseClient
+      .from("posts")
+      .insert({
+
+        user_id:
+          currentUser.id,
+
+        username:
+          currentUsername,
+
+        content:
+          "🖼️ Image",
+
+        image_url:
+          imageUrl
+
+      });
+
+
+  if(postError){
+
+    console.error(
+      "IMAGE POST ERROR:",
+      postError
+    );
+
+    alert(
+      "Image save nahi hui.\n\n" +
+      postError.message
+    );
+
+    return;
+  }
+
 
   input.value="";
+
+  await loadPosts();
+
 }
 
 
@@ -451,7 +646,9 @@ function sendImage(){
 ========================= */
 
 let recognition=null;
+
 let isRecording=false;
+
 
 function toggleVoice(){
 
@@ -460,10 +657,15 @@ function toggleVoice(){
     window.webkitSpeechRecognition;
 
   const status =
-    document.getElementById("recordStatus");
+    document.getElementById(
+      "recordStatus"
+    );
 
   const input =
-    document.getElementById("chatInput");
+    document.getElementById(
+      "chatInput"
+    );
+
 
   if(!SpeechRecognition){
 
@@ -473,6 +675,7 @@ function toggleVoice(){
 
     return;
   }
+
 
   if(isRecording){
 
@@ -485,6 +688,7 @@ function toggleVoice(){
     return;
   }
 
+
   recognition =
     new SpeechRecognition();
 
@@ -494,7 +698,9 @@ function toggleVoice(){
 
   recognition.interimResults=false;
 
-  recognition.onresult=function(event){
+
+  recognition.onresult =
+  function(event){
 
     let result="";
 
@@ -504,10 +710,15 @@ function toggleVoice(){
       i++
     ){
 
-      if(event.results[i].isFinal){
+      if(
+        event.results[i].isFinal
+      ){
 
         result +=
-          event.results[i][0].transcript + " ";
+          event.results[i][0]
+            .transcript +
+          " ";
+
       }
 
     }
@@ -516,7 +727,9 @@ function toggleVoice(){
 
   };
 
-  recognition.onerror=function(){
+
+  recognition.onerror =
+  function(){
 
     isRecording=false;
 
@@ -524,13 +737,16 @@ function toggleVoice(){
 
   };
 
-  recognition.onend=function(){
+
+  recognition.onend =
+  function(){
 
     isRecording=false;
 
     status.style.display="none";
 
   };
+
 
   recognition.start();
 
