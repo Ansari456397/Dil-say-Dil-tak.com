@@ -1,4 +1,4 @@
-```html
+ ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +21,7 @@ body{
   font-family:Arial,sans-serif;
   background:#f4f6fb;
   color:#222;
-  padding-top:155px;
+  padding-top:195px;
   padding-bottom:82px;
 }
 
@@ -72,7 +72,7 @@ body{
   right:0;
 }
 
-/* ================= TOP MESSAGE ================= */
+/* ================= MESSAGE BOX ================= */
 
 .home-message-box{
   position:fixed;
@@ -139,6 +139,27 @@ body{
   margin-top:5px;
 }
 
+/* TRENDING CARD INSIDE MESSAGE BOX */
+
+.trending-card{
+  margin-top:9px;
+  width:100%;
+  border:0;
+  background:#fff5e8;
+  color:#e67e22;
+  border-radius:12px;
+  padding:9px 12px;
+  text-align:left;
+  font-size:13px;
+  font-weight:bold;
+  cursor:pointer;
+  border-left:4px solid #f39c12;
+}
+
+.trending-card:active{
+  transform:scale(.98);
+}
+
 /* ================= MAIN ================= */
 
 .container{
@@ -161,76 +182,6 @@ body{
 .welcome h3{
   margin:0 0 5px;
   color:#6c5ce7;
-}
-
-/* ================= QUICK MENU ================= */
-
-.quick-menu{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-bottom:14px;
-}
-
-.menu-card{
-  border:0;
-  width:100%;
-  background:white;
-  border-radius:15px;
-  padding:14px 10px;
-  text-align:left;
-  box-shadow:0 2px 8px #0001;
-  cursor:pointer;
-  transition:0.2s;
-}
-
-.menu-card:active{
-  transform:scale(.97);
-}
-
-.menu-icon{
-  font-size:24px;
-  display:block;
-  margin-bottom:6px;
-}
-
-.menu-title{
-  display:block;
-  font-size:15px;
-  font-weight:bold;
-  color:#333;
-}
-
-.menu-subtitle{
-  display:block;
-  font-size:11px;
-  color:#777;
-  margin-top:3px;
-}
-
-.menu-card:nth-child(1){
-  border-left:4px solid #6c5ce7;
-}
-
-.menu-card:nth-child(2){
-  border-left:4px solid #f1c40f;
-}
-
-.menu-card:nth-child(3){
-  border-left:4px solid #ff7675;
-}
-
-.menu-card:nth-child(4){
-  border-left:4px solid #3498db;
-}
-
-/* ================= SECTION ================= */
-
-.section-title{
-  font-size:18px;
-  font-weight:bold;
-  color:#6c5ce7;
-  margin:10px 3px;
 }
 
 /* ================= POST ================= */
@@ -435,22 +386,15 @@ body{
 
   .header-side.logout{
     right:0;
-  }
-
-  .menu-card{
-    padding:12px 9px;
-  }
-
-  .menu-title{
-    font-size:14px;
-  }
-
-  .menu-subtitle{
-    font-size:10px;
+    font-size:11px;
   }
 
   .media-btn{
     padding:7px 9px;
+    font-size:12px;
+  }
+
+  .trending-card{
     font-size:12px;
   }
 
@@ -498,7 +442,7 @@ body{
   <button
     class="header-side logout"
     onclick="logout()">
-    🚪
+    Logout
   </button>
 
 </div>
@@ -557,14 +501,20 @@ body{
     🎤 Listening... Tap Voice again to stop
   </div>
 
+  <!-- TRENDING POSTS CARD -->
+
+  <button
+    class="trending-card"
+    onclick="openTrending()">
+    🔥 Trending Posts
+  </button>
+
 </div>
 
 
 <!-- ================= MAIN ================= -->
 
 <div class="container">
-
-  <!-- WELCOME -->
 
   <div class="welcome">
 
@@ -579,85 +529,7 @@ body{
   </div>
 
 
-  <!-- ================= QUICK MENU ================= -->
-
-  <div class="quick-menu">
-
-    <button
-      class="menu-card"
-      onclick="openPrivateChat()">
-
-      <span class="menu-icon">💬</span>
-
-      <span class="menu-title">
-        Private Chat
-      </span>
-
-      <span class="menu-subtitle">
-        Chat privately
-      </span>
-
-    </button>
-
-
-    <button
-      class="menu-card"
-      onclick="openTrending()">
-
-      <span class="menu-icon">🔥</span>
-
-      <span class="menu-title">
-        Trending Posts
-      </span>
-
-      <span class="menu-subtitle">
-        Popular posts
-      </span>
-
-    </button>
-
-
-    <button
-      class="menu-card"
-      onclick="openNotifications()">
-
-      <span class="menu-icon">🔔</span>
-
-      <span class="menu-title">
-        Notifications
-      </span>
-
-      <span class="menu-subtitle">
-        Your activity
-      </span>
-
-    </button>
-
-
-    <button
-      class="menu-card"
-      onclick="openProfile()">
-
-      <span class="menu-icon">👤</span>
-
-      <span class="menu-title">
-        Profile
-      </span>
-
-      <span class="menu-subtitle">
-        Your profile
-      </span>
-
-    </button>
-
-  </div>
-
-
   <!-- ================= POSTS ================= -->
-
-  <div class="section-title">
-    🔥 Trending Posts
-  </div>
 
   <div id="posts">
 
@@ -928,8 +800,6 @@ function createPostElement(
   }
 
 
-  /* ACTION BUTTONS */
-
   const actions =
     document.createElement("div");
 
@@ -1011,8 +881,6 @@ function createPostElement(
   actions.appendChild(reply);
 
 
-  /* DELETE OWN POST */
-
   if(
     currentUser &&
     post.user_id === currentUser.id
@@ -1041,8 +909,6 @@ function createPostElement(
 
   div.appendChild(actions);
 
-
-  /* COMMENTS */
 
   const commentsBox =
     document.createElement("div");
@@ -1466,8 +1332,6 @@ async function loadComments(postId){
       commentText
     );
 
-
-    /* REPLY */
 
     const replyArea =
       document.createElement("div");
@@ -1976,9 +1840,7 @@ function openStars(){
 
 function openTrending(){
 
-  document.querySelector(
-    ".section-title"
-  ).scrollIntoView({
+  document.getElementById("posts").scrollIntoView({
     behavior:"smooth"
   });
 
@@ -2059,3 +1921,4 @@ startApp();
 </body>
 </html>
 ```
+ 
