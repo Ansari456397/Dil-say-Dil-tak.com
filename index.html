@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+   <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -65,12 +66,6 @@ body{
 .profile-name{
   font-size:19px;
   font-weight:bold;
-}
-
-.online{
-  color:#16a085;
-  font-size:13px;
-  margin-top:4px;
 }
 
 /* ================= TOP MESSAGE ================= */
@@ -308,6 +303,7 @@ body{
 }
 
 </style>
+
 </head>
 
 <body>
@@ -322,131 +318,128 @@ body{
 
 </header>
 
-
 <main class="container">
 
   <!-- ================= PROFILE ================= -->
 
   <div class="profile-card">
 
-    <div
-      class="profile-name"
-      id="profileName">
-      Loading...
-    </div>
-
-    <div class="online">
-      ● Online
-    </div>
+```
+<div
+  class="profile-name"
+  id="profileName">
+  Loading...
+</div>
+```
 
   </div>
-
 
   <!-- ================= MESSAGE BOX ================= -->
 
   <div class="home-message-box">
 
-    <div class="message-title">
-      💬 Message
-    </div>
+```
+<div class="message-title">
+  💬 Message
+</div>
 
 
-    <!-- REPLY PREVIEW -->
+<!-- REPLY PREVIEW -->
 
-    <div
-      id="replyPreview"
-      style="
-        display:none;
-        background:#f1eefc;
-        padding:7px 10px;
-        border-radius:9px;
-        margin-bottom:7px;
-        font-size:13px;
-      ">
+<div
+  id="replyPreview"
+  style="
+    display:none;
+    background:#f1eefc;
+    padding:7px 10px;
+    border-radius:9px;
+    margin-bottom:7px;
+    font-size:13px;
+  ">
 
-      Replying to
-      <b id="replyUsername"></b>
+  Replying to
+  <b id="replyUsername"></b>
 
-      <button
-        onclick="cancelReply()"
-        style="
-          float:right;
-          border:0;
-          background:none;
-          cursor:pointer;
-        ">
-        ✕
-      </button>
+  <button
+    onclick="cancelReply()"
+    style="
+      float:right;
+      border:0;
+      background:none;
+      cursor:pointer;
+    ">
+    ✕
+  </button>
 
-    </div>
-
-
-    <!-- MESSAGE INPUT -->
-
-    <div class="message-row">
-
-      <input
-        id="chatInput"
-        type="text"
-        placeholder="Write a message..."
-        onkeydown="
-          if(event.key==='Enter'){
-            event.preventDefault();
-            sendTextMessage();
-          }
-        "
-      >
-
-      <button
-        class="chat-send"
-        onclick="sendTextMessage()">
-        ➤
-      </button>
-
-    </div>
+</div>
 
 
-    <!-- IMAGE + VOICE -->
+<!-- MESSAGE INPUT -->
 
-    <div class="message-tools">
+<div class="message-row">
 
-      <button
-        onclick="
-          document.getElementById('imageInput').click()
-        ">
-        🖼️ Upload Image
-      </button>
+  <input
+    id="chatInput"
+    type="text"
+    placeholder="Write a message..."
+    onkeydown="
+      if(event.key==='Enter'){
+        event.preventDefault();
+        sendTextMessage();
+      }
+    "
+  >
 
-      <button
-        id="voiceBtn"
-        onclick="toggleRecording()">
-        🎤 Voice
-      </button>
+  <button
+    class="chat-send"
+    onclick="sendTextMessage()">
+    ➤
+  </button>
 
-    </div>
-
-
-    <!-- HIDDEN IMAGE INPUT -->
-
-    <input
-      id="imageInput"
-      type="file"
-      accept="image/*"
-      style="display:none"
-      onchange="sendImage()"
-    >
+</div>
 
 
-    <!-- RECORD STATUS -->
+<!-- IMAGE + VOICE -->
 
-    <div
-      id="recordStatus"
-      class="record-status">
-      Recording... Tap 🎤 again to stop
-    </div>
+<div class="message-tools">
+
+  <button
+    onclick="
+      document.getElementById('imageInput').click()
+    ">
+    🖼️ Upload Image
+  </button>
+
+  <button
+    id="voiceBtn"
+    onclick="toggleRecording()">
+    🎤 Voice
+  </button>
+
+</div>
+
+
+<!-- HIDDEN IMAGE INPUT -->
+
+<input
+  id="imageInput"
+  type="file"
+  accept="image/*"
+  style="display:none"
+  onchange="sendImage()"
+>
+
+
+<!-- RECORD STATUS -->
+
+<div
+  id="recordStatus"
+  class="record-status">
+  Recording... Tap 🎤 again to stop
+</div>
+```
 
   </div>
-
 
   <!-- ================= TRENDING POSTS ================= -->
 
@@ -454,17 +447,17 @@ body{
     🔥 Trending Posts
   </div>
 
-
   <div id="posts">
 
-    <div class="empty">
-      Loading posts...
-    </div>
+```
+<div class="empty">
+  Loading posts...
+</div>
+```
 
   </div>
 
 </main>
-
 
 <!-- ================= BOTTOM NAV ================= -->
 
@@ -472,50 +465,55 @@ body{
 
   <button onclick="goHome()">
 
-    <div>🏠</div>
+```
+<div>🏠</div>
 
-    Home
+Home
+```
 
   </button>
-
 
   <button onclick="openPrivate()">
 
-    <div>💬</div>
+```
+<div>💬</div>
 
-    Private
+Private
+```
 
   </button>
-
 
   <button onclick="openProfile()">
 
-    <div>👤</div>
+```
+<div>👤</div>
 
-    Profile
+Profile
+```
 
   </button>
-
 
   <button onclick="openNotifications()">
 
-    <div>🔔</div>
+```
+<div>🔔</div>
 
-    Notifications
+Notifications
+```
 
   </button>
 
-
   <button onclick="openMore()">
 
-    <div>☰</div>
+```
+<div>☰</div>
 
-    More
+More
+```
 
   </button>
 
 </nav>
-
 
 <script>
 
@@ -1786,6 +1784,7 @@ function goHome(){
     behavior:"smooth"
 
   });
+
 
 }
 
