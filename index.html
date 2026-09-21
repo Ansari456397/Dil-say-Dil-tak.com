@@ -1,4 +1,4 @@
- ```html
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -91,6 +91,17 @@ body{
   margin-bottom:7px;
 }
 
+.reply-mention{
+  display:none;
+  background:#f0edff;
+  color:#6c5ce7;
+  border-radius:10px;
+  padding:6px 10px;
+  margin-bottom:7px;
+  font-size:12px;
+  font-weight:bold;
+}
+
 .message-row{
   display:flex;
   gap:6px;
@@ -139,7 +150,7 @@ body{
   margin-top:5px;
 }
 
-/* TRENDING CARD INSIDE MESSAGE BOX */
+/* TRENDING CARD */
 
 .trending-card{
   margin-top:9px;
@@ -154,10 +165,6 @@ body{
   font-weight:bold;
   cursor:pointer;
   border-left:4px solid #f39c12;
-}
-
-.trending-card:active{
-  transform:scale(.98);
 }
 
 /* ================= MAIN ================= */
@@ -286,7 +293,7 @@ body{
 
 .comment{
   background:#f6f6fa;
-  padding:8px 10px;
+  padding:9px 10px;
   border-radius:10px;
   margin-top:7px;
   font-size:13px;
@@ -298,17 +305,73 @@ body{
   margin-bottom:3px;
 }
 
+.comment-text{
+  word-break:break-word;
+}
+
+.comment-actions{
+  display:flex;
+  gap:7px;
+  margin-top:7px;
+}
+
+.comment-reply-btn{
+  border:0;
+  background:#eeeaff;
+  color:#6c5ce7;
+  border-radius:14px;
+  padding:5px 9px;
+  font-size:11px;
+  cursor:pointer;
+}
+
 .reply-area{
-  margin-top:6px;
+  display:none;
+  margin-top:7px;
+}
+
+.reply-row{
+  display:flex;
+  gap:5px;
 }
 
 .reply-input{
-  width:100%;
+  flex:1;
+  min-width:0;
   border:1px solid #ddd;
   border-radius:15px;
   padding:7px 10px;
   font-size:12px;
   outline:none;
+}
+
+.reply-send{
+  border:0;
+  background:#6c5ce7;
+  color:white;
+  border-radius:15px;
+  padding:0 11px;
+  cursor:pointer;
+}
+
+.comment-replies{
+  margin-top:7px;
+  margin-left:12px;
+}
+
+.comment-reply{
+  background:white;
+  border-left:3px solid #6c5ce7;
+  padding:7px 9px;
+  margin-top:5px;
+  border-radius:8px;
+  font-size:12px;
+}
+
+.comment-reply-user{
+  font-weight:bold;
+  color:#6c5ce7;
+  margin-bottom:2px;
 }
 
 .status{
@@ -384,11 +447,6 @@ body{
     right:58px;
   }
 
-  .header-side.logout{
-    right:0;
-    font-size:11px;
-  }
-
   .media-btn{
     padding:7px 9px;
     font-size:12px;
@@ -456,6 +514,11 @@ body{
     💬 Message
   </div>
 
+  <div
+    id="replyMention"
+    class="reply-mention">
+  </div>
+
   <div class="message-row">
 
     <input
@@ -501,8 +564,6 @@ body{
     🎤 Listening... Tap Voice again to stop
   </div>
 
-  <!-- TRENDING POSTS CARD -->
-
   <button
     class="trending-card"
     onclick="openTrending()">
@@ -528,9 +589,6 @@ body{
 
   </div>
 
-
-  <!-- ================= POSTS ================= -->
-
   <div id="posts">
 
     <div class="status">
@@ -550,9 +608,7 @@ body{
     class="active"
     onclick="goHome()">
 
-    <span class="nav-icon">
-      🏠
-    </span>
+    <span class="nav-icon">🏠</span>
 
     <span class="nav-text">
       Home
@@ -560,13 +616,10 @@ body{
 
   </button>
 
-
   <button
     onclick="openPrivateChat()">
 
-    <span class="nav-icon">
-      💬
-    </span>
+    <span class="nav-icon">💬</span>
 
     <span class="nav-text">
       Private
@@ -574,13 +627,10 @@ body{
 
   </button>
 
-
   <button
     onclick="openNotifications()">
 
-    <span class="nav-icon">
-      🔔
-    </span>
+    <span class="nav-icon">🔔</span>
 
     <span class="nav-text">
       Notifications
@@ -588,13 +638,10 @@ body{
 
   </button>
 
-
   <button
     onclick="openProfile()">
 
-    <span class="nav-icon">
-      👤
-    </span>
+    <span class="nav-icon">👤</span>
 
     <span class="nav-text">
       My Profile
@@ -623,6 +670,9 @@ window.supabase.createClient(
 
 let currentUser = null;
 let currentUsername = "User";
+
+/* Home reply state */
+let homeReplyUsername = "";
 
 
 /* ================= CHECK LOGIN ================= */
@@ -858,6 +908,8 @@ function createPostElement(
     };
 
 
+  /* ================= HOME REPLY ================= */
+
   const reply =
     document.createElement("button");
 
@@ -870,7 +922,9 @@ function createPostElement(
   reply.onclick =
     function(){
 
-      toggleComments(post.id);
+      startHomeReply(
+        post.username || "User"
+      );
 
     };
 
@@ -909,6 +963,8 @@ function createPostElement(
 
   div.appendChild(actions);
 
+
+  /* ================= COMMENTS BOX ================= */
 
   const commentsBox =
     document.createElement("div");
@@ -988,6 +1044,64 @@ function createPostElement(
   postsBox.appendChild(
     div
   );
+
+}
+
+
+/* ================= HOME REPLY ================= */
+
+function startHomeReply(username){
+
+  homeReplyUsername =
+    username || "User";
+
+  const mention =
+    document.getElementById(
+      "replyMention"
+    );
+
+  const input =
+    document.getElementById(
+      "chatInput"
+    );
+
+  mention.textContent =
+    "↩️ Replying to @" +
+    homeReplyUsername;
+
+  mention.style.display =
+    "block";
+
+  input.value =
+    "@" +
+    homeReplyUsername +
+    " ";
+
+  input.focus();
+
+  input.setSelectionRange(
+    input.value.length,
+    input.value.length
+  );
+
+}
+
+
+/* ================= CLEAR HOME REPLY ================= */
+
+function clearHomeReply(){
+
+  homeReplyUsername = "";
+
+  const mention =
+    document.getElementById(
+      "replyMention"
+    );
+
+  mention.textContent = "";
+
+  mention.style.display =
+    "none";
 
 }
 
@@ -1298,84 +1412,300 @@ async function loadComments(postId){
   }
 
 
-  data.forEach(function(comment){
+  for(
+    const comment of data
+  ){
 
-    const commentDiv =
-      document.createElement("div");
-
-    commentDiv.className =
-      "comment";
-
-
-    const commentUser =
-      document.createElement("div");
-
-    commentUser.className =
-      "comment-user";
-
-    commentUser.textContent =
-      comment.username || "User";
-
-
-    const commentText =
-      document.createElement("div");
-
-    commentText.textContent =
-      comment.content || "";
-
-
-    commentDiv.appendChild(
-      commentUser
+    await createCommentElement(
+      comment,
+      box
     );
 
-    commentDiv.appendChild(
-      commentText
-    );
+  }
+
+}
 
 
-    const replyArea =
+/* ================= CREATE COMMENT ================= */
+
+async function createCommentElement(
+  comment,
+  box
+){
+
+  const commentDiv =
+    document.createElement("div");
+
+  commentDiv.className =
+    "comment";
+
+
+  const commentUser =
+    document.createElement("div");
+
+  commentUser.className =
+    "comment-user";
+
+  commentUser.textContent =
+    comment.username || "User";
+
+
+  const commentText =
+    document.createElement("div");
+
+  commentText.className =
+    "comment-text";
+
+  commentText.textContent =
+    comment.content || "";
+
+
+  commentDiv.appendChild(
+    commentUser
+  );
+
+  commentDiv.appendChild(
+    commentText
+  );
+
+
+  /* ================= COMMENT ACTIONS ================= */
+
+  const commentActions =
+    document.createElement("div");
+
+  commentActions.className =
+    "comment-actions";
+
+
+  const replyButton =
+    document.createElement("button");
+
+  replyButton.className =
+    "comment-reply-btn";
+
+  replyButton.textContent =
+    "↩️ Reply";
+
+
+  const replyArea =
+    document.createElement("div");
+
+  replyArea.className =
+    "reply-area";
+
+
+  const replyRow =
+    document.createElement("div");
+
+  replyRow.className =
+    "reply-row";
+
+
+  const replyInput =
+    document.createElement("input");
+
+  replyInput.className =
+    "reply-input";
+
+  replyInput.placeholder =
+    "Reply to @" +
+    (comment.username || "User");
+
+
+  const replySend =
+    document.createElement("button");
+
+  replySend.className =
+    "reply-send";
+
+  replySend.textContent =
+    "➤";
+
+
+  replyButton.onclick =
+    function(){
+
+      if(
+        replyArea.style.display ===
+        "block"
+      ){
+
+        replyArea.style.display =
+          "none";
+
+        return;
+
+      }
+
+
+      replyArea.style.display =
+        "block";
+
+      replyInput.value =
+        "@" +
+        (comment.username || "User") +
+        " ";
+
+      replyInput.focus();
+
+      replyInput.setSelectionRange(
+        replyInput.value.length,
+        replyInput.value.length
+      );
+
+    };
+
+
+  replyInput.onkeydown =
+    function(event){
+
+      if(event.key === "Enter"){
+
+        addReply(
+          comment.id,
+          replyInput
+        );
+
+      }
+
+    };
+
+
+  replySend.onclick =
+    function(){
+
+      addReply(
+        comment.id,
+        replyInput
+      );
+
+    };
+
+
+  replyRow.appendChild(
+    replyInput
+  );
+
+  replyRow.appendChild(
+    replySend
+  );
+
+  replyArea.appendChild(
+    replyRow
+  );
+
+
+  commentActions.appendChild(
+    replyButton
+  );
+
+  commentDiv.appendChild(
+    commentActions
+  );
+
+  commentDiv.appendChild(
+    replyArea
+  );
+
+
+  /* ================= COMMENT REPLIES ================= */
+
+  const repliesBox =
+    document.createElement("div");
+
+  repliesBox.className =
+    "comment-replies";
+
+  repliesBox.id =
+    "replies-" + comment.id;
+
+  commentDiv.appendChild(
+    repliesBox
+  );
+
+  box.appendChild(
+    commentDiv
+  );
+
+
+  await loadCommentReplies(
+    comment.id,
+    repliesBox
+  );
+
+}
+
+
+/* ================= LOAD COMMENT REPLIES ================= */
+
+async function loadCommentReplies(
+  commentId,
+  repliesBox
+){
+
+  repliesBox.innerHTML = "";
+
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("comment_replies")
+    .select("*")
+    .eq("comment_id",commentId)
+    .order("id",{ascending:true});
+
+
+  if(error){
+
+    console.error(error);
+
+    return;
+
+  }
+
+
+  if(!data)
+    return;
+
+
+  data.forEach(function(reply){
+
+    const replyDiv =
       document.createElement("div");
 
-    replyArea.className =
-      "reply-area";
+    replyDiv.className =
+      "comment-reply";
 
 
-    const replyInput =
-      document.createElement("input");
+    const replyUser =
+      document.createElement("div");
 
-    replyInput.className =
-      "reply-input";
+    replyUser.className =
+      "comment-reply-user";
 
-    replyInput.placeholder =
-      "Reply...";
-
-
-    replyInput.onkeydown =
-      function(event){
-
-        if(event.key === "Enter"){
-
-          addReply(
-            comment.id,
-            replyInput
-          );
-
-        }
-
-      };
+    replyUser.textContent =
+      reply.username || "User";
 
 
-    replyArea.appendChild(
-      replyInput
+    const replyText =
+      document.createElement("div");
+
+    replyText.textContent =
+      reply.content || "";
+
+
+    replyDiv.appendChild(
+      replyUser
     );
 
-    commentDiv.appendChild(
-      replyArea
+    replyDiv.appendChild(
+      replyText
     );
 
-
-    box.appendChild(
-      commentDiv
+    repliesBox.appendChild(
+      replyDiv
     );
 
   });
@@ -1383,7 +1713,7 @@ async function loadComments(postId){
 }
 
 
-/* ================= REPLY ================= */
+/* ================= ADD COMMENT REPLY ================= */
 
 async function addReply(
   commentId,
@@ -1439,7 +1769,32 @@ async function addReply(
 
   input.value = "";
 
-  alert("↩️ Reply added!");
+
+  const replyArea =
+    input.closest(".reply-area");
+
+  if(replyArea){
+
+    replyArea.style.display =
+      "none";
+
+  }
+
+
+  const repliesBox =
+    document.getElementById(
+      "replies-" + commentId
+    );
+
+
+  if(repliesBox){
+
+    await loadCommentReplies(
+      commentId,
+      repliesBox
+    );
+
+  }
 
 }
 
@@ -1506,7 +1861,16 @@ async function sendMessage(){
 
   input.value = "";
 
+  clearHomeReply();
+
   await loadPosts();
+
+
+  /* Home ko latest message par le jaye */
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
 
 }
 
@@ -1921,4 +2285,3 @@ startApp();
 </body>
 </html>
 ```
- 
