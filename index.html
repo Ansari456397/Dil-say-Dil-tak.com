@@ -32,6 +32,7 @@ async function addComment(postId){
     });
 
   if(error){
+
     console.error("COMMENT SAVE ERROR:", error);
 
     alert(
@@ -45,4 +46,5 @@ async function addComment(postId){
   input.value = "";
 
   await loadComments(postId);
+
 }
