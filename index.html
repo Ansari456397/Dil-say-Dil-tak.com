@@ -1,4 +1,5 @@
-  <!DOCTYPE html>
+```html
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -21,6 +22,7 @@ body{
   background:#f4f6fb;
   color:#222;
   padding-top:155px;
+  padding-bottom:82px;
 }
 
 /* ================= HEADER ================= */
@@ -58,11 +60,15 @@ body{
   padding:0 10px;
 }
 
-.header-side:first-child{
+.header-side.left{
   left:0;
 }
 
-.header-side:last-child{
+.header-side.stars{
+  right:72px;
+}
+
+.header-side.logout{
   right:0;
 }
 
@@ -361,6 +367,55 @@ body{
   margin:10px;
 }
 
+/* ================= BOTTOM NAVIGATION ================= */
+
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:70px;
+  background:#fff;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  border-top:1px solid #ddd;
+  box-shadow:0 -3px 15px rgba(0,0,0,0.12);
+  z-index:9999;
+}
+
+.bottom-nav button{
+  flex:1;
+  height:70px;
+  border:0;
+  background:transparent;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  color:#555;
+  cursor:pointer;
+}
+
+.bottom-nav button:active{
+  background:#f4f1ff;
+}
+
+.bottom-nav .nav-icon{
+  font-size:22px;
+  line-height:22px;
+}
+
+.bottom-nav .nav-text{
+  font-size:11px;
+  font-weight:bold;
+}
+
+.bottom-nav .active{
+  color:#6c5ce7;
+}
+
 /* ================= MOBILE ================= */
 
 @media(max-width:400px){
@@ -370,8 +425,16 @@ body{
   }
 
   .header-side{
-    font-size:12px;
-    padding:0 7px;
+    font-size:11px;
+    padding:0 6px;
+  }
+
+  .header-side.stars{
+    right:58px;
+  }
+
+  .header-side.logout{
+    right:0;
   }
 
   .menu-card{
@@ -396,6 +459,14 @@ body{
     padding:7px 8px;
   }
 
+  .bottom-nav .nav-icon{
+    font-size:20px;
+  }
+
+  .bottom-nav .nav-text{
+    font-size:10px;
+  }
+
 }
 
 </style>
@@ -409,7 +480,7 @@ body{
 <div class="header">
 
   <button
-    class="header-side"
+    class="header-side left"
     onclick="openOnlineUsers()">
     👥 Online
   </button>
@@ -419,9 +490,15 @@ body{
   </div>
 
   <button
-    class="header-side"
+    class="header-side stars"
     onclick="openStars()">
     ⭐ Stars
+  </button>
+
+  <button
+    class="header-side logout"
+    onclick="logout()">
+    🚪
   </button>
 
 </div>
@@ -589,6 +666,69 @@ body{
     </div>
 
   </div>
+
+</div>
+
+
+<!-- ================= BOTTOM NAVIGATION ================= -->
+
+<div class="bottom-nav">
+
+  <button
+    class="active"
+    onclick="goHome()">
+
+    <span class="nav-icon">
+      🏠
+    </span>
+
+    <span class="nav-text">
+      Home
+    </span>
+
+  </button>
+
+
+  <button
+    onclick="openPrivateChat()">
+
+    <span class="nav-icon">
+      💬
+    </span>
+
+    <span class="nav-text">
+      Private
+    </span>
+
+  </button>
+
+
+  <button
+    onclick="openNotifications()">
+
+    <span class="nav-icon">
+      🔔
+    </span>
+
+    <span class="nav-text">
+      Notifications
+    </span>
+
+  </button>
+
+
+  <button
+    onclick="openProfile()">
+
+    <span class="nav-icon">
+      👤
+    </span>
+
+    <span class="nav-text">
+      My Profile
+    </span>
+
+  </button>
 
 </div>
 
@@ -1804,7 +1944,17 @@ function toggleVoice(){
 }
 
 
-/* ================= MENU ================= */
+/* ================= NAVIGATION ================= */
+
+function goHome(){
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
 
 function openPrivateChat(){
 
@@ -1862,6 +2012,44 @@ function openProfile(){
 }
 
 
+/* ================= LOGOUT ================= */
+
+async function logout(){
+
+  const confirmLogout =
+    confirm(
+      "Kya aap Logout karna chahte hain?"
+    );
+
+  if(!confirmLogout)
+    return;
+
+
+  const {
+    error
+  } = await supabaseClient.auth.signOut();
+
+
+  if(error){
+
+    console.error(error);
+
+    alert(
+      "Logout nahi hua.\n\n" +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  window.location.href =
+    "login.html";
+
+}
+
+
 /* ================= START ================= */
 
 startApp();
@@ -1870,3 +2058,4 @@ startApp();
 
 </body>
 </html>
+```
