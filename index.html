@@ -22,45 +22,27 @@ async function addComment(postId){
     return;
   }
 
-  try{
+  const { error } = await supabaseClient
+    .from("comments")
+    .insert({
+      post_id: postId,
+      user_id: currentUser.id,
+      username: currentUsername,
+      content: text
+    });
 
-    const { data, error } = await supabaseClient
-      .from("comments")
-      .insert({
-        post_id: postId,
-        user_id: currentUser.id,
-        username: currentUsername,
-        content: text
-      })
-      .select()
-      .single();
-
-    if(error){
-
-      console.error("COMMENT SAVE ERROR:", error);
-
-      alert(
-        "Comment save nahi hua.\n\n" +
-        error.message
-      );
-
-      return;
-    }
-
-    input.value = "";
-
-    await loadComments(postId);
-
-  }catch(error){
-
-    console.error("COMMENT ERROR:", error);
+  if(error){
+    console.error("COMMENT SAVE ERROR:", error);
 
     alert(
-      "Comment mein error aa gaya.\n\n" +
+      "Comment save nahi hua.\n\n" +
       error.message
     );
 
+    return;
   }
 
-}
+  input.value = "";
 
+  await loadComments(postId);
+}
