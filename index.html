@@ -1,15 +1,18 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Socialyte</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
@@ -18,6 +21,8 @@ body{
   color:#222;
   padding-bottom:75px;
 }
+
+/* ================= HEADER ================= */
 
 .header{
   background:linear-gradient(135deg,#6c5ce7,#8e44ad);
@@ -38,6 +43,8 @@ body{
   opacity:.85;
 }
 
+/* ================= CONTAINER ================= */
+
 .container{
   width:100%;
   max-width:650px;
@@ -45,7 +52,8 @@ body{
   padding:12px;
 }
 
-/* PROFILE */
+/* ================= PROFILE ================= */
+
 .profile-card{
   background:white;
   border-radius:15px;
@@ -65,7 +73,8 @@ body{
   margin-top:4px;
 }
 
-/* TOP MESSAGE */
+/* ================= TOP MESSAGE ================= */
+
 .home-message-box{
   background:white;
   border-radius:15px;
@@ -77,6 +86,7 @@ body{
 .message-title{
   font-weight:bold;
   margin-bottom:8px;
+  font-size:16px;
 }
 
 .message-row{
@@ -91,15 +101,22 @@ body{
   border-radius:22px;
   padding:11px 14px;
   outline:none;
+  font-size:14px;
+}
+
+#chatInput:focus{
+  border-color:#6c5ce7;
 }
 
 .chat-send{
   width:45px;
+  height:45px;
   border:0;
   border-radius:50%;
   background:#6c5ce7;
   color:white;
   font-size:19px;
+  cursor:pointer;
 }
 
 .message-tools{
@@ -112,56 +129,33 @@ body{
   flex:1;
   border:0;
   border-radius:10px;
-  padding:9px 5px;
+  padding:10px 5px;
   background:#f0eefc;
   cursor:pointer;
+  font-size:13px;
+}
+
+.message-tools button:active{
+  transform:scale(.98);
 }
 
 .record-status{
   font-size:12px;
   color:#e74c3c;
-  margin-top:5px;
+  margin-top:7px;
   display:none;
 }
 
-/* POST BOX */
-.post-box{
-  background:white;
-  border-radius:15px;
-  padding:12px;
-  margin-bottom:14px;
-  box-shadow:0 3px 12px rgba(0,0,0,.08);
-}
+/* ================= SECTION ================= */
 
-.post-box textarea{
-  width:100%;
-  min-height:75px;
-  resize:none;
-  border:1px solid #ddd;
-  border-radius:12px;
-  padding:11px;
-  outline:none;
-}
-
-.post-btn{
-  width:100%;
-  margin-top:8px;
-  padding:11px;
-  border:0;
-  border-radius:10px;
-  background:#6c5ce7;
-  color:white;
-  font-weight:bold;
-}
-
-/* SECTION */
 .section-title{
   font-size:20px;
   font-weight:bold;
   margin:15px 3px 10px;
 }
 
-/* POST */
+/* ================= POST ================= */
+
 .post{
   background:white;
   border-radius:15px;
@@ -212,7 +206,8 @@ body{
   color:#b9770e;
 }
 
-/* COMMENTS */
+/* ================= COMMENTS ================= */
+
 .comments-area{
   margin-top:12px;
   border-top:1px solid #eee;
@@ -244,6 +239,7 @@ body{
   color:#6c5ce7;
   font-size:12px;
   padding:5px 0;
+  cursor:pointer;
 }
 
 .comment-input-row{
@@ -266,9 +262,11 @@ body{
   color:white;
   border-radius:20px;
   padding:0 14px;
+  cursor:pointer;
 }
 
-/* BOTTOM NAV */
+/* ================= BOTTOM NAV ================= */
+
 .bottom-nav{
   position:fixed;
   bottom:0;
@@ -297,6 +295,8 @@ body{
   margin-bottom:2px;
 }
 
+/* ================= GENERAL ================= */
+
 .hidden{
   display:none!important;
 }
@@ -306,779 +306,1463 @@ body{
   color:#888;
   padding:20px;
 }
+
 </style>
 </head>
 
 <body>
 
+<!-- ================= HEADER ================= -->
+
 <header class="header">
-  <div class="logo">Socia<span>lyte</span></div>
+
+  <div class="logo">
+    Socia<span>lyte</span>
+  </div>
+
 </header>
+
 
 <main class="container">
 
-  <!-- PROFILE -->
+  <!-- ================= PROFILE ================= -->
+
   <div class="profile-card">
-    <div class="profile-name" id="profileName">Loading...</div>
-    <div class="online">● Online</div>
-  </div>
 
-  <!-- TOP MESSAGE BOX -->
-  <div class="home-message-box">
-
-    <div class="message-title">💬 Message</div>
-
-    <div id="replyPreview"
-         style="display:none;background:#f1eefc;padding:7px 10px;border-radius:9px;margin-bottom:7px;font-size:13px;">
-      Replying to <b id="replyUsername"></b>
-      <button onclick="cancelReply()"
-              style="float:right;border:0;background:none;">✕</button>
+    <div
+      class="profile-name"
+      id="profileName">
+      Loading...
     </div>
 
+    <div class="online">
+      ● Online
+    </div>
+
+  </div>
+
+
+  <!-- ================= MESSAGE BOX ================= -->
+
+  <div class="home-message-box">
+
+    <div class="message-title">
+      💬 Message
+    </div>
+
+
+    <!-- REPLY PREVIEW -->
+
+    <div
+      id="replyPreview"
+      style="
+        display:none;
+        background:#f1eefc;
+        padding:7px 10px;
+        border-radius:9px;
+        margin-bottom:7px;
+        font-size:13px;
+      ">
+
+      Replying to
+      <b id="replyUsername"></b>
+
+      <button
+        onclick="cancelReply()"
+        style="
+          float:right;
+          border:0;
+          background:none;
+          cursor:pointer;
+        ">
+        ✕
+      </button>
+
+    </div>
+
+
+    <!-- MESSAGE INPUT -->
+
     <div class="message-row">
+
       <input
         id="chatInput"
         type="text"
         placeholder="Write a message..."
-        onkeydown="if(event.key==='Enter') sendTextMessage()">
+        onkeydown="
+          if(event.key==='Enter'){
+            event.preventDefault();
+            sendTextMessage();
+          }
+        "
+      >
 
-      <button class="chat-send" onclick="sendTextMessage()">➤</button>
+      <button
+        class="chat-send"
+        onclick="sendTextMessage()">
+        ➤
+      </button>
+
     </div>
 
+
+    <!-- IMAGE + VOICE -->
+
     <div class="message-tools">
-      <button onclick="document.getElementById('imageInput').click()">
+
+      <button
+        onclick="
+          document.getElementById('imageInput').click()
+        ">
         🖼️ Upload Image
       </button>
 
-      <button id="voiceBtn" onclick="toggleRecording()">
+      <button
+        id="voiceBtn"
+        onclick="toggleRecording()">
         🎤 Voice
       </button>
+
     </div>
+
+
+    <!-- HIDDEN IMAGE INPUT -->
 
     <input
       id="imageInput"
       type="file"
       accept="image/*"
       style="display:none"
-      onchange="sendImage()">
+      onchange="sendImage()"
+    >
 
-    <div id="recordStatus" class="record-status">
+
+    <!-- RECORD STATUS -->
+
+    <div
+      id="recordStatus"
+      class="record-status">
       Recording... Tap 🎤 again to stop
     </div>
 
   </div>
 
-  <!-- POST BOX -->
-  <div class="post-box">
 
-    <textarea
-      id="postInput"
-      placeholder="Write a post..."></textarea>
+  <!-- ================= TRENDING POSTS ================= -->
 
-    <button class="post-btn" onclick="createPost()">
-      📝 Post
-    </button>
-
+  <div class="section-title">
+    🔥 Trending Posts
   </div>
 
-  <div class="section-title">🔥 Trending Posts</div>
 
   <div id="posts">
-    <div class="empty">Loading posts...</div>
+
+    <div class="empty">
+      Loading posts...
+    </div>
+
   </div>
 
 </main>
 
-<!-- BOTTOM NAV -->
+
+<!-- ================= BOTTOM NAV ================= -->
+
 <nav class="bottom-nav">
 
   <button onclick="goHome()">
+
     <div>🏠</div>
+
     Home
+
   </button>
+
 
   <button onclick="openPrivate()">
+
     <div>💬</div>
+
     Private
+
   </button>
+
 
   <button onclick="openProfile()">
+
     <div>👤</div>
+
     Profile
+
   </button>
+
 
   <button onclick="openNotifications()">
+
     <div>🔔</div>
+
     Notifications
+
   </button>
 
+
   <button onclick="openMore()">
+
     <div>☰</div>
+
     More
+
   </button>
 
 </nav>
 
+
 <script>
 
-/* ================= SUPABASE ================= */
+/* =====================================================
+   SUPABASE
+===================================================== */
 
-const SUPABASE_URL = "https://szmauhxiyjffjhrcruee.supabase.co";
+const SUPABASE_URL =
+"https://szmauhxiyjffjhrcruee.supabase.co";
 
-
-
-const SUPABASE_KEY = "sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
+const SUPABASE_KEY =
+"sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
 
 const supabaseClient =
-  supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
 
 
-/* ================= VARIABLES ================= */
+/* =====================================================
+   VARIABLES
+===================================================== */
 
 let currentUser = null;
+
 let currentUsername = "User";
 
 let replyToUser = "";
+
 let replyToUserId = null;
 
 let mediaRecorder = null;
+
 let audioChunks = [];
+
 let isRecording = false;
 
 
-/* ================= CHECK USER ================= */
+/* =====================================================
+   CHECK USER
+===================================================== */
 
 async function checkUser(){
 
-  const {
-    data:{user},
-    error
-  } = await supabaseClient.auth.getUser();
+  try{
 
-  if(error || !user){
-    window.location.href = "login.html";
-    return;
+    const {
+      data:{user},
+      error
+    } =
+    await supabaseClient.auth.getUser();
+
+
+    if(error || !user){
+
+      window.location.href =
+        "login.html";
+
+      return;
+    }
+
+
+    currentUser = user;
+
+
+    currentUsername =
+      user.user_metadata?.username ||
+      user.email?.split("@")[0] ||
+      "User";
+
+
+    const profileName =
+      document.getElementById(
+        "profileName"
+      );
+
+
+    if(profileName){
+
+      profileName.textContent =
+        currentUsername;
+
+    }
+
+
+    await loadPosts();
+
+  }catch(error){
+
+    console.error(
+      "CHECK USER ERROR:",
+      error
+    );
+
   }
 
-  currentUser = user;
-
-  currentUsername =
-    user.user_metadata?.username ||
-    user.email?.split("@")[0] ||
-    "User";
-
-  document.getElementById("profileName").textContent =
-    currentUsername;
-
-  await loadPosts();
 }
+
 
 checkUser();
 
 
-/* ================= LOAD POSTS ================= */
+/* =====================================================
+   LOAD POSTS
+===================================================== */
 
 async function loadPosts(){
 
-  const box = document.getElementById("posts");
+  if(!currentUser) return;
 
-  const { data:blockedRows } =
-    await supabaseClient
-      .from("user_blocks")
-      .select("blocked_id")
-      .eq("blocker_id", currentUser.id);
+
+  const box =
+    document.getElementById("posts");
+
+
+  if(!box) return;
+
+
+  /* GET BLOCKED USERS */
+
+  const {
+    data:blockedRows,
+    error:blockError
+  } =
+  await supabaseClient
+    .from("user_blocks")
+    .select("blocked_id")
+    .eq(
+      "blocker_id",
+      currentUser.id
+    );
+
+
+  if(blockError){
+
+    console.error(
+      "BLOCK LOAD ERROR:",
+      blockError
+    );
+
+  }
+
 
   const blockedIds =
-    (blockedRows || []).map(x => x.blocked_id);
+    (blockedRows || [])
+      .map(x => x.blocked_id);
 
-  const { data, error } =
-    await supabaseClient
-      .from("posts")
-      .select("*")
-      .order("created_at",{ascending:false});
+
+  /* GET POSTS */
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .from("posts")
+    .select("*")
+    .order(
+      "created_at",
+      {ascending:false}
+    );
+
 
   if(error){
 
-    console.error(error);
+    console.error(
+      "POST LOAD ERROR:",
+      error
+    );
+
 
     box.innerHTML =
-      `<div class="empty">Posts load nahi ho sake.</div>`;
+      `<div class="empty">
+        Posts load nahi ho sake.
+      </div>`;
+
 
     return;
   }
 
+
   const posts =
     (data || []).filter(
-      p => !blockedIds.includes(p.user_id)
+      p =>
+        !blockedIds.includes(
+          p.user_id
+        )
     );
+
 
   if(!posts.length){
 
     box.innerHTML =
-      `<div class="empty">Abhi koi post nahi hai.</div>`;
+      `<div class="empty">
+        Abhi koi post nahi hai.
+      </div>`;
 
     return;
   }
 
-  box.innerHTML = posts.map(post => `
 
-    <div class="post">
+  box.innerHTML =
+    posts.map(
+      post => `
 
-      <div class="post-user">
-        @${escapeHtml(post.username || "User")}
-      </div>
+      <div class="post">
 
-      <div class="post-time">
-        ${formatDate(post.created_at)}
-      </div>
-
-      <div class="post-content">
-        ${escapeHtml(post.content || "")}
-      </div>
-
-      <div class="post-actions">
-
-        <button onclick="toggleAction('${post.id}','jhappi')">
-          🤗 Jhappi
-        </button>
-
-        <button onclick="toggleAction('${post.id}','chupair')">
-          👋 Chupair
-        </button>
-
-        <button onclick="showNotice('Love')">
-          ❤️ Love
-        </button>
-
-        <button onclick="showNotice('Haha')">
-          😂 Haha
-        </button>
-
-        <button class="comment-btn"
-                onclick="toggleComments('${post.id}')">
-          💬 Comments
-        </button>
-
-        ${
-          post.user_id === currentUser.id
-          ?
-          `<button class="delete-btn"
-             onclick="deletePost('${post.id}')">
-             🗑️ Delete
-           </button>`
-          :
-          `<button class="block-btn"
-             onclick="blockUser('${post.user_id}')">
-             🚫 Block
-           </button>`
-        }
-
-      </div>
-
-      <div id="comments-${post.id}"
-           class="comments-area">
-
-        <div id="comment-list-${post.id}">
-          Loading comments...
+        <div class="post-user">
+          @${escapeHtml(
+            post.username || "User"
+          )}
         </div>
 
-        <div class="comment-input-row">
 
-          <input
-            id="comment-input-${post.id}"
-            placeholder="Write a comment..."
-            onkeydown="if(event.key==='Enter') addComment('${post.id}')">
+        <div class="post-time">
+          ${formatDate(
+            post.created_at
+          )}
+        </div>
 
-          <button onclick="addComment('${post.id}')">
-            ➤
+
+        <div class="post-content">
+          ${escapeHtml(
+            post.content || ""
+          )}
+        </div>
+
+
+        <div class="post-actions">
+
+
+          <button
+            onclick="
+              toggleAction(
+                '${post.id}',
+                'jhappi'
+              )
+            ">
+            🤗 Jhappi
           </button>
 
+
+          <button
+            onclick="
+              toggleAction(
+                '${post.id}',
+                'chupair'
+              )
+            ">
+            👋 Chupair
+          </button>
+
+
+          <button
+            onclick="
+              showNotice('Love')
+            ">
+            ❤️ Love
+          </button>
+
+
+          <button
+            onclick="
+              showNotice('Haha')
+            ">
+            😂 Haha
+          </button>
+
+
+          <button
+            class="comment-btn"
+            onclick="
+              toggleComments(
+                '${post.id}'
+              )
+            ">
+            💬 Comments
+          </button>
+
+
+          ${
+            post.user_id === currentUser.id
+
+            ?
+
+            `<button
+              class="delete-btn"
+              onclick="
+                deletePost(
+                  '${post.id}'
+                )
+              ">
+              🗑️ Delete
+            </button>`
+
+            :
+
+            `<button
+              class="block-btn"
+              onclick="
+                blockUser(
+                  '${post.user_id}'
+                )
+              ">
+              🚫 Block
+            </button>`
+          }
+
+
         </div>
+
+
+        <!-- COMMENTS -->
+
+        <div
+          id="comments-${post.id}"
+          class="comments-area">
+
+
+          <div
+            id="comment-list-${post.id}">
+
+            Loading comments...
+
+          </div>
+
+
+          <div
+            class="comment-input-row">
+
+
+            <input
+              id="comment-input-${post.id}"
+              placeholder="Write a comment..."
+              onkeydown="
+                if(event.key==='Enter'){
+                  event.preventDefault();
+                  addComment('${post.id}');
+                }
+              "
+            >
+
+
+            <button
+              onclick="
+                addComment(
+                  '${post.id}'
+                )
+              ">
+              ➤
+            </button>
+
+
+          </div>
+
+
+        </div>
+
 
       </div>
 
-    </div>
-
-  `).join("");
+    `
+    ).join("");
 
 }
 
 
-/* ================= ADD COMMENT ================= */
+/* =====================================================
+   ADD COMMENT
+===================================================== */
 
 async function addComment(postId){
 
   if(!currentUser){
-    alert("Please login first.");
+
+    alert(
+      "Please login first."
+    );
+
     return;
   }
+
 
   const input =
-    document.getElementById("comment-input-" + postId);
+    document.getElementById(
+      "comment-input-" +
+      postId
+    );
+
 
   if(!input){
-    alert("Comment box nahi mila.");
+
+    alert(
+      "Comment box nahi mila."
+    );
+
     return;
   }
 
-  const text = input.value.trim();
 
-  if(!text){
-    return;
-  }
+  const text =
+    input.value.trim();
 
-  const { error } =
-    await supabaseClient
-      .from("comments")
-      .insert({
-        post_id: postId,
-        user_id: currentUser.id,
-        username: currentUsername,
-        content: text
-      });
+
+  if(!text) return;
+
+
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("comments")
+    .insert({
+
+      post_id:postId,
+
+      user_id:currentUser.id,
+
+      username:currentUsername,
+
+      content:text
+
+    });
+
 
   if(error){
 
-    console.error("COMMENT SAVE ERROR:",error);
+    console.error(
+      "COMMENT SAVE ERROR:",
+      error
+    );
+
 
     alert(
       "Comment save nahi hua.\n\n" +
       error.message
     );
 
+
     return;
   }
 
+
   input.value = "";
 
-  await loadComments(postId);
+
+  await loadComments(
+    postId
+  );
 
 }
 
 
-/* ================= LOAD COMMENTS ================= */
+/* =====================================================
+   LOAD COMMENTS
+===================================================== */
 
 async function loadComments(postId){
 
   const box =
-    document.getElementById("comment-list-" + postId);
+    document.getElementById(
+      "comment-list-" +
+      postId
+    );
+
 
   if(!box) return;
 
-  const { data, error } =
-    await supabaseClient
-      .from("comments")
-      .select("*")
-      .eq("post_id",postId)
-      .order("created_at",{ascending:true});
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .from("comments")
+    .select("*")
+    .eq(
+      "post_id",
+      postId
+    )
+    .order(
+      "created_at",
+      {ascending:true}
+    );
+
 
   if(error){
 
-    console.error("COMMENT LOAD ERROR:",error);
+    console.error(
+      "COMMENT LOAD ERROR:",
+      error
+    );
+
 
     box.innerHTML =
-      `<div class="empty">Comments load nahi hue.</div>`;
+      `<div class="empty">
+        Comments load nahi hue.
+      </div>`;
+
 
     return;
   }
+
 
   if(!data || !data.length){
 
     box.innerHTML =
-      `<div class="empty">No comments yet.</div>`;
+      `<div class="empty">
+        No comments yet.
+      </div>`;
+
 
     return;
   }
 
-  box.innerHTML = data.map(comment => `
 
-    <div class="comment">
+  box.innerHTML =
+    data.map(
+      comment => `
 
-      <div class="comment-user">
-        @${escapeHtml(comment.username || "User")}
+      <div class="comment">
+
+
+        <div class="comment-user">
+
+          @${escapeHtml(
+            comment.username ||
+            "User"
+          )}
+
+        </div>
+
+
+        <div class="comment-text">
+
+          ${escapeHtml(
+            comment.content ||
+            ""
+          )}
+
+        </div>
+
+
+        <button
+          class="reply-btn"
+          onclick="
+            replyTo(
+              '${escapeAttr(
+                comment.username ||
+                "User"
+              )}'
+            )
+          ">
+
+          ↩️ Reply
+
+        </button>
+
+
       </div>
 
-      <div class="comment-text">
-        ${escapeHtml(comment.content || "")}
-      </div>
-
-      <button
-        class="reply-btn"
-        onclick="replyTo('${escapeAttr(comment.username || "User")}')">
-        ↩️ Reply
-      </button>
-
-    </div>
-
-  `).join("");
+    `
+    ).join("");
 
 }
 
 
-/* ================= TOGGLE COMMENTS ================= */
+/* =====================================================
+   TOGGLE COMMENTS
+===================================================== */
 
 async function toggleComments(postId){
 
   const area =
-    document.getElementById("comments-" + postId);
+    document.getElementById(
+      "comments-" +
+      postId
+    );
+
 
   if(!area) return;
 
-  if(area.style.display === "block"){
 
-    area.style.display = "none";
+  if(
+    area.style.display ===
+    "block"
+  ){
+
+    area.style.display =
+      "none";
 
   }else{
 
-    area.style.display = "block";
+    area.style.display =
+      "block";
 
-    await loadComments(postId);
+
+    await loadComments(
+      postId
+    );
+
   }
 
 }
 
 
-/* ================= REPLY ================= */
+/* =====================================================
+   REPLY
+===================================================== */
 
 function replyTo(username){
 
-  replyToUser = username;
+  replyToUser =
+    username;
 
-  document.getElementById("replyUsername").textContent =
-    "@" + username;
 
-  document.getElementById("replyPreview").style.display =
-    "block";
+  replyToUserId =
+    null;
+
+
+  const preview =
+    document.getElementById(
+      "replyPreview"
+    );
+
+
+  const replyUsername =
+    document.getElementById(
+      "replyUsername"
+    );
+
+
+  if(replyUsername){
+
+    replyUsername.textContent =
+      "@" + username;
+
+  }
+
+
+  if(preview){
+
+    preview.style.display =
+      "block";
+
+  }
+
 
   const input =
-    document.getElementById("chatInput");
+    document.getElementById(
+      "chatInput"
+    );
 
-  input.value =
-    "@" + username + " ";
 
-  input.focus();
+  if(input){
+
+    input.value =
+      "@" +
+      username +
+      " ";
+
+    input.focus();
+
+  }
 
 }
 
+
+/* =====================================================
+   CANCEL REPLY
+===================================================== */
 
 function cancelReply(){
 
-  replyToUser = "";
+  replyToUser =
+    "";
 
-  replyToUserId = null;
-
-  document.getElementById("replyPreview").style.display =
-    "none";
-
-  document.getElementById("chatInput").value = "";
-
-}
+  replyToUserId =
+    null;
 
 
-/* ================= CREATE POST ================= */
-
-async function createPost(){
-
-  if(!currentUser){
-    alert("Please login first.");
-    return;
-  }
-
-  const input =
-    document.getElementById("postInput");
-
-  const content =
-    input.value.trim();
-
-  if(!content) return;
-
-  const {error} =
-    await supabaseClient
-      .from("posts")
-      .insert({
-        user_id: currentUser.id,
-        username: currentUsername,
-        content: content
-      });
-
-  if(error){
-
-    console.error(error);
-
-    alert(
-      "Post save nahi hua.\n\n" +
-      error.message
+  const preview =
+    document.getElementById(
+      "replyPreview"
     );
 
-    return;
+
+  if(preview){
+
+    preview.style.display =
+      "none";
+
   }
 
-  input.value = "";
 
-  await loadPosts();
+  const input =
+    document.getElementById(
+      "chatInput"
+    );
+
+
+  if(input){
+
+    input.value =
+      "";
+
+  }
 
 }
 
 
-/* ================= DELETE POST ================= */
+/* =====================================================
+   DELETE POST
+===================================================== */
 
 async function deletePost(postId){
 
-  if(!confirm("Kya aap ye post delete karna chahte hain?")){
-    return;
-  }
+  if(!currentUser) return;
 
-  const {error} =
-    await supabaseClient
-      .from("posts")
-      .delete()
-      .eq("id",postId)
-      .eq("user_id",currentUser.id);
+
+  const confirmDelete =
+    confirm(
+      "Kya aap ye post delete karna chahte hain?"
+    );
+
+
+  if(!confirmDelete) return;
+
+
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("posts")
+    .delete()
+    .eq(
+      "id",
+      postId
+    )
+    .eq(
+      "user_id",
+      currentUser.id
+    );
+
 
   if(error){
+
+    console.error(
+      "DELETE POST ERROR:",
+      error
+    );
+
 
     alert(
       "Post delete nahi hua.\n\n" +
       error.message
     );
 
+
     return;
   }
+
 
   await loadPosts();
 
 }
 
 
-/* ================= BLOCK USER ================= */
+/* =====================================================
+   BLOCK USER
+===================================================== */
 
 async function blockUser(userId){
 
   if(!currentUser) return;
 
-  if(userId === currentUser.id) return;
 
-  const {error} =
-    await supabaseClient
-      .from("user_blocks")
-      .insert({
-        blocker_id: currentUser.id,
-        blocked_id: userId
-      });
+  if(
+    userId ===
+    currentUser.id
+  ){
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("user_blocks")
+    .insert({
+
+      blocker_id:
+        currentUser.id,
+
+      blocked_id:
+        userId
+
+    });
+
 
   if(error){
 
-    if(error.code === "23505"){
+    if(
+      error.code ===
+      "23505"
+    ){
 
-      alert("Ye user already blocked hai.");
+      alert(
+        "Ye user already blocked hai."
+      );
 
     }else{
+
+      console.error(
+        "BLOCK ERROR:",
+        error
+      );
+
 
       alert(
         "User block nahi hua.\n\n" +
         error.message
       );
+
     }
+
 
     return;
   }
 
-  alert("User blocked.");
+
+  alert(
+    "User blocked."
+  );
+
 
   await loadPosts();
 
 }
 
 
-/* ================= POST ACTION ================= */
+/* =====================================================
+   POST ACTION
+===================================================== */
 
-async function toggleAction(postId,actionType){
+async function toggleAction(
+  postId,
+  actionType
+){
 
   if(!currentUser) return;
 
-  const {data:existing,error:findError} =
-    await supabaseClient
-      .from("post_actions")
-      .select("id")
-      .eq("post_id",postId)
-      .eq("user_id",currentUser.id)
-      .eq("action_type",actionType)
-      .maybeSingle();
+
+  const {
+    data:existing,
+    error:findError
+  } =
+  await supabaseClient
+    .from("post_actions")
+    .select("id")
+    .eq(
+      "post_id",
+      postId
+    )
+    .eq(
+      "user_id",
+      currentUser.id
+    )
+    .eq(
+      "action_type",
+      actionType
+    )
+    .maybeSingle();
+
 
   if(findError){
 
-    console.error(findError);
+    console.error(
+      "ACTION FIND ERROR:",
+      findError
+    );
+
 
     return;
   }
 
+
   if(existing){
 
+    const {
+      error
+    } =
     await supabaseClient
       .from("post_actions")
       .delete()
-      .eq("id",existing.id);
+      .eq(
+        "id",
+        existing.id
+      );
 
-  }else{
-
-    const {error} =
-      await supabaseClient
-        .from("post_actions")
-        .insert({
-          post_id:postId,
-          user_id:currentUser.id,
-          action_type:actionType
-        });
 
     if(error){
 
-      console.error(error);
+      console.error(
+        "ACTION DELETE ERROR:",
+        error
+      );
 
-      alert(error.message);
-
-      return;
     }
+
+
+  }else{
+
+    const {
+      error
+    } =
+    await supabaseClient
+      .from("post_actions")
+      .insert({
+
+        post_id:
+          postId,
+
+        user_id:
+          currentUser.id,
+
+        action_type:
+          actionType
+
+      });
+
+
+    if(error){
+
+      console.error(
+        "ACTION INSERT ERROR:",
+        error
+      );
+
+
+      alert(
+        error.message
+      );
+
+    }
+
   }
 
 }
 
 
-/* ================= MESSAGE ================= */
+/* =====================================================
+   SEND TEXT MESSAGE
+===================================================== */
 
 async function sendTextMessage(){
 
   if(!currentUser){
-    alert("Please login first.");
+
+    alert(
+      "Please login first."
+    );
+
     return;
   }
 
-  const input =
-    document.getElementById("chatInput");
 
-  let text =
+  const input =
+    document.getElementById(
+      "chatInput"
+    );
+
+
+  if(!input) return;
+
+
+  const text =
     input.value.trim();
+
 
   if(!text) return;
 
-  const {error} =
-    await supabaseClient
-      .from("messages")
-      .insert({
-        user_id:currentUser.id,
-        username:currentUsername,
-        content:text
-      });
+
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("messages")
+    .insert({
+
+      user_id:
+        currentUser.id,
+
+      username:
+        currentUsername,
+
+      content:
+        text
+
+    });
+
 
   if(error){
 
-    console.error("MESSAGE ERROR:",error);
+    console.error(
+      "MESSAGE ERROR:",
+      error
+    );
+
 
     alert(
       "Message send nahi hua.\n\n" +
       error.message
     );
 
+
     return;
   }
 
-  input.value = "";
+
+  input.value =
+    "";
+
 
   cancelReply();
 
 }
 
 
-/* ================= IMAGE ================= */
+/* =====================================================
+   IMAGE
+===================================================== */
 
 async function sendImage(){
 
-  const file =
-    document.getElementById("imageInput").files[0];
+  const input =
+    document.getElementById(
+      "imageInput"
+    );
 
-  if(!file || !currentUser) return;
+
+  if(!input) return;
+
+
+  const file =
+    input.files[0];
+
+
+  if(!file) return;
+
+
+  if(!currentUser){
+
+    alert(
+      "Please login first."
+    );
+
+
+    input.value =
+      "";
+
+
+    return;
+  }
+
+
+  /*
+    Storage bucket abhi configure nahi hai.
+    Isliye image ko fake send nahi kiya ja raha.
+  */
+
 
   alert(
-    "Image upload ke liye Supabase Storage bucket required hai. " +
-    "Pehle storage bucket configure karna hoga."
+    "Image sending ke liye Supabase Storage bucket configure karna hoga."
   );
+
+
+  input.value =
+    "";
 
 }
 
 
-/* ================= VOICE ================= */
+/* =====================================================
+   VOICE RECORDING
+===================================================== */
 
 async function toggleRecording(){
 
-  if(!navigator.mediaDevices ||
-     !navigator.mediaDevices.getUserMedia){
+  if(
+    !navigator.mediaDevices ||
+    !navigator.mediaDevices.getUserMedia
+  ){
 
-    alert("Voice recording browser mein supported nahi hai.");
+    alert(
+      "Voice recording browser mein supported nahi hai."
+    );
+
+
     return;
   }
+
+
+  /* STOP */
 
   if(isRecording){
 
     mediaRecorder.stop();
 
-    isRecording = false;
+    isRecording =
+      false;
 
-    document.getElementById("recordStatus").style.display =
-      "none";
 
-    document.getElementById("voiceBtn").textContent =
-      "🎤 Voice";
+    const status =
+      document.getElementById(
+        "recordStatus"
+      );
+
+
+    const voiceBtn =
+      document.getElementById(
+        "voiceBtn"
+      );
+
+
+    if(status){
+
+      status.style.display =
+        "none";
+
+    }
+
+
+    if(voiceBtn){
+
+      voiceBtn.textContent =
+        "🎤 Voice";
+
+    }
+
 
     return;
   }
 
+
+  /* START */
+
   try{
 
     const stream =
-      await navigator.mediaDevices.getUserMedia({
-        audio:true
-      });
+      await navigator.mediaDevices
+        .getUserMedia({
+          audio:true
+        });
 
-    audioChunks = [];
+
+    audioChunks =
+      [];
+
 
     mediaRecorder =
-      new MediaRecorder(stream);
+      new MediaRecorder(
+        stream
+      );
+
 
     mediaRecorder.ondataavailable =
       event => {
 
-        if(event.data.size > 0){
-          audioChunks.push(event.data);
+        if(
+          event.data &&
+          event.data.size > 0
+        ){
+
+          audioChunks.push(
+            event.data
+          );
+
         }
 
       };
 
+
     mediaRecorder.onstop =
       () => {
 
-        stream.getTracks().forEach(
-          track => track.stop()
-        );
+        stream
+          .getTracks()
+          .forEach(
+            track =>
+              track.stop()
+          );
+
 
         alert(
-          "Voice recording ready hai. " +
-          "Storage setup ke baad ise messages mein save kiya ja sakta hai."
+          "Voice recording ready hai. Messages mein save karne ke liye Storage setup karna hoga."
         );
 
       };
 
+
     mediaRecorder.start();
 
-    isRecording = true;
 
-    document.getElementById("recordStatus").style.display =
-      "block";
+    isRecording =
+      true;
 
-    document.getElementById("voiceBtn").textContent =
-      "⏹️ Stop";
+
+    const status =
+      document.getElementById(
+        "recordStatus"
+      );
+
+
+    const voiceBtn =
+      document.getElementById(
+        "voiceBtn"
+      );
+
+
+    if(status){
+
+      status.style.display =
+        "block";
+
+    }
+
+
+    if(voiceBtn){
+
+      voiceBtn.textContent =
+        "⏹️ Stop";
+
+    }
+
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "MIC ERROR:",
+      error
+    );
+
 
     alert(
       "Microphone permission allow karein."
@@ -1089,26 +1773,49 @@ async function toggleRecording(){
 }
 
 
-/* ================= NAVIGATION ================= */
+/* =====================================================
+   NAVIGATION
+===================================================== */
 
 function goHome(){
+
   window.scrollTo({
+
     top:0,
+
     behavior:"smooth"
+
   });
+
 }
+
 
 function openPrivate(){
-  alert("Private Chat section coming soon.");
+
+  alert(
+    "Private Chat section coming soon."
+  );
+
 }
+
 
 function openProfile(){
-  alert("Profile section coming soon.");
+
+  alert(
+    "Profile section coming soon."
+  );
+
 }
 
+
 function openNotifications(){
-  alert("Notifications section coming soon.");
+
+  alert(
+    "Notifications section coming soon."
+  );
+
 }
+
 
 async function openMore(){
 
@@ -1117,18 +1824,25 @@ async function openMore(){
       "More Menu\n\nOK = Logout\nCancel = Stay"
     );
 
+
   if(logout){
 
-    await supabaseClient.auth.signOut();
+    await supabaseClient
+      .auth
+      .signOut();
+
 
     window.location.href =
       "login.html";
+
   }
 
 }
 
 
-/* ================= HELPERS ================= */
+/* =====================================================
+   NOTICE
+===================================================== */
 
 function showNotice(name){
 
@@ -1140,27 +1854,65 @@ function showNotice(name){
 }
 
 
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
 function escapeHtml(value){
 
   return String(value)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
 }
 
+
+/* =====================================================
+   ESCAPE ATTRIBUTE
+===================================================== */
 
 function escapeAttr(value){
 
   return escapeHtml(value)
-    .replace(/`/g,"&#096;");
+    .replace(
+      /`/g,
+      "&#096;"
+    );
+
 }
 
+
+/* =====================================================
+   FORMAT DATE
+===================================================== */
 
 function formatDate(date){
 
   if(!date) return "";
+
 
   try{
 
