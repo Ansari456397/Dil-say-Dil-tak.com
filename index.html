@@ -613,7 +613,6 @@ async function checkUser(){
         try{
 
           await loadPosts();
-
           await loadMessages();
 
         }catch(loadError){
@@ -649,8 +648,6 @@ async function checkUser(){
   }
 
 
-  /* FINAL USER CHECK */
-
   try{
 
     const {data,error} =
@@ -673,7 +670,6 @@ async function checkUser(){
       );
 
       await loadPosts();
-
       await loadMessages();
 
       return;
@@ -1316,11 +1312,6 @@ async function addComment(postId){
 
 async function sendTextMessage(){
 
-  console.log(
-    "SEND MESSAGE CLICKED"
-  );
-
-
   if(!currentUser){
 
     alert(
@@ -1332,10 +1323,7 @@ async function sendTextMessage(){
 
 
   const input =
-    document.getElementById(
-      "chatInput"
-    );
-
+    document.getElementById("chatInput");
 
   if(!input){
 
@@ -1352,7 +1340,6 @@ async function sendTextMessage(){
 
 
   if(!text){
-
     return;
   }
 
@@ -1406,54 +1393,134 @@ async function sendTextMessage(){
 
 
 /* =====================================================
-   LOAD MESSAGE POSTS - FIXED
+   LOAD MESSAGE POSTS - FINAL FIX
 ===================================================== */
 
 async function loadMessages(){
-
-  if(!currentUser){
-    return;
-  }
 
   const messagesBox =
     document.getElementById("messages");
 
   if(!messagesBox){
+
+    console.error(
+      "MESSAGES BOX NOT FOUND"
+    );
+
     return;
   }
+
 
   messagesBox.innerHTML =
     '<div class="empty">Loading messages...</div>';
 
 
-  /*
-    IMPORTANT:
-    Yahan created_at par database ORDER nahi lagaya.
-    Pehle saare messages read honge,
-    phir browser mein newest first sort honge.
-  */
+  try{
 
-  const {data,error} =
-    await supabaseClient
-      .from("messages")
-      .select("*");
+    const result =
+      await supabaseClient
+        .from("messages")
+        .select("*");
 
 
-  console.log(
-    "MESSAGES DATA:",
-    data
-  );
-
-  console.log(
-    "MESSAGES ERROR:",
-    error
-  );
+    console.log(
+      "MESSAGE RESULT:",
+      result
+    );
 
 
-  if(error){
+    const data =
+      result.data;
+
+    const error =
+      result.error;
+
+
+    if(error){
+
+      console.error(
+        "MESSAGE READ ERROR:",
+        error
+      );
+
+      messagesBox.innerHTML =
+        '<div class="empty">' +
+        'Message read error:<br>' +
+        '<small>' +
+        escapeHtml(error.message) +
+        '</small>' +
+        '</div>';
+
+      return;
+    }
+
+
+    if(!data || data.length === 0){
+
+      messagesBox.innerHTML =
+        '<div class="empty">' +
+        'Database se koi message nahi mila.' +
+        '</div>';
+
+      return;
+    }
+
+
+    data.sort(function(a,b){
+
+      return new Date(b.created_at || 0) -
+             new Date(a.created_at || 0);
+
+    });
+
+
+    messagesBox.innerHTML =
+      data.map(function(msg){
+
+        const username =
+          msg.username || "User";
+
+        const text =
+          msg.message ||
+          msg.content ||
+          "";
+
+
+        return `
+
+          <div class="home-message">
+
+            <div class="home-message-user">
+              ${escapeHtml(username)}
+            </div>
+
+            <div class="home-message-text">
+              ${escapeHtml(text)}
+            </div>
+
+            ${
+              msg.created_at
+              ? `
+                <div class="home-message-date">
+                  ${escapeHtml(
+                    formatDate(msg.created_at)
+                  )}
+                </div>
+              `
+              : ""
+            }
+
+          </div>
+
+        `;
+
+      }).join("");
+
+
+  }catch(error){
 
     console.error(
-      "MESSAGES LOAD ERROR:",
+      "MESSAGE EXCEPTION:",
       error
     );
 
@@ -1465,68 +1532,7 @@ async function loadMessages(){
       '</small>' +
       '</div>';
 
-    return;
   }
-
-
-  if(!data || data.length === 0){
-
-    messagesBox.innerHTML =
-      '<div class="empty">No messages yet.</div>';
-
-    return;
-  }
-
-
-  /* NEWEST MESSAGE FIRST */
-
-  data.sort(function(a,b){
-
-    return new Date(b.created_at || 0) -
-           new Date(a.created_at || 0);
-
-  });
-
-
-  messagesBox.innerHTML =
-    data.map(function(msg){
-
-      const username =
-        msg.username || "User";
-
-      const text =
-        msg.message ||
-        msg.content ||
-        "";
-
-
-      return `
-
-        <div class="home-message">
-
-          <div class="home-message-user">
-            ${escapeHtml(username)}
-          </div>
-
-          <div class="home-message-text">
-            ${escapeHtml(text)}
-          </div>
-
-          ${
-            msg.created_at
-            ? `
-              <div class="home-message-date">
-                ${formatDate(msg.created_at)}
-              </div>
-            `
-            : ""
-          }
-
-        </div>
-
-      `;
-
-    }).join("");
 
 }
 
