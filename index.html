@@ -1393,8 +1393,110 @@ async function sendTextMessage(){
 
 
 /* =====================================================
-   LOAD MESSAGE POSTS - FINAL FIX
+   LOAD MESSAGE POSTS
 ===================================================== */
+
+async function loadMessages(){
+
+  const box = document.getElementById("messages");
+
+  if(!box){
+    alert("messages box nahi mila");
+    return;
+  }
+
+  box.innerHTML =
+    '<div class="empty">Checking messages...</div>';
+
+  try{
+
+    const result = await supabaseClient
+      .from("messages")
+      .select("*");
+
+    console.log("MESSAGE DATA:", result.data);
+    console.log("MESSAGE ERROR:", result.error);
+
+    if(result.error){
+
+      box.innerHTML = `
+        <div class="empty">
+          ❌ Database Read Error
+          <br><br>
+          ${escapeHtml(result.error.message)}
+        </div>
+      `;
+
+      return;
+    }
+
+    if(!result.data || result.data.length === 0){
+
+      box.innerHTML = `
+        <div class="empty">
+          ❌ Supabase ne 0 messages return kiye.
+        </div>
+      `;
+
+      return;
+    }
+
+    box.innerHTML = result.data.map(function(msg){
+
+      const username =
+        msg.username || "User";
+
+      const text =
+        msg.message ||
+        msg.content ||
+        "Message text missing";
+
+      return `
+        <div class="home-message">
+
+          <div class="home-message-user">
+            ${escapeHtml(username)}
+          </div>
+
+          <div class="home-message-text">
+            ${escapeHtml(text)}
+          </div>
+
+          ${
+            msg.created_at
+            ? `
+              <div class="home-message-date">
+                ${escapeHtml(
+                  formatDate(msg.created_at)
+                )}
+              </div>
+            `
+            : ""
+          }
+
+        </div>
+      `;
+
+    }).join("");
+
+  }catch(error){
+
+    console.error(
+      "MESSAGE EXCEPTION:",
+      error
+    );
+
+    box.innerHTML = `
+      <div class="empty">
+        ❌ Messages load nahi hue.
+        <br><br>
+        ${escapeHtml(error.message)}
+      </div>
+    `;
+
+  }
+
+}
 
 async function loadMessages(){
 
