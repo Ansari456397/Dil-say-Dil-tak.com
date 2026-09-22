@@ -81,6 +81,10 @@ body{
   font-size:15px;
 }
 
+#chatInput:focus{
+  border-color:#6c5ce7;
+}
+
 .chat-send{
   border:0;
   border-radius:10px;
@@ -321,7 +325,7 @@ body{
 
 <div class="container">
 
-  <!-- TOP MESSAGE BOX -->
+  <!-- ================= TOP MESSAGE BOX ================= -->
 
   <div class="home-message-box">
 
@@ -335,18 +339,12 @@ body{
         id="chatInput"
         type="text"
         placeholder="Write a message..."
-        onkeydown="
-          if(event.key === 'Enter'){
-            event.preventDefault();
-            sendTextMessage();
-          }
-        "
       >
 
       <button
         class="chat-send"
         type="button"
-        onclick="sendTextMessage()">
+        id="sendMessageBtn">
         ➤
       </button>
 
@@ -356,14 +354,13 @@ body{
 
       <button
         type="button"
-        onclick="document.getElementById('imageInput').click()">
+        id="uploadImageBtn">
         🖼️ Upload Image
       </button>
 
       <button
         id="voiceBtn"
-        type="button"
-        onclick="toggleRecording()">
+        type="button">
         🎤 Voice
       </button>
 
@@ -374,7 +371,6 @@ body{
       type="file"
       accept="image/*"
       style="display:none"
-      onchange="sendImage()"
     >
 
     <div
@@ -391,7 +387,7 @@ body{
   </div>
 
 
-  <!-- POSTS -->
+  <!-- ================= POSTS ================= -->
 
   <div class="section-title">
     🔥 Trending Posts
@@ -408,7 +404,7 @@ body{
 </div>
 
 
-<!-- BOTTOM NAVIGATION -->
+<!-- ================= BOTTOM NAVIGATION ================= -->
 
 <div class="bottom-nav">
 
@@ -505,10 +501,7 @@ function setCurrentUser(user){
     user.email?.split("@")[0] ||
     "User";
 
-  console.log(
-    "CURRENT USER:",
-    user.email
-  );
+  console.log("CURRENT USER:",user.email);
 
   return true;
 }
@@ -522,38 +515,25 @@ async function checkUser(){
 
   console.log("Checking Socialyte login session...");
 
-  /*
-    Login ke baad session ko thora time dete hain.
-  */
-
   for(let attempt = 1; attempt <= 8; attempt++){
 
     try{
 
+      const {data,error} =
+        await supabaseClient.auth.getSession();
+
       console.log(
         "Session check:",
-        attempt
+        attempt,
+        data
       );
 
-
-      const {
-        data,
-        error
-      } =
-      await supabaseClient
-        .auth
-        .getSession();
-
-
       if(error){
-
         console.error(
           "GET SESSION ERROR:",
           error
         );
-
       }
-
 
       if(
         data &&
@@ -565,22 +545,13 @@ async function checkUser(){
           data.session.user
         );
 
-        console.log(
-          "SESSION FOUND"
-        );
-
-        /*
-          Posts fail bhi ho jayein to
-          website login page par nahi jayegi.
-        */
+        console.log("SESSION FOUND");
 
         try{
 
           await loadPosts();
 
-        }
-
-        catch(postError){
+        }catch(postError){
 
           console.error(
             "POST LOAD ERROR:",
@@ -588,9 +559,7 @@ async function checkUser(){
           );
 
           const postsBox =
-            document.getElementById(
-              "posts"
-            );
+            document.getElementById("posts");
 
           if(postsBox){
 
@@ -602,12 +571,9 @@ async function checkUser(){
         }
 
         return;
-
       }
 
-    }
-
-    catch(error){
+    }catch(error){
 
       console.error(
         "SESSION CHECK ERROR:",
@@ -616,19 +582,11 @@ async function checkUser(){
 
     }
 
-
-    /*
-      8 attempts × 750ms
-    */
-
     if(attempt < 8){
 
       await new Promise(
         resolve =>
-          setTimeout(
-            resolve,
-            750
-          )
+          setTimeout(resolve,750)
       );
 
     }
@@ -636,20 +594,12 @@ async function checkUser(){
   }
 
 
-  /*
-    Last check using getUser()
-  */
+  /* FINAL USER CHECK */
 
   try{
 
-    const {
-      data,
-      error
-    } =
-    await supabaseClient
-      .auth
-      .getUser();
-
+    const {data,error} =
+      await supabaseClient.auth.getUser();
 
     console.log(
       "FINAL USER CHECK:",
@@ -657,26 +607,20 @@ async function checkUser(){
       error
     );
 
-
     if(
       !error &&
       data &&
       data.user
     ){
 
-      setCurrentUser(
-        data.user
-      );
+      setCurrentUser(data.user);
 
       await loadPosts();
 
       return;
-
     }
 
-  }
-
-  catch(error){
+  }catch(error){
 
     console.error(
       "FINAL USER CHECK ERROR:",
@@ -685,12 +629,6 @@ async function checkUser(){
 
   }
 
-
-  /*
-    Sirf tab login par wapas bhejna hai
-    jab multiple checks ke baad bhi
-    user session na mile.
-  */
 
   console.log(
     "NO SESSION FOUND - LOGIN PAGE"
@@ -708,13 +646,12 @@ async function checkUser(){
 ===================================================== */
 
 supabaseClient.auth.onAuthStateChange(
-  (event, session) => {
+  (event,session) => {
 
     console.log(
       "AUTH EVENT:",
       event
     );
-
 
     if(
       session &&
@@ -750,26 +687,18 @@ function openProfile(){
 async function loadPosts(){
 
   if(!currentUser){
-
     return;
   }
 
-
   const postsBox =
-    document.getElementById(
-      "posts"
-    );
-
+    document.getElementById("posts");
 
   if(!postsBox) return;
-
 
   postsBox.innerHTML =
     '<div class="empty">Loading posts...</div>';
 
-
   let blockedIds = [];
-
 
   try{
 
@@ -777,14 +706,13 @@ async function loadPosts(){
       data:blocked,
       error:blockError
     } =
-    await supabaseClient
-      .from("user_blocks")
-      .select("blocked_id")
-      .eq(
-        "blocker_id",
-        currentUser.id
-      );
-
+      await supabaseClient
+        .from("user_blocks")
+        .select("blocked_id")
+        .eq(
+          "blocker_id",
+          currentUser.id
+        );
 
     if(!blockError){
 
@@ -797,9 +725,7 @@ async function loadPosts(){
 
     }
 
-  }
-
-  catch(error){
+  }catch(error){
 
     console.warn(
       "BLOCK CHECK ERROR:",
@@ -809,19 +735,16 @@ async function loadPosts(){
   }
 
 
-  const {
-    data,
-    error
-  } =
-  await supabaseClient
-    .from("posts")
-    .select("*")
-    .order(
-      "created_at",
-      {
-        ascending:false
-      }
-    );
+  const {data,error} =
+    await supabaseClient
+      .from("posts")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
 
 
   if(error){
@@ -874,9 +797,7 @@ function renderPost(post){
   const ownPost =
     post.user_id === currentUser.id;
 
-
   let controls = "";
-
 
   if(ownPost){
 
@@ -888,9 +809,7 @@ function renderPost(post){
       </button>
     `;
 
-  }
-
-  else{
+  }else{
 
     controls = `
       <button
@@ -959,12 +878,6 @@ function renderPost(post){
             id="comment-input-${escapeAttr(post.id)}"
             type="text"
             placeholder="Write a comment..."
-            onkeydown="
-              if(event.key === 'Enter'){
-                event.preventDefault();
-                addComment('${escapeAttr(post.id)}');
-              }
-            "
           >
 
           <button
@@ -999,15 +912,12 @@ async function toggleComments(postId){
 
   if(box.style.display === "block"){
 
-    box.style.display =
-      "none";
+    box.style.display = "none";
 
     return;
-
   }
 
-  box.style.display =
-    "block";
+  box.style.display = "block";
 
   await loadComments(postId);
 
@@ -1027,23 +937,20 @@ async function loadComments(postId){
     '<div class="empty">Loading comments...</div>';
 
 
-  const {
-    data,
-    error
-  } =
-  await supabaseClient
-    .from("comments")
-    .select("*")
-    .eq(
-      "post_id",
-      postId
-    )
-    .order(
-      "created_at",
-      {
-        ascending:true
-      }
-    );
+  const {data,error} =
+    await supabaseClient
+      .from("comments")
+      .select("*")
+      .eq(
+        "post_id",
+        postId
+      )
+      .order(
+        "created_at",
+        {
+          ascending:true
+        }
+      );
 
 
   if(error){
@@ -1117,15 +1024,6 @@ async function loadComments(postId){
                   id="reply-input-${escapeAttr(comment.id)}"
                   type="text"
                   placeholder="Reply to ${escapeAttr(username)}..."
-                  onkeydown="
-                    if(event.key === 'Enter'){
-                      event.preventDefault();
-                      sendCommentReply(
-                        '${escapeAttr(comment.id)}',
-                        '${escapeAttr(postId)}'
-                      );
-                    }
-                  "
                 >
 
                 <button
@@ -1150,6 +1048,61 @@ async function loadComments(postId){
       }
     ).join("");
 
+
+  /* Enter key for comments/replies */
+
+  data.forEach(comment => {
+
+    const commentInput =
+      document.getElementById(
+        "comment-input-" + postId
+      );
+
+    if(commentInput){
+
+      commentInput.onkeydown =
+        function(event){
+
+          if(event.key === "Enter"){
+
+            event.preventDefault();
+
+            addComment(postId);
+
+          }
+
+        };
+
+    }
+
+
+    const replyInput =
+      document.getElementById(
+        "reply-input-" + comment.id
+      );
+
+    if(replyInput){
+
+      replyInput.onkeydown =
+        function(event){
+
+          if(event.key === "Enter"){
+
+            event.preventDefault();
+
+            sendCommentReply(
+              comment.id,
+              postId
+            );
+
+          }
+
+        };
+
+    }
+
+  });
+
 }
 
 
@@ -1163,12 +1116,14 @@ function showCommentReply(
       "reply-box-" + commentId
     );
 
+  if(!box) return;
+
   const input =
     document.getElementById(
       "reply-input-" + commentId
     );
 
-  if(!box || !input) return;
+  if(!input) return;
 
   box.style.display =
     "block";
@@ -1211,19 +1166,17 @@ async function sendCommentReply(
   if(!text) return;
 
 
-  const {
-    error
-  } =
-  await supabaseClient
-    .from("comments")
-    .insert({
+  const {error} =
+    await supabaseClient
+      .from("comments")
+      .insert({
 
-      post_id:postId,
-      user_id:currentUser.id,
-      username:currentUsername,
-      content:text
+        post_id:postId,
+        user_id:currentUser.id,
+        username:currentUsername,
+        content:text
 
-    });
+      });
 
 
   if(error){
@@ -1236,8 +1189,6 @@ async function sendCommentReply(
     return;
   }
 
-
-  input.value = "";
 
   await loadComments(postId);
 
@@ -1261,7 +1212,6 @@ async function addComment(postId){
       "comment-input-" + postId
     );
 
-
   if(!input) return;
 
 
@@ -1272,19 +1222,17 @@ async function addComment(postId){
   if(!text) return;
 
 
-  const {
-    error
-  } =
-  await supabaseClient
-    .from("comments")
-    .insert({
+  const {error} =
+    await supabaseClient
+      .from("comments")
+      .insert({
 
-      post_id:postId,
-      user_id:currentUser.id,
-      username:currentUsername,
-      content:text
+        post_id:postId,
+        user_id:currentUser.id,
+        username:currentUsername,
+        content:text
 
-    });
+      });
 
 
   if(error){
@@ -1306,10 +1254,15 @@ async function addComment(postId){
 
 
 /* =====================================================
-   MESSAGE
+   MESSAGE - FIXED
 ===================================================== */
 
 async function sendTextMessage(){
+
+  console.log(
+    "SEND MESSAGE CLICKED"
+  );
+
 
   if(!currentUser){
 
@@ -1327,62 +1280,178 @@ async function sendTextMessage(){
     );
 
 
-  if(!input) return;
-
-
-  const text =
-    input.value.trim();
-
-
-  if(!text) return;
-
-
-  let result =
-    await supabaseClient
-      .from("Messages")
-      .insert({
-
-        user_id:currentUser.id,
-        username:currentUsername,
-        content:text
-
-      });
-
-
-  if(result.error){
-
-    result =
-      await supabaseClient
-        .from("messages")
-        .insert({
-
-          user_id:currentUser.id,
-          username:currentUsername,
-          content:text
-
-        });
-
-  }
-
-
-  if(result.error){
+  if(!input){
 
     alert(
-      "Message send nahi hua.\n\n" +
-      result.error.message
+      "Message box nahi mila."
     );
 
     return;
   }
 
 
+  const text =
+    input.value.trim();
+
+
+  if(!text){
+
+    return;
+  }
+
+
+  /* Directly use lowercase public.messages */
+
+  const {data,error} =
+    await supabaseClient
+      .from("messages")
+      .insert({
+
+        user_id:currentUser.id,
+        username:currentUsername,
+        content:text
+
+      })
+      .select();
+
+
+  if(error){
+
+    console.error(
+      "MESSAGE SEND ERROR:",
+      error
+    );
+
+    alert(
+      "Message send nahi hua.\n\n" +
+      error.message
+    );
+
+    return;
+  }
+
+
+  console.log(
+    "MESSAGE SENT:",
+    data
+  );
+
+
   input.value = "";
 
   showNotice(
-    "Message sent."
+    "💬 Message sent."
   );
 
 }
+
+
+/* =====================================================
+   MESSAGE BUTTONS
+===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    const chatInput =
+      document.getElementById(
+        "chatInput"
+      );
+
+    const sendBtn =
+      document.getElementById(
+        "sendMessageBtn"
+      );
+
+    const uploadBtn =
+      document.getElementById(
+        "uploadImageBtn"
+      );
+
+    const imageInput =
+      document.getElementById(
+        "imageInput"
+      );
+
+    const voiceBtn =
+      document.getElementById(
+        "voiceBtn"
+      );
+
+
+    if(chatInput){
+
+      chatInput.addEventListener(
+        "keydown",
+        function(event){
+
+          if(event.key === "Enter"){
+
+            event.preventDefault();
+
+            sendTextMessage();
+
+          }
+
+        }
+      );
+
+    }
+
+
+    if(sendBtn){
+
+      sendBtn.addEventListener(
+        "click",
+        function(){
+
+          sendTextMessage();
+
+        }
+      );
+
+    }
+
+
+    if(uploadBtn && imageInput){
+
+      uploadBtn.addEventListener(
+        "click",
+        function(){
+
+          imageInput.click();
+
+        }
+      );
+
+      imageInput.addEventListener(
+        "change",
+        function(){
+
+          sendImage();
+
+        }
+      );
+
+    }
+
+
+    if(voiceBtn){
+
+      voiceBtn.addEventListener(
+        "click",
+        function(){
+
+          toggleRecording();
+
+        }
+      );
+
+    }
+
+  }
+);
 
 
 /* =====================================================
@@ -1401,18 +1470,16 @@ async function toggleLike(postId){
   }
 
 
-  const {
-    error
-  } =
-  await supabaseClient
-    .from("post_actions")
-    .insert({
+  const {error} =
+    await supabaseClient
+      .from("post_actions")
+      .insert({
 
-      post_id:postId,
-      user_id:currentUser.id,
-      action_type:"like"
+        post_id:postId,
+        user_id:currentUser.id,
+        action_type:"like"
 
-    });
+      });
 
 
   if(error){
@@ -1448,18 +1515,16 @@ async function toggleDislike(postId){
   }
 
 
-  const {
-    error
-  } =
-  await supabaseClient
-    .from("post_actions")
-    .insert({
+  const {error} =
+    await supabaseClient
+      .from("post_actions")
+      .insert({
 
-      post_id:postId,
-      user_id:currentUser.id,
-      action_type:"dislike"
+        post_id:postId,
+        user_id:currentUser.id,
+        action_type:"dislike"
 
-    });
+      });
 
 
   if(error){
@@ -1494,20 +1559,18 @@ async function deletePost(postId){
   }
 
 
-  const {
-    error
-  } =
-  await supabaseClient
-    .from("posts")
-    .delete()
-    .eq(
-      "id",
-      postId
-    )
-    .eq(
-      "user_id",
-      currentUser.id
-    );
+  const {error} =
+    await supabaseClient
+      .from("posts")
+      .delete()
+      .eq(
+        "id",
+        postId
+      )
+      .eq(
+        "user_id",
+        currentUser.id
+      );
 
 
   if(error){
@@ -1557,17 +1620,15 @@ async function blockUser(userId){
   }
 
 
-  const {
-    error
-  } =
-  await supabaseClient
-    .from("user_blocks")
-    .insert({
+  const {error} =
+    await supabaseClient
+      .from("user_blocks")
+      .insert({
 
-      blocker_id:currentUser.id,
-      blocked_id:userId
+        blocker_id:currentUser.id,
+        blocked_id:userId
 
-    });
+      });
 
 
   if(error){
@@ -1817,12 +1878,10 @@ async function moreMenu(){
   }
 
 
-  const {
-    error
-  } =
-  await supabaseClient
-    .auth
-    .signOut();
+  const {error} =
+    await supabaseClient
+      .auth
+      .signOut();
 
 
   if(error){
@@ -1906,15 +1965,12 @@ function formatDate(date){
 
   if(!date) return "";
 
-
   try{
 
     return new Date(date)
       .toLocaleString();
 
-  }
-
-  catch(error){
+  }catch(error){
 
     return "";
 
