@@ -307,10 +307,6 @@ body{
 <body>
 
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
-
 <header class="header">
 
   <div class="logo">
@@ -323,16 +319,13 @@ body{
 <div class="container">
 
 
-  <!-- ===================================================
-       TOP MESSAGE BOX
-  ==================================================== -->
+  <!-- TOP MESSAGE BOX -->
 
   <div class="home-message-box">
 
     <div class="message-title">
       💬 Message
     </div>
-
 
     <div class="message-row">
 
@@ -348,7 +341,6 @@ body{
         "
       >
 
-
       <button
         class="chat-send"
         onclick="sendTextMessage()">
@@ -356,7 +348,6 @@ body{
       </button>
 
     </div>
-
 
     <div class="message-tools">
 
@@ -369,7 +360,6 @@ body{
         🖼️ Upload Image
       </button>
 
-
       <button
         id="voiceBtn"
         onclick="toggleRecording()">
@@ -378,7 +368,6 @@ body{
 
     </div>
 
-
     <input
       id="imageInput"
       type="file"
@@ -386,7 +375,6 @@ body{
       style="display:none"
       onchange="sendImage()"
     >
-
 
     <div
       id="recordStatus"
@@ -402,14 +390,11 @@ body{
   </div>
 
 
-  <!-- ===================================================
-       TRENDING POSTS
-  ==================================================== -->
+  <!-- TRENDING POSTS -->
 
   <div class="section-title">
     🔥 Trending Posts
   </div>
-
 
   <div id="posts">
 
@@ -422,38 +407,27 @@ body{
 </div>
 
 
-<!-- =====================================================
-     BOTTOM NAVIGATION
-===================================================== -->
+<!-- BOTTOM NAVIGATION -->
 
 <div class="bottom-nav">
 
-
-  <!-- HOME -->
-
   <button onclick="goHome()">
-
     <span>🏠</span>
-
     Home
-
   </button>
 
 
-  <!-- PRIVATE -->
-
   <button onclick="showNotice('Private Chat coming soon')">
-
     <span>💬</span>
-
     Private
-
   </button>
 
 
   <!-- PROFILE -->
 
-  <button onclick="openProfile()">
+  <button
+    type="button"
+    onclick="openProfile()">
 
     <span>👤</span>
 
@@ -462,25 +436,15 @@ body{
   </button>
 
 
-  <!-- NOTIFICATIONS -->
-
   <button onclick="showNotice('Notifications coming soon')">
-
     <span>🔔</span>
-
     Notifications
-
   </button>
 
 
-  <!-- MORE -->
-
   <button onclick="moreMenu()">
-
     <span>☰</span>
-
     More
-
   </button>
 
 </div>
@@ -502,10 +466,8 @@ body{
 const SUPABASE_URL =
   "https://szmauhxiyjffjhrcrue.supabase.co";
 
-
 const SUPABASE_KEY =
   "sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
-
 
 const supabaseClient =
   supabase.createClient(
@@ -543,7 +505,6 @@ async function checkUser(){
     } =
     await supabaseClient.auth.getUser();
 
-
     if(
       error ||
       !data ||
@@ -558,16 +519,13 @@ async function checkUser(){
 
     }
 
-
     currentUser =
       data.user;
-
 
     currentUsername =
       data.user.user_metadata?.username ||
       data.user.email?.split("@")[0] ||
       "User";
-
 
     await loadPosts();
 
@@ -595,17 +553,6 @@ async function checkUser(){
 
 function openProfile(){
 
-  if(!currentUser){
-
-    showNotice(
-      "Please login first."
-    );
-
-    return;
-
-  }
-
-
   window.location.href =
     "profile.html";
 
@@ -623,13 +570,10 @@ async function loadPosts(){
       "posts"
     );
 
-
   if(!postsBox) return;
-
 
   postsBox.innerHTML =
     '<div class="empty">Loading posts...</div>';
-
 
   const {
     data: blocked,
@@ -643,7 +587,6 @@ async function loadPosts(){
       currentUser.id
     );
 
-
   if(blockError){
 
     console.warn(
@@ -653,14 +596,12 @@ async function loadPosts(){
 
   }
 
-
   const blockedIds =
     (blocked || [])
       .map(
         x =>
           x.blocked_id
       );
-
 
   const {
     data,
@@ -676,7 +617,6 @@ async function loadPosts(){
       }
     );
 
-
   if(error){
 
     console.error(
@@ -684,15 +624,12 @@ async function loadPosts(){
       error
     );
 
-
     postsBox.innerHTML =
       '<div class="empty">Posts load nahi hue.</div>';
-
 
     return;
 
   }
-
 
   const posts =
     (data || [])
@@ -703,7 +640,6 @@ async function loadPosts(){
           )
       );
 
-
   if(posts.length === 0){
 
     postsBox.innerHTML =
@@ -712,7 +648,6 @@ async function loadPosts(){
     return;
 
   }
-
 
   postsBox.innerHTML =
     posts
@@ -732,43 +667,31 @@ function renderPost(post){
     post.user_id ===
     currentUser.id;
 
-
   return `
 
     <div
       class="post"
       id="post-${escapeAttr(post.id)}">
 
-
       <div class="post-user">
-
         ${escapeHtml(
           post.username || "User"
         )}
-
       </div>
 
-
       <div class="post-date">
-
         ${formatDate(
           post.created_at
         )}
-
       </div>
 
-
       <div class="post-content">
-
         ${escapeHtml(
           post.content || ""
         )}
-
       </div>
 
-
       <div class="post-actions">
-
 
         <button
           onclick="
@@ -776,11 +699,8 @@ function renderPost(post){
               '${escapeAttr(post.id)}'
             )
           ">
-
           👍 Like
-
         </button>
-
 
         <button
           onclick="
@@ -788,11 +708,8 @@ function renderPost(post){
               '${escapeAttr(post.id)}'
             )
           ">
-
           👎 Dislike
-
         </button>
-
 
         <button
           onclick="
@@ -800,11 +717,8 @@ function renderPost(post){
               '${escapeAttr(post.id)}'
             )
           ">
-
           💬 Comments
-
         </button>
-
 
         ${
           !ownPost
@@ -818,9 +732,7 @@ function renderPost(post){
                 '${escapeAttr(post.user_id)}'
               )
             ">
-
             🚫 Block
-
           </button>
           `
 
@@ -833,29 +745,22 @@ function renderPost(post){
                 '${escapeAttr(post.id)}'
               )
             ">
-
             🗑️ Delete Post
-
           </button>
           `
         }
 
-
       </div>
-
 
       <div
         class="comments"
         id="comments-${escapeAttr(post.id)}">
 
-
         <div
           id="comment-list-${escapeAttr(post.id)}">
         </div>
 
-
         <div class="comment-box">
-
 
           <input
             id="comment-input-${escapeAttr(post.id)}"
@@ -869,24 +774,18 @@ function renderPost(post){
             "
           >
 
-
           <button
             onclick="
               addComment(
                 '${escapeAttr(post.id)}'
               )
             ">
-
             ➤
-
           </button>
-
 
         </div>
 
-
       </div>
-
 
     </div>
 
@@ -906,9 +805,7 @@ async function toggleComments(postId){
       "comments-" + postId
     );
 
-
   if(!box) return;
-
 
   if(
     box.style.display ===
@@ -922,10 +819,8 @@ async function toggleComments(postId){
 
   }
 
-
   box.style.display =
     "block";
-
 
   await loadComments(
     postId
@@ -945,13 +840,10 @@ async function loadComments(postId){
       "comment-list-" + postId
     );
 
-
   if(!list) return;
-
 
   list.innerHTML =
     '<div class="empty">Loading comments...</div>';
-
 
   const {
     data,
@@ -971,7 +863,6 @@ async function loadComments(postId){
       }
     );
 
-
   if(error){
 
     console.error(
@@ -979,15 +870,12 @@ async function loadComments(postId){
       error
     );
 
-
     list.innerHTML =
       '<div class="empty">Comments load nahi hue.</div>';
-
 
     return;
 
   }
-
 
   if(
     !data ||
@@ -997,11 +885,9 @@ async function loadComments(postId){
     list.innerHTML =
       '<div class="empty">No comments yet.</div>';
 
-
     return;
 
   }
-
 
   list.innerHTML =
     data
@@ -1014,29 +900,21 @@ async function loadComments(postId){
               class="comment"
               id="comment-${escapeAttr(comment.id)}">
 
-
               <div class="comment-user">
-
                 ${escapeHtml(
                   comment.username ||
                   "User"
                 )}
-
               </div>
 
-
               <div class="comment-text">
-
                 ${escapeHtml(
                   comment.content ||
                   ""
                 )}
-
               </div>
 
-
               <div class="comment-actions">
-
 
                 <button
                   onclick="
@@ -1048,19 +926,14 @@ async function loadComments(postId){
                       )}'
                     )
                   ">
-
                   ↩️ Reply
-
                 </button>
 
-
               </div>
-
 
               <div
                 class="comment-reply-box"
                 id="reply-box-${escapeAttr(comment.id)}">
-
 
                 <input
                   id="reply-input-${escapeAttr(comment.id)}"
@@ -1083,7 +956,6 @@ async function loadComments(postId){
                   "
                 >
 
-
                 <button
                   onclick="
                     sendCommentReply(
@@ -1091,14 +963,10 @@ async function loadComments(postId){
                       '${escapeAttr(postId)}'
                     )
                   ">
-
                   ➤
-
                 </button>
 
-
               </div>
-
 
             </div>
 
@@ -1126,13 +994,11 @@ function showCommentReply(
       commentId
     );
 
-
   const input =
     document.getElementById(
       "reply-input-" +
       commentId
     );
-
 
   if(
     !box ||
@@ -1143,16 +1009,13 @@ function showCommentReply(
 
   }
 
-
   box.style.display =
     "block";
-
 
   input.value =
     "@" +
     username +
     " ";
-
 
   input.focus();
 
@@ -1178,23 +1041,18 @@ async function sendCommentReply(
 
   }
 
-
   const input =
     document.getElementById(
       "reply-input-" +
       commentId
     );
 
-
   if(!input) return;
-
 
   const text =
     input.value.trim();
 
-
   if(!text) return;
-
 
   const {
     error
@@ -1217,7 +1075,6 @@ async function sendCommentReply(
 
     });
 
-
   if(error){
 
     console.error(
@@ -1225,21 +1082,17 @@ async function sendCommentReply(
       error
     );
 
-
     alert(
       "Reply send nahi hua.\n\n" +
       error.message
     );
 
-
     return;
 
   }
 
-
   input.value =
     "";
-
 
   await loadComments(
     postId
@@ -1264,23 +1117,18 @@ async function addComment(postId){
 
   }
 
-
   const input =
     document.getElementById(
       "comment-input-" +
       postId
     );
 
-
   if(!input) return;
-
 
   const text =
     input.value.trim();
 
-
   if(!text) return;
-
 
   const {
     error
@@ -1303,7 +1151,6 @@ async function addComment(postId){
 
     });
 
-
   if(error){
 
     console.error(
@@ -1311,21 +1158,17 @@ async function addComment(postId){
       error
     );
 
-
     alert(
       "Comment send nahi hua.\n\n" +
       error.message
     );
 
-
     return;
 
   }
 
-
   input.value =
     "";
-
 
   await loadComments(
     postId
@@ -1350,12 +1193,10 @@ async function sendTextMessage(){
 
   }
 
-
   const input =
     document.getElementById(
       "chatInput"
     );
-
 
   if(!input){
 
@@ -1367,13 +1208,10 @@ async function sendTextMessage(){
 
   }
 
-
   const text =
     input.value.trim();
 
-
   if(!text) return;
-
 
   let result =
     await supabaseClient
@@ -1391,14 +1229,12 @@ async function sendTextMessage(){
 
       });
 
-
   if(result.error){
 
     console.warn(
       "Messages table failed:",
       result.error.message
     );
-
 
     result =
       await supabaseClient
@@ -1418,7 +1254,6 @@ async function sendTextMessage(){
 
   }
 
-
   if(result.error){
 
     console.error(
@@ -1426,21 +1261,17 @@ async function sendTextMessage(){
       result.error
     );
 
-
     alert(
       "Message send nahi hua.\n\n" +
       result.error.message
     );
 
-
     return;
 
   }
 
-
   input.value =
     "";
-
 
   showNotice(
     "Message sent."
@@ -1465,7 +1296,6 @@ async function toggleLike(postId){
 
   }
 
-
   const {
     error
   } =
@@ -1484,23 +1314,19 @@ async function toggleLike(postId){
 
     });
 
-
   if(error){
 
     showNotice(
       "Like save nahi hua."
     );
 
-
     console.error(
       error
     );
 
-
     return;
 
   }
-
 
   showNotice(
     "👍 Liked"
@@ -1525,7 +1351,6 @@ async function toggleDislike(postId){
 
   }
 
-
   const {
     error
   } =
@@ -1544,23 +1369,19 @@ async function toggleDislike(postId){
 
     });
 
-
   if(error){
 
     showNotice(
       "Dislike save nahi hua."
     );
 
-
     console.error(
       error
     );
 
-
     return;
 
   }
-
 
   showNotice(
     "👎 Disliked"
@@ -1577,15 +1398,12 @@ async function deletePost(postId){
 
   if(!currentUser) return;
 
-
   const ok =
     confirm(
       "Delete this post?"
     );
 
-
   if(!ok) return;
-
 
   const {
     error
@@ -1602,7 +1420,6 @@ async function deletePost(postId){
       currentUser.id
     );
 
-
   if(error){
 
     alert(
@@ -1610,18 +1427,15 @@ async function deletePost(postId){
       error.message
     );
 
-
     return;
 
   }
-
 
   const post =
     document.getElementById(
       "post-" +
       postId
     );
-
 
   if(post){
 
@@ -1640,7 +1454,6 @@ async function blockUser(userId){
 
   if(!currentUser) return;
 
-
   if(
     userId ===
     currentUser.id
@@ -1650,15 +1463,12 @@ async function blockUser(userId){
 
   }
 
-
   const ok =
     confirm(
       "Is user ko block karna hai?"
     );
 
-
   if(!ok) return;
-
 
   const {
     error
@@ -1675,7 +1485,6 @@ async function blockUser(userId){
 
     });
 
-
   if(error){
 
     if(
@@ -1687,27 +1496,22 @@ async function blockUser(userId){
         "User already blocked."
       );
 
-
       return;
 
     }
-
 
     alert(
       "Block nahi hua.\n\n" +
       error.message
     );
 
-
     return;
 
   }
 
-
   showNotice(
     "User blocked."
   );
-
 
   await loadPosts();
 
@@ -1741,11 +1545,9 @@ async function toggleRecording(){
       "Voice recording browser mein available nahi."
     );
 
-
     return;
 
   }
-
 
   if(isRecording){
 
@@ -1755,7 +1557,6 @@ async function toggleRecording(){
 
   }
 
-
   try{
 
     const stream =
@@ -1764,15 +1565,12 @@ async function toggleRecording(){
           audio:true
         });
 
-
     audioChunks = [];
-
 
     mediaRecorder =
       new MediaRecorder(
         stream
       );
-
 
     mediaRecorder.ondataavailable =
       event => {
@@ -1789,7 +1587,6 @@ async function toggleRecording(){
 
       };
 
-
     mediaRecorder.onstop =
       () => {
 
@@ -1800,22 +1597,18 @@ async function toggleRecording(){
               track.stop()
           );
 
-
         isRecording =
           false;
-
 
         const status =
           document.getElementById(
             "recordStatus"
           );
 
-
         const voiceBtn =
           document.getElementById(
             "voiceBtn"
           );
-
 
         if(status){
 
@@ -1824,7 +1617,6 @@ async function toggleRecording(){
 
         }
 
-
         if(voiceBtn){
 
           voiceBtn.textContent =
@@ -1832,26 +1624,21 @@ async function toggleRecording(){
 
         }
 
-
         showNotice(
           "Voice recording ready hai. Storage setup ke baad save hoga."
         );
 
       };
 
-
     mediaRecorder.start();
-
 
     isRecording =
       true;
-
 
     document.getElementById(
       "recordStatus"
     ).style.display =
       "block";
-
 
     document.getElementById(
       "voiceBtn"
@@ -1860,13 +1647,11 @@ async function toggleRecording(){
 
   }
 
-
   catch(error){
 
     console.error(
       error
     );
-
 
     alert(
       "Microphone permission nahi mili."
@@ -1905,9 +1690,7 @@ async function moreMenu(){
       "Logout karna hai?"
     );
 
-
   if(!logout) return;
-
 
   const {
     error
@@ -1916,7 +1699,6 @@ async function moreMenu(){
     .auth
     .signOut();
 
-
   if(error){
 
     alert(
@@ -1924,11 +1706,9 @@ async function moreMenu(){
       error.message
     );
 
-
     return;
 
   }
-
 
   window.location.replace(
     "login.html"
@@ -1948,17 +1728,13 @@ function showNotice(message){
       "notice"
     );
 
-
   if(!box) return;
-
 
   box.textContent =
     message;
 
-
   box.style.display =
     "block";
-
 
   setTimeout(
     () => {
@@ -2019,7 +1795,6 @@ function formatDate(date){
 
   if(!date) return "";
 
-
   try{
 
     return new Date(
@@ -2027,7 +1802,6 @@ function formatDate(date){
     ).toLocaleString();
 
   }
-
 
   catch{
 
