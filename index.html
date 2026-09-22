@@ -349,6 +349,7 @@ body{
 
 <body>
 
+
 <header class="header">
 
   <div class="logo">
@@ -359,6 +360,7 @@ body{
 
 
 <div class="container">
+
 
   <!-- ================= TOP MESSAGE BOX ================= -->
 
@@ -385,6 +387,7 @@ body{
 
     </div>
 
+
     <div class="message-tools">
 
       <button
@@ -394,12 +397,13 @@ body{
       </button>
 
       <button
-        id="voiceBtn"
-        type="button">
+        type="button"
+        id="voiceBtn">
         🎤 Voice
       </button>
 
     </div>
+
 
     <input
       id="imageInput"
@@ -407,6 +411,7 @@ body{
       accept="image/*"
       style="display:none"
     >
+
 
     <div
       id="recordStatus"
@@ -428,6 +433,7 @@ body{
     🔥 Trending Posts
   </div>
 
+
   <div id="posts">
 
     <div class="empty">
@@ -443,6 +449,7 @@ body{
     💬 Message Posts
   </div>
 
+
   <div id="messages">
 
     <div class="empty">
@@ -451,6 +458,7 @@ body{
 
   </div>
 
+
 </div>
 
 
@@ -458,43 +466,62 @@ body{
 
 <div class="bottom-nav">
 
-  <button type="button" onclick="goHome()">
+  <button
+    type="button"
+    onclick="goHome()">
+
     <span>🏠</span>
     Home
+
   </button>
+
 
   <button
     type="button"
     onclick="showNotice('Private Chat coming soon')">
+
     <span>💬</span>
     Private
+
   </button>
+
 
   <button
     type="button"
     onclick="openProfile()">
+
     <span>👤</span>
     Profile
+
   </button>
+
 
   <button
     type="button"
     onclick="showNotice('Notifications coming soon')">
+
     <span>🔔</span>
     Notifications
+
   </button>
+
 
   <button
     type="button"
     onclick="moreMenu()">
+
     <span>☰</span>
     More
+
   </button>
 
 </div>
 
 
-<div id="notice" class="notice"></div>
+<div
+  id="notice"
+  class="notice">
+</div>
 
 
 <script>
@@ -506,8 +533,10 @@ body{
 const SUPABASE_URL =
   "https://szmauhxiyjffjhrcruee.supabase.co";
 
+
 const SUPABASE_KEY =
   "sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
+
 
 const supabaseClient =
   window.supabase.createClient(
@@ -528,10 +557,13 @@ const supabaseClient =
 ===================================================== */
 
 let currentUser = null;
+
 let currentUsername = "User";
 
 let mediaRecorder = null;
+
 let audioChunks = [];
+
 let isRecording = false;
 
 
@@ -541,9 +573,13 @@ let isRecording = false;
 
 function setCurrentUser(user){
 
-  if(!user) return false;
+  if(!user){
+    return false;
+  }
+
 
   currentUser = user;
+
 
   currentUsername =
     user.user_metadata?.username ||
@@ -551,12 +587,15 @@ function setCurrentUser(user){
     user.email?.split("@")[0] ||
     "User";
 
+
   console.log(
     "CURRENT USER:",
     user.email
   );
 
+
   return true;
+
 }
 
 
@@ -570,6 +609,7 @@ async function checkUser(){
     "Checking Socialyte login session..."
   );
 
+
   for(
     let attempt = 1;
     attempt <= 8;
@@ -578,14 +618,19 @@ async function checkUser(){
 
     try{
 
-      const {data,error} =
+      const {
+        data,
+        error
+      } =
         await supabaseClient.auth.getSession();
+
 
       console.log(
         "Session check:",
         attempt,
         data
       );
+
 
       if(error){
 
@@ -595,6 +640,7 @@ async function checkUser(){
         );
 
       }
+
 
       if(
         data &&
@@ -606,25 +652,19 @@ async function checkUser(){
           data.session.user
         );
 
+
         console.log(
           "SESSION FOUND"
         );
 
-        try{
 
-          await loadPosts();
-          await loadMessages();
+        await loadPosts();
 
-        }catch(loadError){
+        await loadMessages();
 
-          console.error(
-            "HOME LOAD ERROR:",
-            loadError
-          );
-
-        }
 
         return;
+
       }
 
     }catch(error){
@@ -635,6 +675,7 @@ async function checkUser(){
       );
 
     }
+
 
     if(attempt < 8){
 
@@ -650,14 +691,19 @@ async function checkUser(){
 
   try{
 
-    const {data,error} =
+    const {
+      data,
+      error
+    } =
       await supabaseClient.auth.getUser();
+
 
     console.log(
       "FINAL USER CHECK:",
       data,
       error
     );
+
 
     if(
       !error &&
@@ -669,10 +715,14 @@ async function checkUser(){
         data.user
       );
 
+
       await loadPosts();
+
       await loadMessages();
 
+
       return;
+
     }
 
   }catch(error){
@@ -688,6 +738,7 @@ async function checkUser(){
   console.log(
     "NO SESSION FOUND - LOGIN PAGE"
   );
+
 
   window.location.replace(
     "login.html"
@@ -707,6 +758,7 @@ supabaseClient.auth.onAuthStateChange(
       "AUTH EVENT:",
       event
     );
+
 
     if(
       session &&
@@ -745,15 +797,22 @@ async function loadPosts(){
     return;
   }
 
+
   const postsBox =
     document.getElementById("posts");
 
-  if(!postsBox) return;
+
+  if(!postsBox){
+    return;
+  }
+
 
   postsBox.innerHTML =
     '<div class="empty">Loading posts...</div>';
 
+
   let blockedIds = [];
+
 
   try{
 
@@ -768,6 +827,7 @@ async function loadPosts(){
           "blocker_id",
           currentUser.id
         );
+
 
     if(!blockError){
 
@@ -790,7 +850,10 @@ async function loadPosts(){
   }
 
 
-  const {data,error} =
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("posts")
       .select("*")
@@ -809,10 +872,13 @@ async function loadPosts(){
       error
     );
 
+
     postsBox.innerHTML =
       '<div class="empty">Posts load nahi hue.</div>';
 
+
     return;
+
   }
 
 
@@ -831,7 +897,9 @@ async function loadPosts(){
     postsBox.innerHTML =
       '<div class="empty">No posts yet.</div>';
 
+
     return;
+
   }
 
 
@@ -852,26 +920,36 @@ function renderPost(post){
   const ownPost =
     post.user_id === currentUser.id;
 
+
   let controls = "";
+
 
   if(ownPost){
 
     controls = `
+
       <button
         type="button"
         onclick="deletePost('${escapeAttr(post.id)}')">
+
         🗑️ Delete Post
+
       </button>
+
     `;
 
   }else{
 
     controls = `
+
       <button
         type="button"
         onclick="blockUser('${escapeAttr(post.user_id)}')">
+
         🚫 Block
+
       </button>
+
     `;
 
   }
@@ -883,51 +961,70 @@ function renderPost(post){
       class="post"
       id="post-${escapeAttr(post.id)}">
 
+
       <div class="post-user">
         ${escapeHtml(post.username || "User")}
       </div>
+
 
       <div class="post-date">
         ${formatDate(post.created_at)}
       </div>
 
+
       <div class="post-content">
         ${escapeHtml(post.content || "")}
       </div>
 
+
       <div class="post-actions">
+
 
         <button
           type="button"
           onclick="toggleLike('${escapeAttr(post.id)}')">
+
           👍 Like
+
         </button>
+
 
         <button
           type="button"
           onclick="toggleDislike('${escapeAttr(post.id)}')">
+
           👎 Dislike
+
         </button>
+
 
         <button
           type="button"
           onclick="toggleComments('${escapeAttr(post.id)}')">
+
           💬 Comments
+
         </button>
+
 
         ${controls}
 
+
       </div>
+
 
       <div
         class="comments"
         id="comments-${escapeAttr(post.id)}">
 
+
         <div
           id="comment-list-${escapeAttr(post.id)}">
         </div>
 
+
         <div class="comment-box">
+
 
           <input
             id="comment-input-${escapeAttr(post.id)}"
@@ -935,15 +1032,21 @@ function renderPost(post){
             placeholder="Write a comment..."
           >
 
+
           <button
             type="button"
             onclick="addComment('${escapeAttr(post.id)}')">
+
             ➤
+
           </button>
+
 
         </div>
 
+
       </div>
+
 
     </div>
 
@@ -963,21 +1066,32 @@ async function toggleComments(postId){
       "comments-" + postId
     );
 
-  if(!box) return;
+
+  if(!box){
+    return;
+  }
+
 
   if(box.style.display === "block"){
 
     box.style.display = "none";
 
     return;
+
   }
 
+
   box.style.display = "block";
+
 
   await loadComments(postId);
 
 }
 
+
+/* =====================================================
+   LOAD COMMENTS
+===================================================== */
 
 async function loadComments(postId){
 
@@ -986,13 +1100,20 @@ async function loadComments(postId){
       "comment-list-" + postId
     );
 
-  if(!list) return;
+
+  if(!list){
+    return;
+  }
+
 
   list.innerHTML =
     '<div class="empty">Loading comments...</div>';
 
 
-  const {data,error} =
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("comments")
       .select("*")
@@ -1015,10 +1136,13 @@ async function loadComments(postId){
       error
     );
 
+
     list.innerHTML =
       '<div class="empty">Comments load nahi hue.</div>';
 
+
     return;
+
   }
 
 
@@ -1027,7 +1151,9 @@ async function loadComments(postId){
     list.innerHTML =
       '<div class="empty">No comments yet.</div>';
 
+
     return;
+
   }
 
 
@@ -1046,15 +1172,19 @@ async function loadComments(postId){
             class="comment"
             id="comment-${escapeAttr(comment.id)}">
 
+
             <div class="comment-user">
               ${escapeHtml(username)}
             </div>
+
 
             <div class="comment-text">
               ${escapeHtml(comment.content || "")}
             </div>
 
+
             <div class="comment-actions">
+
 
               <button
                 type="button"
@@ -1064,22 +1194,29 @@ async function loadComments(postId){
                     '${escapeAttr(username)}'
                   )
                 ">
+
                 ↩️ Reply
+
               </button>
 
+
             </div>
+
 
             <div
               class="comment-reply-box"
               id="reply-box-${escapeAttr(comment.id)}">
 
+
               <div class="comment-reply-row">
+
 
                 <input
                   id="reply-input-${escapeAttr(comment.id)}"
                   type="text"
                   placeholder="Reply to ${escapeAttr(username)}..."
                 >
+
 
                 <button
                   type="button"
@@ -1089,12 +1226,17 @@ async function loadComments(postId){
                       '${escapeAttr(postId)}'
                     )
                   ">
+
                   ➤
+
                 </button>
+
 
               </div>
 
+
             </div>
+
 
           </div>
 
@@ -1104,60 +1246,68 @@ async function loadComments(postId){
     ).join("");
 
 
-  data.forEach(comment => {
+  const commentInput =
+    document.getElementById(
+      "comment-input-" + postId
+    );
 
-    const commentInput =
-      document.getElementById(
-        "comment-input-" + postId
-      );
 
-    if(commentInput){
+  if(commentInput){
 
-      commentInput.onkeydown =
-        function(event){
+    commentInput.onkeydown =
+      function(event){
 
-          if(event.key === "Enter"){
+        if(event.key === "Enter"){
 
-            event.preventDefault();
+          event.preventDefault();
 
-            addComment(postId);
+          addComment(postId);
 
-          }
+        }
 
-        };
+      };
+
+  }
+
+
+  data.forEach(
+    comment => {
+
+      const replyInput =
+        document.getElementById(
+          "reply-input-" + comment.id
+        );
+
+
+      if(replyInput){
+
+        replyInput.onkeydown =
+          function(event){
+
+            if(event.key === "Enter"){
+
+              event.preventDefault();
+
+              sendCommentReply(
+                comment.id,
+                postId
+              );
+
+            }
+
+          };
+
+      }
 
     }
-
-
-    const replyInput =
-      document.getElementById(
-        "reply-input-" + comment.id
-      );
-
-    if(replyInput){
-
-      replyInput.onkeydown =
-        function(event){
-
-          if(event.key === "Enter"){
-
-            event.preventDefault();
-
-            sendCommentReply(
-              comment.id,
-              postId
-            );
-
-          }
-
-        };
-
-    }
-
-  });
+  );
 
 }
 
+
+/* =====================================================
+   COMMENT REPLY
+===================================================== */
 
 function showCommentReply(
   commentId,
@@ -1169,25 +1319,39 @@ function showCommentReply(
       "reply-box-" + commentId
     );
 
-  if(!box) return;
+
+  if(!box){
+    return;
+  }
+
 
   const input =
     document.getElementById(
       "reply-input-" + commentId
     );
 
-  if(!input) return;
+
+  if(!input){
+    return;
+  }
+
 
   box.style.display =
     "block";
 
+
   input.value =
     "@" + username + " ";
+
 
   input.focus();
 
 }
 
+
+/* =====================================================
+   SEND COMMENT REPLY
+===================================================== */
 
 async function sendCommentReply(
   commentId,
@@ -1201,6 +1365,7 @@ async function sendCommentReply(
     );
 
     return;
+
   }
 
 
@@ -1209,128 +1374,8 @@ async function sendCommentReply(
       "reply-input-" + commentId
     );
 
-  if(!input) return;
-
-
-  const text =
-    input.value.trim();
-
-
-  if(!text) return;
-
-
-  const {error} =
-    await supabaseClient
-      .from("comments")
-      .insert({
-
-        post_id:postId,
-        user_id:currentUser.id,
-        username:currentUsername,
-        content:text
-
-      });
-
-
-  if(error){
-
-    alert(
-      "Reply send nahi hua.\n\n" +
-      error.message
-    );
-
-    return;
-  }
-
-
-  await loadComments(postId);
-
-}
-
-
-async function addComment(postId){
-
-  if(!currentUser){
-
-    alert(
-      "Please login first."
-    );
-
-    return;
-  }
-
-
-  const input =
-    document.getElementById(
-      "comment-input-" + postId
-    );
-
-  if(!input) return;
-
-
-  const text =
-    input.value.trim();
-
-
-  if(!text) return;
-
-
-  const {error} =
-    await supabaseClient
-      .from("comments")
-      .insert({
-
-        post_id:postId,
-        user_id:currentUser.id,
-        username:currentUsername,
-        content:text
-
-      });
-
-
-  if(error){
-
-    alert(
-      "Comment send nahi hua.\n\n" +
-      error.message
-    );
-
-    return;
-  }
-
-
-  input.value = "";
-
-  await loadComments(postId);
-
-}
-
-
-/* =====================================================
-   MESSAGE SEND
-===================================================== */
-
-async function sendTextMessage(){
-
-  if(!currentUser){
-
-    alert(
-      "Please login first."
-    );
-
-    return;
-  }
-
-
-  const input =
-    document.getElementById("chatInput");
 
   if(!input){
-
-    alert(
-      "Message box nahi mila."
-    );
-
     return;
   }
 
@@ -1344,14 +1389,174 @@ async function sendTextMessage(){
   }
 
 
-  const {data,error} =
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("comments")
+      .insert({
+
+        post_id:postId,
+
+        user_id:currentUser.id,
+
+        username:currentUsername,
+
+        content:text
+
+      });
+
+
+  if(error){
+
+    alert(
+      "Reply send nahi hua.\n\n" +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  await loadComments(postId);
+
+}
+
+
+/* =====================================================
+   ADD COMMENT
+===================================================== */
+
+async function addComment(postId){
+
+  if(!currentUser){
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+
+  const input =
+    document.getElementById(
+      "comment-input-" + postId
+    );
+
+
+  if(!input){
+    return;
+  }
+
+
+  const text =
+    input.value.trim();
+
+
+  if(!text){
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("comments")
+      .insert({
+
+        post_id:postId,
+
+        user_id:currentUser.id,
+
+        username:currentUsername,
+
+        content:text
+
+      });
+
+
+  if(error){
+
+    alert(
+      "Comment send nahi hua.\n\n" +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  input.value = "";
+
+
+  await loadComments(postId);
+
+}
+
+
+/* =====================================================
+   SEND MESSAGE
+===================================================== */
+
+async function sendTextMessage(){
+
+  if(!currentUser){
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+
+  const input =
+    document.getElementById(
+      "chatInput"
+    );
+
+
+  if(!input){
+
+    alert(
+      "Message box nahi mila."
+    );
+
+    return;
+
+  }
+
+
+  const text =
+    input.value.trim();
+
+
+  if(!text){
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("messages")
       .insert({
 
         user_id:currentUser.id,
+
         username:currentUsername,
-        message:text
+
+        message:text,
+
+        message_type:"text"
 
       })
       .select();
@@ -1364,12 +1569,15 @@ async function sendTextMessage(){
       error
     );
 
+
     alert(
       "Message send nahi hua.\n\n" +
       error.message
     );
 
+
     return;
+
   }
 
 
@@ -1393,115 +1601,18 @@ async function sendTextMessage(){
 
 
 /* =====================================================
-   LOAD MESSAGE POSTS
+   LOAD MESSAGES
+   IMPORTANT:
+   ACTUAL TABLE COLUMN = message
 ===================================================== */
 
 async function loadMessages(){
 
-  const box = document.getElementById("messages");
-
-  if(!box){
-    alert("messages box nahi mila");
-    return;
-  }
-
-  box.innerHTML =
-    '<div class="empty">Checking messages...</div>';
-
-  try{
-
-    const result = await supabaseClient
-      .from("messages")
-      .select("*");
-
-    console.log("MESSAGE DATA:", result.data);
-    console.log("MESSAGE ERROR:", result.error);
-
-    if(result.error){
-
-      box.innerHTML = `
-        <div class="empty">
-          ❌ Database Read Error
-          <br><br>
-          ${escapeHtml(result.error.message)}
-        </div>
-      `;
-
-      return;
-    }
-
-    if(!result.data || result.data.length === 0){
-
-      box.innerHTML = `
-        <div class="empty">
-          ❌ Supabase ne 0 messages return kiye.
-        </div>
-      `;
-
-      return;
-    }
-
-    box.innerHTML = result.data.map(function(msg){
-
-      const username =
-        msg.username || "User";
-
-      const text =
-        msg.message ||
-        msg.content ||
-        "Message text missing";
-
-      return `
-        <div class="home-message">
-
-          <div class="home-message-user">
-            ${escapeHtml(username)}
-          </div>
-
-          <div class="home-message-text">
-            ${escapeHtml(text)}
-          </div>
-
-          ${
-            msg.created_at
-            ? `
-              <div class="home-message-date">
-                ${escapeHtml(
-                  formatDate(msg.created_at)
-                )}
-              </div>
-            `
-            : ""
-          }
-
-        </div>
-      `;
-
-    }).join("");
-
-  }catch(error){
-
-    console.error(
-      "MESSAGE EXCEPTION:",
-      error
+  const messagesBox =
+    document.getElementById(
+      "messages"
     );
 
-    box.innerHTML = `
-      <div class="empty">
-        ❌ Messages load nahi hue.
-        <br><br>
-        ${escapeHtml(error.message)}
-      </div>
-    `;
-
-  }
-
-}
-
-async function loadMessages(){
-
-  const messagesBox =
-    document.getElementById("messages");
 
   if(!messagesBox){
 
@@ -1510,6 +1621,7 @@ async function loadMessages(){
     );
 
     return;
+
   }
 
 
@@ -1519,23 +1631,33 @@ async function loadMessages(){
 
   try{
 
-    const result =
+    const {
+      data,
+      error
+    } =
       await supabaseClient
         .from("messages")
-        .select("*");
+        .select(
+          "id,user_id,message,created_at,username,message_type,media_url,content"
+        )
+        .order(
+          "created_at",
+          {
+            ascending:false
+          }
+        );
 
 
     console.log(
-      "MESSAGE RESULT:",
-      result
+      "MESSAGE DATA:",
+      data
     );
 
 
-    const data =
-      result.data;
-
-    const error =
-      result.error;
+    console.log(
+      "MESSAGE ERROR:",
+      error
+    );
 
 
     if(error){
@@ -1545,78 +1667,108 @@ async function loadMessages(){
         error
       );
 
-      messagesBox.innerHTML =
-        '<div class="empty">' +
-        'Message read error:<br>' +
-        '<small>' +
-        escapeHtml(error.message) +
-        '</small>' +
-        '</div>';
+
+      messagesBox.innerHTML = `
+
+        <div class="empty">
+
+          ❌ Message read error
+
+          <br><br>
+
+          ${escapeHtml(error.message)}
+
+        </div>
+
+      `;
+
 
       return;
+
     }
 
 
     if(!data || data.length === 0){
 
-      messagesBox.innerHTML =
-        '<div class="empty">' +
-        'Database se koi message nahi mila.' +
-        '</div>';
+      messagesBox.innerHTML = `
+
+        <div class="empty">
+
+          Abhi koi message nahi hai.
+
+        </div>
+
+      `;
+
 
       return;
+
     }
 
 
-    data.sort(function(a,b){
-
-      return new Date(b.created_at || 0) -
-             new Date(a.created_at || 0);
-
-    });
-
-
     messagesBox.innerHTML =
-      data.map(function(msg){
+      data
+        .map(
+          function(msg){
 
-        const username =
-          msg.username || "User";
-
-        const text =
-          msg.message ||
-          msg.content ||
-          "";
+            const username =
+              msg.username ||
+              "User";
 
 
-        return `
+            const text =
+              msg.message ||
+              msg.content ||
+              "";
 
-          <div class="home-message">
 
-            <div class="home-message-user">
-              ${escapeHtml(username)}
-            </div>
+            return `
 
-            <div class="home-message-text">
-              ${escapeHtml(text)}
-            </div>
+              <div class="home-message">
 
-            ${
-              msg.created_at
-              ? `
-                <div class="home-message-date">
-                  ${escapeHtml(
-                    formatDate(msg.created_at)
-                  )}
+
+                <div class="home-message-user">
+
+                  ${escapeHtml(username)}
+
                 </div>
-              `
-              : ""
-            }
 
-          </div>
 
-        `;
+                <div class="home-message-text">
 
-      }).join("");
+                  ${escapeHtml(text)}
+
+                </div>
+
+
+                ${
+                  msg.created_at
+                  ?
+                  `
+
+                    <div class="home-message-date">
+
+                      ${escapeHtml(
+                        formatDate(
+                          msg.created_at
+                        )
+                      )}
+
+                    </div>
+
+                  `
+                  :
+                  ""
+                }
+
+
+              </div>
+
+            `;
+
+          }
+        )
+        .join("");
 
 
   }catch(error){
@@ -1626,13 +1778,20 @@ async function loadMessages(){
       error
     );
 
-    messagesBox.innerHTML =
-      '<div class="empty">' +
-      'Messages load nahi hue.<br>' +
-      '<small>' +
-      escapeHtml(error.message) +
-      '</small>' +
-      '</div>';
+
+    messagesBox.innerHTML = `
+
+      <div class="empty">
+
+        ❌ Messages load nahi hue.
+
+        <br><br>
+
+        ${escapeHtml(error.message)}
+
+      </div>
+
+    `;
 
   }
 
@@ -1652,20 +1811,24 @@ document.addEventListener(
         "chatInput"
       );
 
+
     const sendBtn =
       document.getElementById(
         "sendMessageBtn"
       );
+
 
     const uploadBtn =
       document.getElementById(
         "uploadImageBtn"
       );
 
+
     const imageInput =
       document.getElementById(
         "imageInput"
       );
+
 
     const voiceBtn =
       document.getElementById(
@@ -1761,16 +1924,21 @@ async function toggleLike(postId){
     );
 
     return;
+
   }
 
 
-  const {error} =
+  const {
+    error
+  } =
     await supabaseClient
       .from("post_actions")
       .insert({
 
         post_id:postId,
+
         user_id:currentUser.id,
+
         action_type:"like"
 
       });
@@ -1783,6 +1951,7 @@ async function toggleLike(postId){
     );
 
     return;
+
   }
 
 
@@ -1806,16 +1975,21 @@ async function toggleDislike(postId){
     );
 
     return;
+
   }
 
 
-  const {error} =
+  const {
+    error
+  } =
     await supabaseClient
       .from("post_actions")
       .insert({
 
         post_id:postId,
+
         user_id:currentUser.id,
+
         action_type:"dislike"
 
       });
@@ -1828,6 +2002,7 @@ async function toggleDislike(postId){
     );
 
     return;
+
   }
 
 
@@ -1844,7 +2019,9 @@ async function toggleDislike(postId){
 
 async function deletePost(postId){
 
-  if(!currentUser) return;
+  if(!currentUser){
+    return;
+  }
 
 
   if(!confirm(
@@ -1852,10 +2029,13 @@ async function deletePost(postId){
   )){
 
     return;
+
   }
 
 
-  const {error} =
+  const {
+    error
+  } =
     await supabaseClient
       .from("posts")
       .delete()
@@ -1876,7 +2056,9 @@ async function deletePost(postId){
       error.message
     );
 
+
     return;
+
   }
 
 
@@ -1901,11 +2083,12 @@ async function deletePost(postId){
 
 async function blockUser(userId){
 
-  if(!currentUser) return;
+  if(!currentUser){
+    return;
+  }
 
 
   if(userId === currentUser.id){
-
     return;
   }
 
@@ -1915,15 +2098,19 @@ async function blockUser(userId){
   )){
 
     return;
+
   }
 
 
-  const {error} =
+  const {
+    error
+  } =
     await supabaseClient
       .from("user_blocks")
       .insert({
 
         blocker_id:currentUser.id,
+
         blocked_id:userId
 
       });
@@ -1938,6 +2125,7 @@ async function blockUser(userId){
       );
 
       return;
+
     }
 
 
@@ -1946,7 +2134,9 @@ async function blockUser(userId){
       error.message
     );
 
+
     return;
+
   }
 
 
@@ -1978,6 +2168,7 @@ function sendImage(){
   ){
 
     return;
+
   }
 
 
@@ -2006,7 +2197,9 @@ async function toggleRecording(){
       "Voice recording browser mein available nahi."
     );
 
+
     return;
+
   }
 
 
@@ -2018,7 +2211,9 @@ async function toggleRecording(){
 
     }
 
+
     return;
+
   }
 
 
@@ -2105,6 +2300,7 @@ async function toggleRecording(){
 
     mediaRecorder.start();
 
+
     isRecording = true;
 
 
@@ -2144,6 +2340,7 @@ async function toggleRecording(){
       error
     );
 
+
     alert(
       "Microphone permission nahi mili."
     );
@@ -2178,10 +2375,13 @@ async function moreMenu(){
   )){
 
     return;
+
   }
 
 
-  const {error} =
+  const {
+    error
+  } =
     await supabaseClient
       .auth
       .signOut();
@@ -2194,7 +2394,9 @@ async function moreMenu(){
       error.message
     );
 
+
     return;
+
   }
 
 
@@ -2217,7 +2419,9 @@ function showNotice(message){
     );
 
 
-  if(!box) return;
+  if(!box){
+    return;
+  }
 
 
   box.textContent =
@@ -2266,7 +2470,10 @@ function escapeAttr(value){
 
 function formatDate(date){
 
-  if(!date) return "";
+  if(!date){
+    return "";
+  }
+
 
   try{
 
