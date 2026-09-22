@@ -529,10 +529,12 @@ async function checkUser(){
       );
 
       if(error){
+
         console.error(
           "GET SESSION ERROR:",
           error
         );
+
       }
 
       if(
@@ -1049,8 +1051,6 @@ async function loadComments(postId){
     ).join("");
 
 
-  /* Enter key for comments/replies */
-
   data.forEach(comment => {
 
     const commentInput =
@@ -1254,7 +1254,7 @@ async function addComment(postId){
 
 
 /* =====================================================
-   MESSAGE - FIXED
+   MESSAGE
 ===================================================== */
 
 async function sendTextMessage(){
@@ -1300,7 +1300,11 @@ async function sendTextMessage(){
   }
 
 
-  /* Directly use lowercase public.messages */
+  /*
+    IMPORTANT:
+    messages table mein required column
+    "message" hai.
+  */
 
   const {data,error} =
     await supabaseClient
@@ -1309,7 +1313,7 @@ async function sendTextMessage(){
 
         user_id:currentUser.id,
         username:currentUsername,
-        content:text
+        message:text
 
       })
       .select();
