@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,6 +49,11 @@ body{
   padding:12px;
 }
 
+
+/* =====================================================
+   TOP MESSAGE BOX
+===================================================== */
+
 .home-message-box{
   background:white;
   border-radius:14px;
@@ -85,6 +89,7 @@ body{
   color:white;
   width:48px;
   font-size:20px;
+  cursor:pointer;
 }
 
 .message-tools{
@@ -99,7 +104,13 @@ body{
   background:#fafafa;
   border-radius:9px;
   padding:9px 5px;
+  cursor:pointer;
 }
+
+
+/* =====================================================
+   POSTS
+===================================================== */
 
 .section-title{
   font-size:19px;
@@ -146,6 +157,11 @@ body{
   cursor:pointer;
 }
 
+
+/* =====================================================
+   COMMENTS
+===================================================== */
+
 .comments{
   display:none;
   margin-top:12px;
@@ -179,6 +195,7 @@ body{
   background:none;
   color:#6c5ce7;
   padding:3px 0;
+  cursor:pointer;
 }
 
 .comment-box{
@@ -192,6 +209,7 @@ body{
   border:1px solid #ddd;
   border-radius:9px;
   padding:10px;
+  outline:none;
 }
 
 .comment-box button{
@@ -200,6 +218,7 @@ body{
   color:white;
   border-radius:9px;
   padding:0 14px;
+  cursor:pointer;
 }
 
 .comment-reply-box{
@@ -213,7 +232,13 @@ body{
   border:1px solid #ddd;
   border-radius:9px;
   padding:9px;
+  outline:none;
 }
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
 
 .empty{
   background:white;
@@ -222,6 +247,11 @@ body{
   text-align:center;
   color:#777;
 }
+
+
+/* =====================================================
+   BOTTOM NAV
+===================================================== */
 
 .bottom-nav{
   position:fixed;
@@ -241,6 +271,7 @@ body{
   border:0;
   background:white;
   font-size:12px;
+  cursor:pointer;
 }
 
 .bottom-nav button span{
@@ -248,6 +279,11 @@ body{
   font-size:20px;
   margin-bottom:2px;
 }
+
+
+/* =====================================================
+   NOTICE
+===================================================== */
 
 .notice{
   position:fixed;
@@ -265,26 +301,38 @@ body{
 }
 
 </style>
+
 </head>
 
 <body>
 
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
 <header class="header">
+
   <div class="logo">
     Socia<span>lyte</span>
   </div>
+
 </header>
 
 
 <div class="container">
 
-  <!-- TOP MESSAGE BOX -->
+
+  <!-- ===================================================
+       TOP MESSAGE BOX
+  ==================================================== -->
 
   <div class="home-message-box">
 
     <div class="message-title">
       💬 Message
     </div>
+
 
     <div class="message-row">
 
@@ -300,6 +348,7 @@ body{
         "
       >
 
+
       <button
         class="chat-send"
         onclick="sendTextMessage()">
@@ -307,6 +356,7 @@ body{
       </button>
 
     </div>
+
 
     <div class="message-tools">
 
@@ -319,6 +369,7 @@ body{
         🖼️ Upload Image
       </button>
 
+
       <button
         id="voiceBtn"
         onclick="toggleRecording()">
@@ -327,6 +378,7 @@ body{
 
     </div>
 
+
     <input
       id="imageInput"
       type="file"
@@ -334,6 +386,7 @@ body{
       style="display:none"
       onchange="sendImage()"
     >
+
 
     <div
       id="recordStatus"
@@ -349,55 +402,98 @@ body{
   </div>
 
 
+  <!-- ===================================================
+       TRENDING POSTS
+  ==================================================== -->
+
   <div class="section-title">
     🔥 Trending Posts
   </div>
 
+
   <div id="posts">
+
     <div class="empty">
       Loading posts...
     </div>
+
   </div>
 
 </div>
 
 
-<!-- BOTTOM NAV -->
+<!-- =====================================================
+     BOTTOM NAVIGATION
+===================================================== -->
 
 <div class="bottom-nav">
 
+
+  <!-- HOME -->
+
   <button onclick="goHome()">
+
     <span>🏠</span>
+
     Home
+
   </button>
+
+
+  <!-- PRIVATE -->
 
   <button onclick="showNotice('Private Chat coming soon')">
+
     <span>💬</span>
+
     Private
+
   </button>
 
-  <button onclick="showNotice('Profile coming soon')">
+
+  <!-- PROFILE -->
+
+  <button onclick="openProfile()">
+
     <span>👤</span>
+
     Profile
+
   </button>
+
+
+  <!-- NOTIFICATIONS -->
 
   <button onclick="showNotice('Notifications coming soon')">
+
     <span>🔔</span>
+
     Notifications
+
   </button>
 
+
+  <!-- MORE -->
+
   <button onclick="moreMenu()">
+
     <span>☰</span>
+
     More
+
   </button>
 
 </div>
 
 
-<div id="notice" class="notice"></div>
+<div
+  id="notice"
+  class="notice">
+</div>
 
 
 <script>
+
 
 /* =====================================================
    SUPABASE
@@ -406,8 +502,10 @@ body{
 const SUPABASE_URL =
   "https://szmauhxiyjffjhrcrue.supabase.co";
 
+
 const SUPABASE_KEY =
   "sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
+
 
 const supabaseClient =
   supabase.createClient(
@@ -421,10 +519,13 @@ const supabaseClient =
 ===================================================== */
 
 let currentUser = null;
+
 let currentUsername = "User";
 
 let mediaRecorder = null;
+
 let audioChunks = [];
+
 let isRecording = false;
 
 
@@ -434,29 +535,80 @@ let isRecording = false;
 
 async function checkUser(){
 
-  const {
-    data,
-    error
-  } =
-  await supabaseClient.auth.getUser();
+  try{
 
-  if(error || !data || !data.user){
+    const {
+      data,
+      error
+    } =
+    await supabaseClient.auth.getUser();
 
-    window.location.href =
-      "login.html";
 
-    return;
+    if(
+      error ||
+      !data ||
+      !data.user
+    ){
+
+      window.location.replace(
+        "login.html"
+      );
+
+      return;
+
+    }
+
+
+    currentUser =
+      data.user;
+
+
+    currentUsername =
+      data.user.user_metadata?.username ||
+      data.user.email?.split("@")[0] ||
+      "User";
+
+
+    await loadPosts();
+
   }
 
-  currentUser =
-    data.user;
+  catch(error){
 
-  currentUsername =
-    data.user.user_metadata?.username ||
-    data.user.email?.split("@")[0] ||
-    "User";
+    console.error(
+      "LOGIN CHECK ERROR:",
+      error
+    );
 
-  await loadPosts();
+    window.location.replace(
+      "login.html"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   OPEN PROFILE
+===================================================== */
+
+function openProfile(){
+
+  if(!currentUser){
+
+    showNotice(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+
+  window.location.href =
+    "profile.html";
+
 }
 
 
@@ -467,14 +619,21 @@ async function checkUser(){
 async function loadPosts(){
 
   const postsBox =
-    document.getElementById("posts");
+    document.getElementById(
+      "posts"
+    );
+
+
+  if(!postsBox) return;
+
 
   postsBox.innerHTML =
     '<div class="empty">Loading posts...</div>';
 
 
   const {
-    data: blocked
+    data: blocked,
+    error: blockError
   } =
   await supabaseClient
     .from("user_blocks")
@@ -485,9 +644,22 @@ async function loadPosts(){
     );
 
 
+  if(blockError){
+
+    console.warn(
+      "BLOCK LOAD ERROR:",
+      blockError
+    );
+
+  }
+
+
   const blockedIds =
     (blocked || [])
-      .map(x => x.blocked_id);
+      .map(
+        x =>
+          x.blocked_id
+      );
 
 
   const {
@@ -499,7 +671,9 @@ async function loadPosts(){
     .select("*")
     .order(
       "created_at",
-      { ascending:false }
+      {
+        ascending:false
+      }
     );
 
 
@@ -510,10 +684,13 @@ async function loadPosts(){
       error
     );
 
+
     postsBox.innerHTML =
       '<div class="empty">Posts load nahi hue.</div>';
 
+
     return;
+
   }
 
 
@@ -533,6 +710,7 @@ async function loadPosts(){
       '<div class="empty">No posts yet.</div>';
 
     return;
+
   }
 
 
@@ -561,61 +739,107 @@ function renderPost(post){
       class="post"
       id="post-${escapeAttr(post.id)}">
 
+
       <div class="post-user">
+
         ${escapeHtml(
           post.username || "User"
         )}
+
       </div>
+
 
       <div class="post-date">
-        ${formatDate(post.created_at)}
+
+        ${formatDate(
+          post.created_at
+        )}
+
       </div>
 
+
       <div class="post-content">
+
         ${escapeHtml(
           post.content || ""
         )}
+
       </div>
 
 
       <div class="post-actions">
 
+
         <button
-          onclick="toggleLike('${escapeAttr(post.id)}')">
+          onclick="
+            toggleLike(
+              '${escapeAttr(post.id)}'
+            )
+          ">
+
           👍 Like
+
         </button>
 
+
         <button
-          onclick="toggleDislike('${escapeAttr(post.id)}')">
+          onclick="
+            toggleDislike(
+              '${escapeAttr(post.id)}'
+            )
+          ">
+
           👎 Dislike
+
         </button>
 
+
         <button
-          onclick="toggleComments('${escapeAttr(post.id)}')">
+          onclick="
+            toggleComments(
+              '${escapeAttr(post.id)}'
+            )
+          ">
+
           💬 Comments
+
         </button>
+
 
         ${
           !ownPost
+
           ?
+
           `
           <button
-            onclick="blockUser(
-              '${escapeAttr(post.user_id)}'
-            )">
+            onclick="
+              blockUser(
+                '${escapeAttr(post.user_id)}'
+              )
+            ">
+
             🚫 Block
+
           </button>
           `
+
           :
+
           `
           <button
-            onclick="deletePost(
-              '${escapeAttr(post.id)}'
-            )">
+            onclick="
+              deletePost(
+                '${escapeAttr(post.id)}'
+              )
+            ">
+
             🗑️ Delete Post
+
           </button>
           `
         }
+
 
       </div>
 
@@ -624,12 +848,14 @@ function renderPost(post){
         class="comments"
         id="comments-${escapeAttr(post.id)}">
 
+
         <div
           id="comment-list-${escapeAttr(post.id)}">
         </div>
 
 
         <div class="comment-box">
+
 
           <input
             id="comment-input-${escapeAttr(post.id)}"
@@ -643,22 +869,29 @@ function renderPost(post){
             "
           >
 
+
           <button
             onclick="
               addComment(
                 '${escapeAttr(post.id)}'
               )
             ">
+
             ➤
+
           </button>
+
 
         </div>
 
+
       </div>
+
 
     </div>
 
   `;
+
 }
 
 
@@ -673,22 +906,31 @@ async function toggleComments(postId){
       "comments-" + postId
     );
 
+
   if(!box) return;
 
+
   if(
-    box.style.display === "block"
+    box.style.display ===
+    "block"
   ){
 
     box.style.display =
       "none";
 
     return;
+
   }
+
 
   box.style.display =
     "block";
 
-  await loadComments(postId);
+
+  await loadComments(
+    postId
+  );
+
 }
 
 
@@ -703,7 +945,9 @@ async function loadComments(postId){
       "comment-list-" + postId
     );
 
+
   if(!list) return;
+
 
   list.innerHTML =
     '<div class="empty">Loading comments...</div>';
@@ -722,7 +966,9 @@ async function loadComments(postId){
     )
     .order(
       "created_at",
-      { ascending:true }
+      {
+        ascending:true
+      }
     );
 
 
@@ -733,102 +979,135 @@ async function loadComments(postId){
       error
     );
 
+
     list.innerHTML =
       '<div class="empty">Comments load nahi hue.</div>';
 
+
     return;
+
   }
 
 
-  if(!data || data.length === 0){
+  if(
+    !data ||
+    data.length === 0
+  ){
 
     list.innerHTML =
       '<div class="empty">No comments yet.</div>';
 
+
     return;
+
   }
 
 
   list.innerHTML =
     data
-      .map(comment => {
+      .map(
+        comment => {
 
-        return `
-
-          <div
-            class="comment"
-            id="comment-${escapeAttr(comment.id)}">
-
-            <div class="comment-user">
-              ${escapeHtml(
-                comment.username || "User"
-              )}
-            </div>
-
-            <div class="comment-text">
-              ${escapeHtml(
-                comment.content || ""
-              )}
-            </div>
-
-            <div class="comment-actions">
-
-              <button
-                onclick="
-                  showCommentReply(
-                    '${escapeAttr(comment.id)}',
-                    '${escapeAttr(
-                      comment.username || "User"
-                    )}'
-                  )
-                ">
-                ↩️ Reply
-              </button>
-
-            </div>
-
+          return `
 
             <div
-              class="comment-reply-box"
-              id="reply-box-${escapeAttr(comment.id)}">
+              class="comment"
+              id="comment-${escapeAttr(comment.id)}">
 
-              <input
-                id="reply-input-${escapeAttr(comment.id)}"
-                type="text"
-                placeholder="Reply to ${
-                  escapeAttr(
-                    comment.username || "User"
-                  )
-                }..."
-                onkeydown="
-                  if(event.key==='Enter'){
-                    event.preventDefault();
+
+              <div class="comment-user">
+
+                ${escapeHtml(
+                  comment.username ||
+                  "User"
+                )}
+
+              </div>
+
+
+              <div class="comment-text">
+
+                ${escapeHtml(
+                  comment.content ||
+                  ""
+                )}
+
+              </div>
+
+
+              <div class="comment-actions">
+
+
+                <button
+                  onclick="
+                    showCommentReply(
+                      '${escapeAttr(comment.id)}',
+                      '${escapeAttr(
+                        comment.username ||
+                        "User"
+                      )}'
+                    )
+                  ">
+
+                  ↩️ Reply
+
+                </button>
+
+
+              </div>
+
+
+              <div
+                class="comment-reply-box"
+                id="reply-box-${escapeAttr(comment.id)}">
+
+
+                <input
+                  id="reply-input-${escapeAttr(comment.id)}"
+                  type="text"
+                  placeholder="Reply to ${
+                    escapeAttr(
+                      comment.username ||
+                      "User"
+                    )
+                  }..."
+                  onkeydown="
+                    if(event.key==='Enter'){
+                      event.preventDefault();
+
+                      sendCommentReply(
+                        '${escapeAttr(comment.id)}',
+                        '${escapeAttr(postId)}'
+                      );
+                    }
+                  "
+                >
+
+
+                <button
+                  onclick="
                     sendCommentReply(
                       '${escapeAttr(comment.id)}',
                       '${escapeAttr(postId)}'
-                    );
-                  }
-                "
-              >
+                    )
+                  ">
 
-              <button
-                onclick="
-                  sendCommentReply(
-                    '${escapeAttr(comment.id)}',
-                    '${escapeAttr(postId)}'
-                  )
-                ">
-                ➤
-              </button>
+                  ➤
+
+                </button>
+
+
+              </div>
+
 
             </div>
 
-          </div>
+          `;
 
-        `;
-
-      })
+        }
+      )
       .join("");
+
 }
 
 
@@ -843,23 +1122,40 @@ function showCommentReply(
 
   const box =
     document.getElementById(
-      "reply-box-" + commentId
+      "reply-box-" +
+      commentId
     );
+
 
   const input =
     document.getElementById(
-      "reply-input-" + commentId
+      "reply-input-" +
+      commentId
     );
 
-  if(!box || !input) return;
+
+  if(
+    !box ||
+    !input
+  ){
+
+    return;
+
+  }
+
 
   box.style.display =
     "block";
 
+
   input.value =
-    "@" + username + " ";
+    "@" +
+    username +
+    " ";
+
 
   input.focus();
+
 }
 
 
@@ -879,19 +1175,23 @@ async function sendCommentReply(
     );
 
     return;
+
   }
 
 
   const input =
     document.getElementById(
-      "reply-input-" + commentId
+      "reply-input-" +
+      commentId
     );
+
 
   if(!input) return;
 
 
   const text =
     input.value.trim();
+
 
   if(!text) return;
 
@@ -925,18 +1225,26 @@ async function sendCommentReply(
       error
     );
 
+
     alert(
       "Reply send nahi hua.\n\n" +
       error.message
     );
 
+
     return;
+
   }
 
 
-  input.value = "";
+  input.value =
+    "";
 
-  await loadComments(postId);
+
+  await loadComments(
+    postId
+  );
+
 }
 
 
@@ -953,19 +1261,23 @@ async function addComment(postId){
     );
 
     return;
+
   }
 
 
   const input =
     document.getElementById(
-      "comment-input-" + postId
+      "comment-input-" +
+      postId
     );
+
 
   if(!input) return;
 
 
   const text =
     input.value.trim();
+
 
   if(!text) return;
 
@@ -999,18 +1311,26 @@ async function addComment(postId){
       error
     );
 
+
     alert(
       "Comment send nahi hua.\n\n" +
       error.message
     );
 
+
     return;
+
   }
 
 
-  input.value = "";
+  input.value =
+    "";
 
-  await loadComments(postId);
+
+  await loadComments(
+    postId
+  );
+
 }
 
 
@@ -1027,6 +1347,7 @@ async function sendTextMessage(){
     );
 
     return;
+
   }
 
 
@@ -1043,6 +1364,7 @@ async function sendTextMessage(){
     );
 
     return;
+
   }
 
 
@@ -1104,16 +1426,25 @@ async function sendTextMessage(){
       result.error
     );
 
+
     alert(
       "Message send nahi hua.\n\n" +
       result.error.message
     );
 
+
     return;
+
   }
 
 
-  input.value = "";
+  input.value =
+    "";
+
+
+  showNotice(
+    "Message sent."
+  );
 
 }
 
@@ -1131,6 +1462,7 @@ async function toggleLike(postId){
     );
 
     return;
+
   }
 
 
@@ -1159,17 +1491,21 @@ async function toggleLike(postId){
       "Like save nahi hua."
     );
 
+
     console.error(
       error
     );
 
+
     return;
+
   }
 
 
   showNotice(
     "👍 Liked"
   );
+
 }
 
 
@@ -1186,6 +1522,7 @@ async function toggleDislike(postId){
     );
 
     return;
+
   }
 
 
@@ -1214,17 +1551,21 @@ async function toggleDislike(postId){
       "Dislike save nahi hua."
     );
 
+
     console.error(
       error
     );
 
+
     return;
+
   }
 
 
   showNotice(
     "👎 Disliked"
   );
+
 }
 
 
@@ -1241,6 +1582,7 @@ async function deletePost(postId){
     confirm(
       "Delete this post?"
     );
+
 
   if(!ok) return;
 
@@ -1268,18 +1610,25 @@ async function deletePost(postId){
       error.message
     );
 
+
     return;
+
   }
 
 
   const post =
     document.getElementById(
-      "post-" + postId
+      "post-" +
+      postId
     );
 
+
   if(post){
+
     post.remove();
+
   }
+
 }
 
 
@@ -1298,6 +1647,7 @@ async function blockUser(userId){
   ){
 
     return;
+
   }
 
 
@@ -1305,6 +1655,7 @@ async function blockUser(userId){
     confirm(
       "Is user ko block karna hai?"
     );
+
 
   if(!ok) return;
 
@@ -1336,7 +1687,9 @@ async function blockUser(userId){
         "User already blocked."
       );
 
+
       return;
+
     }
 
 
@@ -1345,7 +1698,9 @@ async function blockUser(userId){
       error.message
     );
 
+
     return;
+
   }
 
 
@@ -1355,6 +1710,7 @@ async function blockUser(userId){
 
 
   await loadPosts();
+
 }
 
 
@@ -1377,13 +1733,17 @@ function sendImage(){
 
 async function toggleRecording(){
 
-  if(!navigator.mediaDevices){
+  if(
+    !navigator.mediaDevices
+  ){
 
     alert(
       "Voice recording browser mein available nahi."
     );
 
+
     return;
+
   }
 
 
@@ -1392,6 +1752,7 @@ async function toggleRecording(){
     mediaRecorder.stop();
 
     return;
+
   }
 
 
@@ -1416,7 +1777,9 @@ async function toggleRecording(){
     mediaRecorder.ondataavailable =
       event => {
 
-        if(event.data.size > 0){
+        if(
+          event.data.size > 0
+        ){
 
           audioChunks.push(
             event.data
@@ -1437,17 +1800,38 @@ async function toggleRecording(){
               track.stop()
           );
 
-        isRecording = false;
 
-        document.getElementById(
-          "recordStatus"
-        ).style.display =
-          "none";
+        isRecording =
+          false;
 
-        document.getElementById(
-          "voiceBtn"
-        ).textContent =
-          "🎤 Voice";
+
+        const status =
+          document.getElementById(
+            "recordStatus"
+          );
+
+
+        const voiceBtn =
+          document.getElementById(
+            "voiceBtn"
+          );
+
+
+        if(status){
+
+          status.style.display =
+            "none";
+
+        }
+
+
+        if(voiceBtn){
+
+          voiceBtn.textContent =
+            "🎤 Voice";
+
+        }
+
 
         showNotice(
           "Voice recording ready hai. Storage setup ke baad save hoga."
@@ -1458,7 +1842,9 @@ async function toggleRecording(){
 
     mediaRecorder.start();
 
-    isRecording = true;
+
+    isRecording =
+      true;
 
 
     document.getElementById(
@@ -1473,53 +1859,80 @@ async function toggleRecording(){
       "⏹️ Stop";
 
   }
+
+
   catch(error){
 
     console.error(
       error
     );
 
+
     alert(
       "Microphone permission nahi mili."
     );
 
   }
+
 }
 
 
 /* =====================================================
-   NAVIGATION
+   HOME
 ===================================================== */
 
 function goHome(){
 
   window.scrollTo({
+
     top:0,
+
     behavior:"smooth"
+
   });
 
 }
 
 
-function moreMenu(){
+/* =====================================================
+   MORE / LOGOUT
+===================================================== */
+
+async function moreMenu(){
 
   const logout =
     confirm(
       "Logout karna hai?"
     );
 
+
   if(!logout) return;
 
-  supabaseClient.auth
-    .signOut()
-    .then(
-      () => {
 
-        window.location.href =
-          "login.html";
+  const {
+    error
+  } =
+  await supabaseClient
+    .auth
+    .signOut();
 
-      }
+
+  if(error){
+
+    alert(
+      "Logout nahi hua.\n\n" +
+      error.message
     );
+
+
+    return;
+
+  }
+
+
+  window.location.replace(
+    "login.html"
+  );
 
 }
 
@@ -1535,8 +1948,13 @@ function showNotice(message){
       "notice"
     );
 
+
+  if(!box) return;
+
+
   box.textContent =
     message;
+
 
   box.style.display =
     "block";
@@ -1601,6 +2019,7 @@ function formatDate(date){
 
   if(!date) return "";
 
+
   try{
 
     return new Date(
@@ -1608,6 +2027,8 @@ function formatDate(date){
     ).toLocaleString();
 
   }
+
+
   catch{
 
     return "";
@@ -1627,4 +2048,3 @@ checkUser();
 
 </body>
 </html>
-```
