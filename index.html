@@ -192,6 +192,16 @@ body{
   margin-top:8px;
 }
 
+.delete-message-btn{
+  margin-top:8px;
+  border:0;
+  background:none;
+  color:#d63031;
+  cursor:pointer;
+  font-size:12px;
+  padding:0;
+}
+
 
 /* ================= COMMENTS ================= */
 
@@ -349,7 +359,6 @@ body{
 
 <body>
 
-
 <header class="header">
 
   <div class="logo">
@@ -376,6 +385,7 @@ body{
         id="chatInput"
         type="text"
         placeholder="Write a message..."
+        maxlength="1000"
       >
 
       <button
@@ -412,7 +422,6 @@ body{
       style="display:none"
     >
 
-
     <div
       id="recordStatus"
       style="
@@ -433,7 +442,6 @@ body{
     🔥 Trending Posts
   </div>
 
-
   <div id="posts">
 
     <div class="empty">
@@ -443,12 +451,11 @@ body{
   </div>
 
 
-  <!-- ================= MESSAGE POSTS ================= -->
+  <!-- ================= HOME MESSAGES ================= -->
 
   <div class="section-title">
     💬 Message Posts
   </div>
-
 
   <div id="messages">
 
@@ -457,7 +464,6 @@ body{
     </div>
 
   </div>
-
 
 </div>
 
@@ -533,10 +539,8 @@ body{
 const SUPABASE_URL =
   "https://szmauhxiyjffjhrcruee.supabase.co";
 
-
 const SUPABASE_KEY =
   "sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
-
 
 const supabaseClient =
   window.supabase.createClient(
@@ -557,13 +561,10 @@ const supabaseClient =
 ===================================================== */
 
 let currentUser = null;
-
 let currentUsername = "User";
 
 let mediaRecorder = null;
-
 let audioChunks = [];
-
 let isRecording = false;
 
 
@@ -577,9 +578,7 @@ function setCurrentUser(user){
     return false;
   }
 
-
   currentUser = user;
-
 
   currentUsername =
     user.user_metadata?.username ||
@@ -587,15 +586,12 @@ function setCurrentUser(user){
     user.email?.split("@")[0] ||
     "User";
 
-
   console.log(
     "CURRENT USER:",
     user.email
   );
 
-
   return true;
-
 }
 
 
@@ -608,7 +604,6 @@ async function checkUser(){
   console.log(
     "Checking Socialyte login session..."
   );
-
 
   for(
     let attempt = 1;
@@ -624,13 +619,11 @@ async function checkUser(){
       } =
         await supabaseClient.auth.getSession();
 
-
       console.log(
         "Session check:",
         attempt,
         data
       );
-
 
       if(error){
 
@@ -640,7 +633,6 @@ async function checkUser(){
         );
 
       }
-
 
       if(
         data &&
@@ -652,19 +644,14 @@ async function checkUser(){
           data.session.user
         );
 
-
         console.log(
           "SESSION FOUND"
         );
 
-
         await loadPosts();
-
         await loadMessages();
 
-
         return;
-
       }
 
     }catch(error){
@@ -675,7 +662,6 @@ async function checkUser(){
       );
 
     }
-
 
     if(attempt < 8){
 
@@ -697,13 +683,11 @@ async function checkUser(){
     } =
       await supabaseClient.auth.getUser();
 
-
     console.log(
       "FINAL USER CHECK:",
       data,
       error
     );
-
 
     if(
       !error &&
@@ -715,14 +699,10 @@ async function checkUser(){
         data.user
       );
 
-
       await loadPosts();
-
       await loadMessages();
 
-
       return;
-
     }
 
   }catch(error){
@@ -738,7 +718,6 @@ async function checkUser(){
   console.log(
     "NO SESSION FOUND - LOGIN PAGE"
   );
-
 
   window.location.replace(
     "login.html"
@@ -758,7 +737,6 @@ supabaseClient.auth.onAuthStateChange(
       "AUTH EVENT:",
       event
     );
-
 
     if(
       session &&
@@ -797,22 +775,17 @@ async function loadPosts(){
     return;
   }
 
-
   const postsBox =
     document.getElementById("posts");
-
 
   if(!postsBox){
     return;
   }
 
-
   postsBox.innerHTML =
     '<div class="empty">Loading posts...</div>';
 
-
   let blockedIds = [];
-
 
   try{
 
@@ -827,7 +800,6 @@ async function loadPosts(){
           "blocker_id",
           currentUser.id
         );
-
 
     if(!blockError){
 
@@ -872,10 +844,8 @@ async function loadPosts(){
       error
     );
 
-
     postsBox.innerHTML =
       '<div class="empty">Posts load nahi hue.</div>';
-
 
     return;
 
@@ -896,7 +866,6 @@ async function loadPosts(){
 
     postsBox.innerHTML =
       '<div class="empty">No posts yet.</div>';
-
 
     return;
 
@@ -920,9 +889,7 @@ function renderPost(post){
   const ownPost =
     post.user_id === currentUser.id;
 
-
   let controls = "";
-
 
   if(ownPost){
 
@@ -961,24 +928,19 @@ function renderPost(post){
       class="post"
       id="post-${escapeAttr(post.id)}">
 
-
       <div class="post-user">
         ${escapeHtml(post.username || "User")}
       </div>
 
-
       <div class="post-date">
-        ${formatDate(post.created_at)}
+        ${escapeHtml(formatDate(post.created_at))}
       </div>
-
 
       <div class="post-content">
         ${escapeHtml(post.content || "")}
       </div>
 
-
       <div class="post-actions">
-
 
         <button
           type="button"
@@ -988,7 +950,6 @@ function renderPost(post){
 
         </button>
 
-
         <button
           type="button"
           onclick="toggleDislike('${escapeAttr(post.id)}')">
@@ -996,7 +957,6 @@ function renderPost(post){
           👎 Dislike
 
         </button>
-
 
         <button
           type="button"
@@ -1006,9 +966,7 @@ function renderPost(post){
 
         </button>
 
-
         ${controls}
-
 
       </div>
 
@@ -1017,21 +975,17 @@ function renderPost(post){
         class="comments"
         id="comments-${escapeAttr(post.id)}">
 
-
         <div
           id="comment-list-${escapeAttr(post.id)}">
         </div>
 
-
         <div class="comment-box">
-
 
           <input
             id="comment-input-${escapeAttr(post.id)}"
             type="text"
             placeholder="Write a comment..."
           >
-
 
           <button
             type="button"
@@ -1041,12 +995,9 @@ function renderPost(post){
 
           </button>
 
-
         </div>
 
-
       </div>
-
 
     </div>
 
@@ -1066,11 +1017,9 @@ async function toggleComments(postId){
       "comments-" + postId
     );
 
-
   if(!box){
     return;
   }
-
 
   if(box.style.display === "block"){
 
@@ -1080,9 +1029,7 @@ async function toggleComments(postId){
 
   }
 
-
   box.style.display = "block";
-
 
   await loadComments(postId);
 
@@ -1100,15 +1047,12 @@ async function loadComments(postId){
       "comment-list-" + postId
     );
 
-
   if(!list){
     return;
   }
 
-
   list.innerHTML =
     '<div class="empty">Loading comments...</div>';
-
 
   const {
     data,
@@ -1136,10 +1080,8 @@ async function loadComments(postId){
       error
     );
 
-
     list.innerHTML =
       '<div class="empty">Comments load nahi hue.</div>';
-
 
     return;
 
@@ -1150,7 +1092,6 @@ async function loadComments(postId){
 
     list.innerHTML =
       '<div class="empty">No comments yet.</div>';
-
 
     return;
 
@@ -1165,26 +1106,21 @@ async function loadComments(postId){
           comment.username ||
           "User";
 
-
         return `
 
           <div
             class="comment"
             id="comment-${escapeAttr(comment.id)}">
 
-
             <div class="comment-user">
               ${escapeHtml(username)}
             </div>
-
 
             <div class="comment-text">
               ${escapeHtml(comment.content || "")}
             </div>
 
-
             <div class="comment-actions">
-
 
               <button
                 type="button"
@@ -1199,7 +1135,6 @@ async function loadComments(postId){
 
               </button>
 
-
             </div>
 
 
@@ -1207,16 +1142,13 @@ async function loadComments(postId){
               class="comment-reply-box"
               id="reply-box-${escapeAttr(comment.id)}">
 
-
               <div class="comment-reply-row">
-
 
                 <input
                   id="reply-input-${escapeAttr(comment.id)}"
                   type="text"
                   placeholder="Reply to ${escapeAttr(username)}..."
                 >
-
 
                 <button
                   type="button"
@@ -1231,12 +1163,9 @@ async function loadComments(postId){
 
                 </button>
 
-
               </div>
 
-
             </div>
-
 
           </div>
 
@@ -1278,7 +1207,6 @@ async function loadComments(postId){
           "reply-input-" + comment.id
         );
 
-
       if(replyInput){
 
         replyInput.onkeydown =
@@ -1319,30 +1247,24 @@ function showCommentReply(
       "reply-box-" + commentId
     );
 
-
   if(!box){
     return;
   }
-
 
   const input =
     document.getElementById(
       "reply-input-" + commentId
     );
 
-
   if(!input){
     return;
   }
 
-
   box.style.display =
     "block";
 
-
   input.value =
     "@" + username + " ";
-
 
   input.focus();
 
@@ -1374,7 +1296,6 @@ async function sendCommentReply(
       "reply-input-" + commentId
     );
 
-
   if(!input){
     return;
   }
@@ -1382,7 +1303,6 @@ async function sendCommentReply(
 
   const text =
     input.value.trim();
-
 
   if(!text){
     return;
@@ -1446,7 +1366,6 @@ async function addComment(postId){
       "comment-input-" + postId
     );
 
-
   if(!input){
     return;
   }
@@ -1454,7 +1373,6 @@ async function addComment(postId){
 
   const text =
     input.value.trim();
-
 
   if(!text){
     return;
@@ -1493,14 +1411,13 @@ async function addComment(postId){
 
   input.value = "";
 
-
   await loadComments(postId);
 
 }
 
 
 /* =====================================================
-   SEND MESSAGE
+   NEW HOME MESSAGE SYSTEM
 ===================================================== */
 
 async function sendTextMessage(){
@@ -1521,7 +1438,6 @@ async function sendTextMessage(){
       "chatInput"
     );
 
-
   if(!input){
 
     alert(
@@ -1536,7 +1452,6 @@ async function sendTextMessage(){
   const text =
     input.value.trim();
 
-
   if(!text){
     return;
   }
@@ -1547,34 +1462,31 @@ async function sendTextMessage(){
     error
   } =
     await supabaseClient
-      .from("messages")
+      .from("home_messages")
       .insert({
 
         user_id:currentUser.id,
 
         username:currentUsername,
 
-        message:text,
-
-        message_type:"text"
+        message:text
 
       })
-      .select();
+      .select()
+      .single();
 
 
   if(error){
 
     console.error(
-      "MESSAGE SEND ERROR:",
+      "HOME MESSAGE SEND ERROR:",
       error
     );
-
 
     alert(
       "Message send nahi hua.\n\n" +
       error.message
     );
-
 
     return;
 
@@ -1582,16 +1494,14 @@ async function sendTextMessage(){
 
 
   console.log(
-    "MESSAGE SENT:",
+    "HOME MESSAGE SENT:",
     data
   );
 
 
   input.value = "";
 
-
   await loadMessages();
-
 
   showNotice(
     "💬 Message sent."
@@ -1601,9 +1511,7 @@ async function sendTextMessage(){
 
 
 /* =====================================================
-   LOAD MESSAGES
-   IMPORTANT:
-   ACTUAL TABLE COLUMN = message
+   LOAD NEW HOME MESSAGES
 ===================================================== */
 
 async function loadMessages(){
@@ -1612,7 +1520,6 @@ async function loadMessages(){
     document.getElementById(
       "messages"
     );
-
 
   if(!messagesBox){
 
@@ -1629,155 +1536,35 @@ async function loadMessages(){
     '<div class="empty">Loading messages...</div>';
 
 
-  try{
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("messages")
-        .select(
-          "id,user_id,message,created_at,username,message_type,media_url,content"
-        )
-        .order(
-          "created_at",
-          {
-            ascending:false
-          }
-        );
-
-
-    console.log(
-      "MESSAGE DATA:",
-      data
-    );
-
-
-    console.log(
-      "MESSAGE ERROR:",
-      error
-    );
-
-
-    if(error){
-
-      console.error(
-        "MESSAGE READ ERROR:",
-        error
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("home_messages")
+      .select(
+        "id,user_id,username,message,created_at"
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
       );
 
 
-      messagesBox.innerHTML = `
+  console.log(
+    "NEW HOME MESSAGES:",
+    data
+  );
 
-        <div class="empty">
-
-          ❌ Message read error
-
-          <br><br>
-
-          ${escapeHtml(error.message)}
-
-        </div>
-
-      `;
+  console.log(
+    "NEW HOME MESSAGE ERROR:",
+    error
+  );
 
 
-      return;
-
-    }
-
-
-    if(!data || data.length === 0){
-
-      messagesBox.innerHTML = `
-
-        <div class="empty">
-
-          Abhi koi message nahi hai.
-
-        </div>
-
-      `;
-
-
-      return;
-
-    }
-
-
-    messagesBox.innerHTML =
-      data
-        .map(
-          function(msg){
-
-            const username =
-              msg.username ||
-              "User";
-
-
-            const text =
-              msg.message ||
-              msg.content ||
-              "";
-
-
-            return `
-
-              <div class="home-message">
-
-
-                <div class="home-message-user">
-
-                  ${escapeHtml(username)}
-
-                </div>
-
-
-                <div class="home-message-text">
-
-                  ${escapeHtml(text)}
-
-                </div>
-
-
-                ${
-                  msg.created_at
-                  ?
-                  `
-
-                    <div class="home-message-date">
-
-                      ${escapeHtml(
-                        formatDate(
-                          msg.created_at
-                        )
-                      )}
-
-                    </div>
-
-                  `
-                  :
-                  ""
-                }
-
-
-              </div>
-
-            `;
-
-          }
-        )
-        .join("");
-
-
-  }catch(error){
-
-    console.error(
-      "MESSAGE EXCEPTION:",
-      error
-    );
-
+  if(error){
 
     messagesBox.innerHTML = `
 
@@ -1793,7 +1580,156 @@ async function loadMessages(){
 
     `;
 
+    return;
+
   }
+
+
+  if(!data || data.length === 0){
+
+    messagesBox.innerHTML = `
+
+      <div class="empty">
+
+        Abhi koi message nahi hai.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  messagesBox.innerHTML =
+    data.map(
+      function(msg){
+
+        const username =
+          msg.username ||
+          "User";
+
+
+        const message =
+          msg.message ||
+          "";
+
+
+        const mine =
+          currentUser &&
+          msg.user_id === currentUser.id;
+
+
+        return `
+
+          <div class="home-message">
+
+            <div class="home-message-user">
+
+              ${escapeHtml(username)}
+
+            </div>
+
+
+            <div class="home-message-text">
+
+              ${escapeHtml(message)}
+
+            </div>
+
+
+            <div class="home-message-date">
+
+              ${escapeHtml(
+                formatDate(
+                  msg.created_at
+                )
+              )}
+
+            </div>
+
+
+            ${
+              mine
+              ?
+              `
+
+                <button
+                  type="button"
+                  class="delete-message-btn"
+                  onclick="deleteHomeMessage(${msg.id})">
+
+                  🗑️ Delete
+
+                </button>
+
+              `
+              :
+              ""
+            }
+
+          </div>
+
+        `;
+
+      }
+    ).join("");
+
+}
+
+
+/* =====================================================
+   DELETE HOME MESSAGE
+===================================================== */
+
+async function deleteHomeMessage(
+  messageId
+){
+
+  if(!currentUser){
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("home_messages")
+      .delete()
+      .eq(
+        "id",
+        messageId
+      )
+      .eq(
+        "user_id",
+        currentUser.id
+      );
+
+
+  if(error){
+
+    console.error(
+      "DELETE HOME MESSAGE ERROR:",
+      error
+    );
+
+    alert(
+      "Message delete nahi hua.\n\n" +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  await loadMessages();
+
+  showNotice(
+    "🗑️ Message deleted."
+  );
 
 }
 
@@ -2056,7 +1992,6 @@ async function deletePost(postId){
       error.message
     );
 
-
     return;
 
   }
@@ -2134,7 +2069,6 @@ async function blockUser(userId){
       error.message
     );
 
-
     return;
 
   }
@@ -2143,7 +2077,6 @@ async function blockUser(userId){
   showNotice(
     "User blocked."
   );
-
 
   await loadPosts();
 
@@ -2173,7 +2106,7 @@ function sendImage(){
 
 
   showNotice(
-    "Image Storage bucket setup karna baqi hai."
+    "Image Storage abhi setup nahi hai."
   );
 
 
@@ -2197,7 +2130,6 @@ async function toggleRecording(){
       "Voice recording browser mein available nahi."
     );
 
-
     return;
 
   }
@@ -2210,7 +2142,6 @@ async function toggleRecording(){
       mediaRecorder.stop();
 
     }
-
 
     return;
 
@@ -2300,7 +2231,6 @@ async function toggleRecording(){
 
     mediaRecorder.start();
 
-
     isRecording = true;
 
 
@@ -2339,7 +2269,6 @@ async function toggleRecording(){
       "VOICE ERROR:",
       error
     );
-
 
     alert(
       "Microphone permission nahi mili."
@@ -2393,7 +2322,6 @@ async function moreMenu(){
       "Logout nahi hua.\n\n" +
       error.message
     );
-
 
     return;
 
