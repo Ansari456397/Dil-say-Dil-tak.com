@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,7 +52,7 @@ body{
 
 
 /* =====================================================
-   TOP MESSAGE BOX
+   MESSAGE BOX
 ===================================================== */
 
 .home-message-box{
@@ -227,12 +228,25 @@ body{
   padding-left:12px;
 }
 
-.comment-reply-box input{
-  width:100%;
+.comment-reply-row{
+  display:flex;
+  gap:6px;
+}
+
+.comment-reply-row input{
+  flex:1;
   border:1px solid #ddd;
   border-radius:9px;
   padding:9px;
   outline:none;
+}
+
+.comment-reply-row button{
+  border:0;
+  background:#6c5ce7;
+  color:white;
+  border-radius:9px;
+  padding:0 13px;
 }
 
 
@@ -334,7 +348,7 @@ body{
         type="text"
         placeholder="Write a message..."
         onkeydown="
-          if(event.key==='Enter'){
+          if(event.key === 'Enter'){
             event.preventDefault();
             sendTextMessage();
           }
@@ -349,13 +363,12 @@ body{
 
     </div>
 
+
     <div class="message-tools">
 
       <button
         onclick="
-          document
-          .getElementById('imageInput')
-          .click()
+          document.getElementById('imageInput').click()
         ">
         🖼️ Upload Image
       </button>
@@ -368,6 +381,7 @@ body{
 
     </div>
 
+
     <input
       id="imageInput"
       type="file"
@@ -375,6 +389,7 @@ body{
       style="display:none"
       onchange="sendImage()"
     >
+
 
     <div
       id="recordStatus"
@@ -390,7 +405,7 @@ body{
   </div>
 
 
-  <!-- TRENDING POSTS -->
+  <!-- POSTS -->
 
   <div class="section-title">
     🔥 Trending Posts
@@ -416,31 +431,22 @@ body{
     Home
   </button>
 
-
   <button onclick="showNotice('Private Chat coming soon')">
     <span>💬</span>
     Private
   </button>
 
-
-  <!-- PROFILE -->
-
   <button
     type="button"
     onclick="openProfile()">
-
     <span>👤</span>
-
     Profile
-
   </button>
-
 
   <button onclick="showNotice('Notifications coming soon')">
     <span>🔔</span>
     Notifications
   </button>
-
 
   <button onclick="moreMenu()">
     <span>☰</span>
@@ -481,18 +487,15 @@ const supabaseClient =
 ===================================================== */
 
 let currentUser = null;
-
 let currentUsername = "User";
 
 let mediaRecorder = null;
-
 let audioChunks = [];
-
 let isRecording = false;
 
 
 /* =====================================================
-   LOGIN CHECK
+   LOGIN / SESSION
 ===================================================== */
 
 async function checkUser(){
@@ -503,12 +506,28 @@ async function checkUser(){
       data,
       error
     } =
-    await supabaseClient.auth.getUser();
+    await supabaseClient.auth.getSession();
+
+
+    if(error){
+
+      console.error(
+        "SESSION ERROR:",
+        error
+      );
+
+      window.location.replace(
+        "login.html"
+      );
+
+      return;
+    }
+
 
     if(
-      error ||
       !data ||
-      !data.user
+      !data.session ||
+      !data.session.user
     ){
 
       window.location.replace(
@@ -516,16 +535,18 @@ async function checkUser(){
       );
 
       return;
-
     }
 
+
     currentUser =
-      data.user;
+      data.session.user;
+
 
     currentUsername =
-      data.user.user_metadata?.username ||
-      data.user.email?.split("@")[0] ||
+      currentUser.user_metadata?.username ||
+      currentUser.email?.split("@")[0] ||
       "User";
+
 
     await loadPosts();
 
@@ -534,7 +555,7 @@ async function checkUser(){
   catch(error){
 
     console.error(
-      "LOGIN CHECK ERROR:",
+      "CHECK USER ERROR:",
       error
     );
 
@@ -548,7 +569,34 @@ async function checkUser(){
 
 
 /* =====================================================
-   OPEN PROFILE
+   AUTH STATE
+===================================================== */
+
+supabaseClient.auth.onAuthStateChange(
+  (event, session) => {
+
+    if(
+      event === "SIGNED_IN" &&
+      session &&
+      session.user
+    ){
+
+      currentUser =
+        session.user;
+
+      currentUsername =
+        session.user.user_metadata?.username ||
+        session.user.email?.split("@")[0] ||
+        "User";
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   PROFILE
 ===================================================== */
 
 function openProfile(){
@@ -572,8 +620,10 @@ async function loadPosts(){
 
   if(!postsBox) return;
 
+
   postsBox.innerHTML =
     '<div class="empty">Loading posts...</div>';
+
 
   const {
     data: blocked,
@@ -587,6 +637,7 @@ async function loadPosts(){
       currentUser.id
     );
 
+
   if(blockError){
 
     console.warn(
@@ -596,12 +647,14 @@ async function loadPosts(){
 
   }
 
+
   const blockedIds =
     (blocked || [])
       .map(
-        x =>
-          x.blocked_id
+        item =>
+          item.blocked_id
       );
+
 
   const {
     data,
@@ -617,6 +670,7 @@ async function loadPosts(){
       }
     );
 
+
   if(error){
 
     console.error(
@@ -628,8 +682,8 @@ async function loadPosts(){
       '<div class="empty">Posts load nahi hue.</div>';
 
     return;
-
   }
+
 
   const posts =
     (data || [])
@@ -640,14 +694,15 @@ async function loadPosts(){
           )
       );
 
+
   if(posts.length === 0){
 
     postsBox.innerHTML =
       '<div class="empty">No posts yet.</div>';
 
     return;
-
   }
+
 
   postsBox.innerHTML =
     posts
@@ -667,6 +722,31 @@ function renderPost(post){
     post.user_id ===
     currentUser.id;
 
+
+  let controls = "";
+
+
+  if(ownPost){
+
+    controls = `
+      <button
+        onclick="deletePost('${escapeAttr(post.id)}')">
+        🗑️ Delete Post
+      </button>
+    `;
+
+  }else{
+
+    controls = `
+      <button
+        onclick="blockUser('${escapeAttr(post.user_id)}')">
+        🚫 Block
+      </button>
+    `;
+
+  }
+
+
   return `
 
     <div
@@ -679,11 +759,13 @@ function renderPost(post){
         )}
       </div>
 
+
       <div class="post-date">
         ${formatDate(
           post.created_at
         )}
       </div>
+
 
       <div class="post-content">
         ${escapeHtml(
@@ -691,74 +773,41 @@ function renderPost(post){
         )}
       </div>
 
+
       <div class="post-actions">
 
         <button
-          onclick="
-            toggleLike(
-              '${escapeAttr(post.id)}'
-            )
-          ">
+          onclick="toggleLike('${escapeAttr(post.id)}')">
           👍 Like
         </button>
 
+
         <button
-          onclick="
-            toggleDislike(
-              '${escapeAttr(post.id)}'
-            )
-          ">
+          onclick="toggleDislike('${escapeAttr(post.id)}')">
           👎 Dislike
         </button>
 
+
         <button
-          onclick="
-            toggleComments(
-              '${escapeAttr(post.id)}'
-            )
-          ">
+          onclick="toggleComments('${escapeAttr(post.id)}')">
           💬 Comments
         </button>
 
-        ${
-          !ownPost
 
-          ?
-
-          `
-          <button
-            onclick="
-              blockUser(
-                '${escapeAttr(post.user_id)}'
-              )
-            ">
-            🚫 Block
-          </button>
-          `
-
-          :
-
-          `
-          <button
-            onclick="
-              deletePost(
-                '${escapeAttr(post.id)}'
-              )
-            ">
-            🗑️ Delete Post
-          </button>
-          `
-        }
+        ${controls}
 
       </div>
+
 
       <div
         class="comments"
         id="comments-${escapeAttr(post.id)}">
 
+
         <div
           id="comment-list-${escapeAttr(post.id)}">
         </div>
+
 
         <div class="comment-box">
 
@@ -767,19 +816,16 @@ function renderPost(post){
             type="text"
             placeholder="Write a comment..."
             onkeydown="
-              if(event.key==='Enter'){
+              if(event.key === 'Enter'){
                 event.preventDefault();
                 addComment('${escapeAttr(post.id)}');
               }
             "
           >
 
+
           <button
-            onclick="
-              addComment(
-                '${escapeAttr(post.id)}'
-              )
-            ">
+            onclick="addComment('${escapeAttr(post.id)}')">
             ➤
           </button>
 
@@ -795,7 +841,7 @@ function renderPost(post){
 
 
 /* =====================================================
-   COMMENTS TOGGLE
+   TOGGLE COMMENTS
 ===================================================== */
 
 async function toggleComments(postId){
@@ -805,11 +851,12 @@ async function toggleComments(postId){
       "comments-" + postId
     );
 
+
   if(!box) return;
 
+
   if(
-    box.style.display ===
-    "block"
+    box.style.display === "block"
   ){
 
     box.style.display =
@@ -819,8 +866,10 @@ async function toggleComments(postId){
 
   }
 
+
   box.style.display =
     "block";
+
 
   await loadComments(
     postId
@@ -840,10 +889,13 @@ async function loadComments(postId){
       "comment-list-" + postId
     );
 
+
   if(!list) return;
+
 
   list.innerHTML =
     '<div class="empty">Loading comments...</div>';
+
 
   const {
     data,
@@ -863,6 +915,7 @@ async function loadComments(postId){
       }
     );
 
+
   if(error){
 
     console.error(
@@ -877,6 +930,7 @@ async function loadComments(postId){
 
   }
 
+
   if(
     !data ||
     data.length === 0
@@ -889,10 +943,16 @@ async function loadComments(postId){
 
   }
 
+
   list.innerHTML =
     data
       .map(
         comment => {
+
+          const username =
+            comment.username ||
+            "User";
+
 
           return `
 
@@ -900,19 +960,18 @@ async function loadComments(postId){
               class="comment"
               id="comment-${escapeAttr(comment.id)}">
 
+
               <div class="comment-user">
-                ${escapeHtml(
-                  comment.username ||
-                  "User"
-                )}
+                ${escapeHtml(username)}
               </div>
+
 
               <div class="comment-text">
                 ${escapeHtml(
-                  comment.content ||
-                  ""
+                  comment.content || ""
                 )}
               </div>
+
 
               <div class="comment-actions">
 
@@ -920,10 +979,7 @@ async function loadComments(postId){
                   onclick="
                     showCommentReply(
                       '${escapeAttr(comment.id)}',
-                      '${escapeAttr(
-                        comment.username ||
-                        "User"
-                      )}'
+                      '${escapeAttr(username)}'
                     )
                   ">
                   ↩️ Reply
@@ -931,40 +987,44 @@ async function loadComments(postId){
 
               </div>
 
+
+              <!-- REPLY BOX INSIDE COMMENT -->
+
               <div
                 class="comment-reply-box"
                 id="reply-box-${escapeAttr(comment.id)}">
 
-                <input
-                  id="reply-input-${escapeAttr(comment.id)}"
-                  type="text"
-                  placeholder="Reply to ${
-                    escapeAttr(
-                      comment.username ||
-                      "User"
-                    )
-                  }..."
-                  onkeydown="
-                    if(event.key==='Enter'){
-                      event.preventDefault();
 
+                <div class="comment-reply-row">
+
+                  <input
+                    id="reply-input-${escapeAttr(comment.id)}"
+                    type="text"
+                    placeholder="Reply to ${escapeAttr(username)}..."
+                    onkeydown="
+                      if(event.key === 'Enter'){
+                        event.preventDefault();
+
+                        sendCommentReply(
+                          '${escapeAttr(comment.id)}',
+                          '${escapeAttr(postId)}'
+                        );
+                      }
+                    "
+                  >
+
+
+                  <button
+                    onclick="
                       sendCommentReply(
                         '${escapeAttr(comment.id)}',
                         '${escapeAttr(postId)}'
-                      );
-                    }
-                  "
-                >
+                      )
+                    ">
+                    ➤
+                  </button>
 
-                <button
-                  onclick="
-                    sendCommentReply(
-                      '${escapeAttr(comment.id)}',
-                      '${escapeAttr(postId)}'
-                    )
-                  ">
-                  ➤
-                </button>
+                </div>
 
               </div>
 
@@ -994,11 +1054,13 @@ function showCommentReply(
       commentId
     );
 
+
   const input =
     document.getElementById(
       "reply-input-" +
       commentId
     );
+
 
   if(
     !box ||
@@ -1009,13 +1071,16 @@ function showCommentReply(
 
   }
 
+
   box.style.display =
     "block";
+
 
   input.value =
     "@" +
     username +
     " ";
+
 
   input.focus();
 
@@ -1041,18 +1106,29 @@ async function sendCommentReply(
 
   }
 
+
   const input =
     document.getElementById(
       "reply-input-" +
       commentId
     );
 
+
   if(!input) return;
+
 
   const text =
     input.value.trim();
 
+
   if(!text) return;
+
+
+  /*
+    Reply Home Message box mein nahi jayega.
+    Ye comments table mein same post ke
+    comments ke andar save hoga.
+  */
 
   const {
     error
@@ -1075,6 +1151,7 @@ async function sendCommentReply(
 
     });
 
+
   if(error){
 
     console.error(
@@ -1091,8 +1168,10 @@ async function sendCommentReply(
 
   }
 
+
   input.value =
     "";
+
 
   await loadComments(
     postId
@@ -1117,18 +1196,23 @@ async function addComment(postId){
 
   }
 
+
   const input =
     document.getElementById(
       "comment-input-" +
       postId
     );
 
+
   if(!input) return;
+
 
   const text =
     input.value.trim();
 
+
   if(!text) return;
+
 
   const {
     error
@@ -1151,6 +1235,7 @@ async function addComment(postId){
 
     });
 
+
   if(error){
 
     console.error(
@@ -1167,8 +1252,10 @@ async function addComment(postId){
 
   }
 
+
   input.value =
     "";
+
 
   await loadComments(
     postId
@@ -1193,10 +1280,12 @@ async function sendTextMessage(){
 
   }
 
+
   const input =
     document.getElementById(
       "chatInput"
     );
+
 
   if(!input){
 
@@ -1208,10 +1297,13 @@ async function sendTextMessage(){
 
   }
 
+
   const text =
     input.value.trim();
 
+
   if(!text) return;
+
 
   let result =
     await supabaseClient
@@ -1229,12 +1321,13 @@ async function sendTextMessage(){
 
       });
 
-  if(result.error){
 
-    console.warn(
-      "Messages table failed:",
-      result.error.message
-    );
+  /*
+    Agar lowercase messages table ho
+    to fallback try hoga.
+  */
+
+  if(result.error){
 
     result =
       await supabaseClient
@@ -1254,6 +1347,7 @@ async function sendTextMessage(){
 
   }
 
+
   if(result.error){
 
     console.error(
@@ -1270,8 +1364,10 @@ async function sendTextMessage(){
 
   }
 
+
   input.value =
     "";
+
 
   showNotice(
     "Message sent."
@@ -1296,6 +1392,7 @@ async function toggleLike(postId){
 
   }
 
+
   const {
     error
   } =
@@ -1314,19 +1411,22 @@ async function toggleLike(postId){
 
     });
 
+
   if(error){
+
+    console.error(
+      "LIKE ERROR:",
+      error
+    );
 
     showNotice(
       "Like save nahi hua."
     );
 
-    console.error(
-      error
-    );
-
     return;
 
   }
+
 
   showNotice(
     "👍 Liked"
@@ -1351,6 +1451,7 @@ async function toggleDislike(postId){
 
   }
 
+
   const {
     error
   } =
@@ -1369,19 +1470,22 @@ async function toggleDislike(postId){
 
     });
 
+
   if(error){
+
+    console.error(
+      "DISLIKE ERROR:",
+      error
+    );
 
     showNotice(
       "Dislike save nahi hua."
     );
 
-    console.error(
-      error
-    );
-
     return;
 
   }
+
 
   showNotice(
     "👎 Disliked"
@@ -1398,12 +1502,15 @@ async function deletePost(postId){
 
   if(!currentUser) return;
 
+
   const ok =
     confirm(
       "Delete this post?"
     );
 
+
   if(!ok) return;
+
 
   const {
     error
@@ -1420,6 +1527,7 @@ async function deletePost(postId){
       currentUser.id
     );
 
+
   if(error){
 
     alert(
@@ -1431,11 +1539,13 @@ async function deletePost(postId){
 
   }
 
+
   const post =
     document.getElementById(
       "post-" +
       postId
     );
+
 
   if(post){
 
@@ -1454,6 +1564,7 @@ async function blockUser(userId){
 
   if(!currentUser) return;
 
+
   if(
     userId ===
     currentUser.id
@@ -1463,12 +1574,15 @@ async function blockUser(userId){
 
   }
 
+
   const ok =
     confirm(
       "Is user ko block karna hai?"
     );
 
+
   if(!ok) return;
+
 
   const {
     error
@@ -1485,6 +1599,7 @@ async function blockUser(userId){
 
     });
 
+
   if(error){
 
     if(
@@ -1500,6 +1615,7 @@ async function blockUser(userId){
 
     }
 
+
     alert(
       "Block nahi hua.\n\n" +
       error.message
@@ -1509,9 +1625,11 @@ async function blockUser(userId){
 
   }
 
+
   showNotice(
     "User blocked."
   );
+
 
   await loadPosts();
 
@@ -1525,7 +1643,7 @@ async function blockUser(userId){
 function sendImage(){
 
   showNotice(
-    "Image sending ke liye Supabase Storage setup chahiye."
+    "Image Storage setup ke baad send hogi."
   );
 
 }
@@ -1538,7 +1656,8 @@ function sendImage(){
 async function toggleRecording(){
 
   if(
-    !navigator.mediaDevices
+    !navigator.mediaDevices ||
+    !navigator.mediaDevices.getUserMedia
   ){
 
     alert(
@@ -1549,13 +1668,19 @@ async function toggleRecording(){
 
   }
 
+
   if(isRecording){
 
-    mediaRecorder.stop();
+    if(mediaRecorder){
+
+      mediaRecorder.stop();
+
+    }
 
     return;
 
   }
+
 
   try{
 
@@ -1565,12 +1690,15 @@ async function toggleRecording(){
           audio:true
         });
 
+
     audioChunks = [];
+
 
     mediaRecorder =
       new MediaRecorder(
         stream
       );
+
 
     mediaRecorder.ondataavailable =
       event => {
@@ -1587,6 +1715,7 @@ async function toggleRecording(){
 
       };
 
+
     mediaRecorder.onstop =
       () => {
 
@@ -1597,18 +1726,22 @@ async function toggleRecording(){
               track.stop()
           );
 
+
         isRecording =
           false;
+
 
         const status =
           document.getElementById(
             "recordStatus"
           );
 
+
         const voiceBtn =
           document.getElementById(
             "voiceBtn"
           );
+
 
         if(status){
 
@@ -1617,6 +1750,7 @@ async function toggleRecording(){
 
         }
 
+
         if(voiceBtn){
 
           voiceBtn.textContent =
@@ -1624,32 +1758,54 @@ async function toggleRecording(){
 
         }
 
+
         showNotice(
           "Voice recording ready hai. Storage setup ke baad save hoga."
         );
 
       };
 
+
     mediaRecorder.start();
+
 
     isRecording =
       true;
 
-    document.getElementById(
-      "recordStatus"
-    ).style.display =
-      "block";
 
-    document.getElementById(
-      "voiceBtn"
-    ).textContent =
-      "⏹️ Stop";
+    const status =
+      document.getElementById(
+        "recordStatus"
+      );
+
+
+    const voiceBtn =
+      document.getElementById(
+        "voiceBtn"
+      );
+
+
+    if(status){
+
+      status.style.display =
+        "block";
+
+    }
+
+
+    if(voiceBtn){
+
+      voiceBtn.textContent =
+        "⏹️ Stop";
+
+    }
 
   }
 
   catch(error){
 
     console.error(
+      "VOICE ERROR:",
       error
     );
 
@@ -1669,11 +1825,8 @@ async function toggleRecording(){
 function goHome(){
 
   window.scrollTo({
-
     top:0,
-
     behavior:"smooth"
-
   });
 
 }
@@ -1690,7 +1843,9 @@ async function moreMenu(){
       "Logout karna hai?"
     );
 
+
   if(!logout) return;
+
 
   const {
     error
@@ -1698,6 +1853,7 @@ async function moreMenu(){
   await supabaseClient
     .auth
     .signOut();
+
 
   if(error){
 
@@ -1709,6 +1865,7 @@ async function moreMenu(){
     return;
 
   }
+
 
   window.location.replace(
     "login.html"
@@ -1728,13 +1885,17 @@ function showNotice(message){
       "notice"
     );
 
+
   if(!box) return;
+
 
   box.textContent =
     message;
 
+
   box.style.display =
     "block";
+
 
   setTimeout(
     () => {
@@ -1795,6 +1956,7 @@ function formatDate(date){
 
   if(!date) return "";
 
+
   try{
 
     return new Date(
@@ -1803,7 +1965,7 @@ function formatDate(date){
 
   }
 
-  catch{
+  catch(error){
 
     return "";
 
@@ -1822,3 +1984,4 @@ checkUser();
 
 </body>
 </html>
+```
