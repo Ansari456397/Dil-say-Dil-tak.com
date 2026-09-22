@@ -1,97 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dil Say Dil Tak - Login</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
+<title>Socialyte - Login</title>
 
-    body {
-      min-height: 100vh;
-      background: #f5f7fb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    .login-box {
-      width: 100%;
-      max-width: 400px;
-      background: white;
-      padding: 35px 25px;
-      border-radius: 22px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-    }
+<style>
 
-    .logo {
-      text-align: center;
-      font-size: 28px;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
 
-    .subtitle {
-      text-align: center;
-      color: #777;
-      margin-bottom: 28px;
-    }
+body{
+  min-height:100vh;
+  background:#f5f7fb;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
 
-    input {
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 15px;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      font-size: 15px;
-    }
+.login-box{
+  width:100%;
+  max-width:400px;
+  background:white;
+  padding:35px 25px;
+  border-radius:22px;
+  box-shadow:0 8px 30px rgba(0,0,0,.08);
+}
 
-    button {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      background: #20242c;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-    }
+.logo{
+  text-align:center;
+  font-size:28px;
+  font-weight:bold;
+  margin-bottom:8px;
+  color:#6c5ce7;
+}
 
-    #message {
-      text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
-    }
+.logo span{
+  color:#8e44ad;
+}
 
-    .signup {
-      text-align: center;
-      margin-top: 20px;
-      color: #777;
-    }
+.subtitle{
+  text-align:center;
+  color:#777;
+  margin-bottom:28px;
+}
 
-    .signup a {
-      color: #20242c;
-      font-weight: bold;
-      text-decoration: none;
-    }
-  </style>
+input{
+  width:100%;
+  padding:14px;
+  margin-bottom:15px;
+  border:1px solid #ddd;
+  border-radius:12px;
+  font-size:15px;
+  outline:none;
+}
+
+input:focus{
+  border-color:#6c5ce7;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,#6c5ce7,#8e44ad);
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
+#message{
+  text-align:center;
+  margin-top:15px;
+  font-size:14px;
+  min-height:20px;
+}
+
+.signup{
+  text-align:center;
+  margin-top:20px;
+  color:#777;
+}
+
+.signup a{
+  color:#6c5ce7;
+  font-weight:bold;
+  text-decoration:none;
+}
+
+</style>
+
 </head>
 
 <body>
 
 <div class="login-box">
 
-  <div class="logo">Dil Say Dil Tak</div>
-  <div class="subtitle">Login to your account</div>
+  <div class="logo">
+    Socia<span>lyte</span>
+  </div>
+
+  <div class="subtitle">
+    Login to your account
+  </div>
+
 
   <form id="loginForm">
 
@@ -99,6 +127,7 @@
       type="email"
       id="email"
       placeholder="Email"
+      autocomplete="email"
       required
     >
 
@@ -106,14 +135,21 @@
       type="password"
       id="password"
       placeholder="Password"
+      autocomplete="current-password"
       required
     >
 
-    <button type="submit">Login</button>
+    <button
+      type="submit"
+      id="loginButton">
+      Login
+    </button>
 
   </form>
 
+
   <div id="message"></div>
+
 
   <div class="signup">
     Don't have an account?
@@ -122,46 +158,201 @@
 
 </div>
 
+
 <script>
 
-const SUPABASE_URL = "https://szmauhxiyjffjhrcruee.supabase.co";
+/* =====================================================
+   SUPABASE
+===================================================== */
 
-const SUPABASE_KEY = "sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
+const SUPABASE_URL =
+  "https://szmauhxiyjffjhrcrue.supabase.co";
 
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const SUPABASE_KEY =
+  "sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
 
-document.getElementById("loginForm").addEventListener("submit", async function(e) {
 
-  e.preventDefault();
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY,
+    {
+      auth:{
+        persistSession:true,
+        autoRefreshToken:true,
+        detectSessionInUrl:true
+      }
+    }
+  );
 
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-  const message = document.getElementById("message");
 
-  message.textContent = "Logging in...";
+/* =====================================================
+   LOGIN
+===================================================== */
 
-  const { data, error } = await supabaseClient.auth.signInWithPassword({
-    email: email,
-    password: password
-  });
+document
+  .getElementById("loginForm")
+  .addEventListener(
+    "submit",
+    async function(e){
 
-  if (error) {
-    message.textContent = error.message;
-    return;
-  }
+      e.preventDefault();
 
-  message.textContent = "Login successful!";
 
-  setTimeout(() => {
-    window.location.href = "index.html";
-  }, 1000);
+      const email =
+        document
+          .getElementById("email")
+          .value
+          .trim();
 
-});
+
+      const password =
+        document
+          .getElementById("password")
+          .value;
+
+
+      const message =
+        document
+          .getElementById("message");
+
+
+      const loginButton =
+        document
+          .getElementById("loginButton");
+
+
+      message.textContent =
+        "Logging in...";
+
+
+      loginButton.disabled =
+        true;
+
+
+      try{
+
+        const {
+          data,
+          error
+        } =
+        await supabaseClient
+          .auth
+          .signInWithPassword({
+            email:email,
+            password:password
+          });
+
+
+        if(error){
+
+          console.error(
+            "LOGIN ERROR:",
+            error
+          );
+
+          message.textContent =
+            error.message;
+
+          loginButton.disabled =
+            false;
+
+          return;
+        }
+
+
+        if(
+          !data ||
+          !data.session ||
+          !data.user
+        ){
+
+          message.textContent =
+            "Login session create nahi hui.";
+
+          loginButton.disabled =
+            false;
+
+          return;
+        }
+
+
+        /*
+          Session ko verify kar rahe hain
+          before opening index.html.
+        */
+
+        const {
+          data:sessionData,
+          error:sessionError
+        } =
+        await supabaseClient
+          .auth
+          .getSession();
+
+
+        if(
+          sessionError ||
+          !sessionData ||
+          !sessionData.session
+        ){
+
+          console.error(
+            "SESSION VERIFY ERROR:",
+            sessionError
+          );
+
+          message.textContent =
+            "Login hua lekin session save nahi hui.";
+
+          loginButton.disabled =
+            false;
+
+          return;
+        }
+
+
+        message.textContent =
+          "Login successful!";
+
+
+        /*
+          Thori si delay taake Supabase
+          session properly persist ho jaye.
+        */
+
+        setTimeout(
+          () => {
+
+            window.location.replace(
+              "index.html"
+            );
+
+          },
+          500
+        );
+
+      }
+
+      catch(error){
+
+        console.error(
+          "LOGIN EXCEPTION:",
+          error
+        );
+
+        message.textContent =
+          "Login failed. Please try again.";
+
+        loginButton.disabled =
+          false;
+
+      }
+
+    }
+  );
 
 </script>
 
 </body>
-</html>
+</html>          
