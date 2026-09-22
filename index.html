@@ -141,6 +141,7 @@ body{
 .post-content{
   white-space:pre-wrap;
   line-height:1.5;
+  word-break:break-word;
 }
 
 .post-actions{
@@ -156,6 +157,39 @@ body{
   border-radius:8px;
   padding:8px 9px;
   cursor:pointer;
+}
+
+
+/* ================= MESSAGE POSTS ================= */
+
+#messages{
+  margin-bottom:20px;
+}
+
+.home-message{
+  background:white;
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.home-message-user{
+  font-weight:bold;
+  color:#6c5ce7;
+  margin-bottom:6px;
+}
+
+.home-message-text{
+  line-height:1.5;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+
+.home-message-date{
+  color:#888;
+  font-size:11px;
+  margin-top:8px;
 }
 
 
@@ -183,6 +217,7 @@ body{
 .comment-text{
   margin-top:4px;
   white-space:pre-wrap;
+  word-break:break-word;
 }
 
 .comment-actions{
@@ -387,7 +422,7 @@ body{
   </div>
 
 
-  <!-- ================= POSTS ================= -->
+  <!-- ================= TRENDING POSTS ================= -->
 
   <div class="section-title">
     🔥 Trending Posts
@@ -397,6 +432,21 @@ body{
 
     <div class="empty">
       Loading posts...
+    </div>
+
+  </div>
+
+
+  <!-- ================= MESSAGE POSTS ================= -->
+
+  <div class="section-title">
+    💬 Message Posts
+  </div>
+
+  <div id="messages">
+
+    <div class="empty">
+      Loading messages...
     </div>
 
   </div>
@@ -501,7 +551,10 @@ function setCurrentUser(user){
     user.email?.split("@")[0] ||
     "User";
 
-  console.log("CURRENT USER:",user.email);
+  console.log(
+    "CURRENT USER:",
+    user.email
+  );
 
   return true;
 }
@@ -513,9 +566,15 @@ function setCurrentUser(user){
 
 async function checkUser(){
 
-  console.log("Checking Socialyte login session...");
+  console.log(
+    "Checking Socialyte login session..."
+  );
 
-  for(let attempt = 1; attempt <= 8; attempt++){
+  for(
+    let attempt = 1;
+    attempt <= 8;
+    attempt++
+  ){
 
     try{
 
@@ -547,28 +606,22 @@ async function checkUser(){
           data.session.user
         );
 
-        console.log("SESSION FOUND");
+        console.log(
+          "SESSION FOUND"
+        );
 
         try{
 
           await loadPosts();
 
-        }catch(postError){
+          await loadMessages();
+
+        }catch(loadError){
 
           console.error(
-            "POST LOAD ERROR:",
-            postError
+            "HOME LOAD ERROR:",
+            loadError
           );
-
-          const postsBox =
-            document.getElementById("posts");
-
-          if(postsBox){
-
-            postsBox.innerHTML =
-              '<div class="empty">Posts load nahi ho sake.</div>';
-
-          }
 
         }
 
@@ -615,9 +668,13 @@ async function checkUser(){
       data.user
     ){
 
-      setCurrentUser(data.user);
+      setCurrentUser(
+        data.user
+      );
 
       await loadPosts();
+
+      await loadMessages();
 
       return;
     }
@@ -1254,7 +1311,7 @@ async function addComment(postId){
 
 
 /* =====================================================
-   MESSAGE
+   MESSAGE SEND
 ===================================================== */
 
 async function sendTextMessage(){
@@ -1343,9 +1400,111 @@ async function sendTextMessage(){
 
   input.value = "";
 
+
+  /* MESSAGE POSTS KO FORAN REFRESH KARO */
+
+  await loadMessages();
+
+
   showNotice(
     "💬 Message sent."
   );
+
+}
+
+
+/* =====================================================
+   LOAD MESSAGE POSTS
+===================================================== */
+
+async function loadMessages(){
+
+  if(!currentUser){
+    return;
+  }
+
+  const messagesBox =
+    document.getElementById(
+      "messages"
+    );
+
+  if(!messagesBox){
+    return;
+  }
+
+
+  messagesBox.innerHTML =
+    '<div class="empty">Loading messages...</div>';
+
+
+  const {data,error} =
+    await supabaseClient
+      .from("messages")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      )
+      .limit(50);
+
+
+  if(error){
+
+    console.error(
+      "MESSAGES LOAD ERROR:",
+      error
+    );
+
+    messagesBox.innerHTML =
+      '<div class="empty">Messages load nahi hue.</div>';
+
+    return;
+  }
+
+
+  if(!data || data.length === 0){
+
+    messagesBox.innerHTML =
+      '<div class="empty">No messages yet.</div>';
+
+    return;
+  }
+
+
+  messagesBox.innerHTML =
+    data.map(
+      message => {
+
+        return `
+
+          <div class="home-message">
+
+            <div class="home-message-user">
+              ${escapeHtml(
+                message.username || "User"
+              )}
+            </div>
+
+            <div class="home-message-text">
+              ${escapeHtml(
+                message.message || ""
+              )}
+            </div>
+
+            <div class="home-message-date">
+              ${formatDate(
+                message.created_at
+              )}
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    ).join("");
 
 }
 
@@ -1428,6 +1587,7 @@ document.addEventListener(
 
         }
       );
+
 
       imageInput.addEventListener(
         "change",
@@ -1557,7 +1717,9 @@ async function deletePost(postId){
   if(!currentUser) return;
 
 
-  if(!confirm("Delete this post?")){
+  if(!confirm(
+    "Delete this post?"
+  )){
 
     return;
   }
@@ -1618,7 +1780,9 @@ async function blockUser(userId){
   }
 
 
-  if(!confirm("Is user ko block karna hai?")){
+  if(!confirm(
+    "Is user ko block karna hai?"
+  )){
 
     return;
   }
@@ -1678,7 +1842,10 @@ function sendImage(){
     );
 
 
-  if(!input || !input.files.length){
+  if(
+    !input ||
+    !input.files.length
+  ){
 
     return;
   }
@@ -1876,7 +2043,9 @@ function goHome(){
 
 async function moreMenu(){
 
-  if(!confirm("Logout karna hai?")){
+  if(!confirm(
+    "Logout karna hai?"
+  )){
 
     return;
   }
