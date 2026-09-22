@@ -1357,12 +1357,6 @@ async function sendTextMessage(){
   }
 
 
-  /*
-    IMPORTANT:
-    messages table mein required column
-    "message" hai.
-  */
-
   const {data,error} =
     await supabaseClient
       .from("messages")
@@ -1401,8 +1395,6 @@ async function sendTextMessage(){
   input.value = "";
 
 
-  /* MESSAGE POSTS KO FORAN REFRESH KARO */
-
   await loadMessages();
 
 
@@ -1414,7 +1406,7 @@ async function sendTextMessage(){
 
 
 /* =====================================================
-   LOAD MESSAGE POSTS
+   LOAD MESSAGE POSTS - FIXED
 ===================================================== */
 
 async function loadMessages(){
@@ -1424,30 +1416,38 @@ async function loadMessages(){
   }
 
   const messagesBox =
-    document.getElementById(
-      "messages"
-    );
+    document.getElementById("messages");
 
   if(!messagesBox){
     return;
   }
 
-
   messagesBox.innerHTML =
     '<div class="empty">Loading messages...</div>';
 
 
+  /*
+    IMPORTANT:
+    Yahan created_at par database ORDER nahi lagaya.
+    Pehle saare messages read honge,
+    phir browser mein newest first sort honge.
+  */
+
   const {data,error} =
     await supabaseClient
       .from("messages")
-      .select("*")
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      )
-      .limit(50);
+      .select("*");
+
+
+  console.log(
+    "MESSAGES DATA:",
+    data
+  );
+
+  console.log(
+    "MESSAGES ERROR:",
+    error
+  );
 
 
   if(error){
@@ -1458,7 +1458,12 @@ async function loadMessages(){
     );
 
     messagesBox.innerHTML =
-      '<div class="empty">Messages load nahi hue.</div>';
+      '<div class="empty">' +
+      'Messages load nahi hue.<br>' +
+      '<small>' +
+      escapeHtml(error.message) +
+      '</small>' +
+      '</div>';
 
     return;
   }
@@ -1473,38 +1478,55 @@ async function loadMessages(){
   }
 
 
+  /* NEWEST MESSAGE FIRST */
+
+  data.sort(function(a,b){
+
+    return new Date(b.created_at || 0) -
+           new Date(a.created_at || 0);
+
+  });
+
+
   messagesBox.innerHTML =
-    data.map(
-      message => {
+    data.map(function(msg){
 
-        return `
+      const username =
+        msg.username || "User";
 
-          <div class="home-message">
+      const text =
+        msg.message ||
+        msg.content ||
+        "";
 
-            <div class="home-message-user">
-              ${escapeHtml(
-                message.username || "User"
-              )}
-            </div>
 
-            <div class="home-message-text">
-              ${escapeHtml(
-                message.message || ""
-              )}
-            </div>
+      return `
 
-            <div class="home-message-date">
-              ${formatDate(
-                message.created_at
-              )}
-            </div>
+        <div class="home-message">
 
+          <div class="home-message-user">
+            ${escapeHtml(username)}
           </div>
 
-        `;
+          <div class="home-message-text">
+            ${escapeHtml(text)}
+          </div>
 
-      }
-    ).join("");
+          ${
+            msg.created_at
+            ? `
+              <div class="home-message-date">
+                ${formatDate(msg.created_at)}
+              </div>
+            `
+            : ""
+          }
+
+        </div>
+
+      `;
+
+    }).join("");
 
 }
 
