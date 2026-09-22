@@ -1,4 +1,1019 @@
-```javascript
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Socialyte</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f6fb;
+  color:#222;
+  padding-bottom:80px;
+}
+
+.header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:linear-gradient(135deg,#6c5ce7,#8e44ad);
+  color:white;
+  padding:16px;
+  text-align:center;
+}
+
+.logo{
+  font-size:25px;
+  font-weight:bold;
+}
+
+.logo span{
+  color:#ffd6ff;
+}
+
+.container{
+  width:100%;
+  max-width:650px;
+  margin:auto;
+  padding:12px;
+}
+
+.home-message-box{
+  background:white;
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:15px;
+  box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.message-title{
+  font-size:17px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+.message-row{
+  display:flex;
+  gap:8px;
+}
+
+#chatInput{
+  flex:1;
+  border:1px solid #ddd;
+  border-radius:10px;
+  padding:12px;
+  outline:none;
+  font-size:15px;
+}
+
+.chat-send{
+  border:0;
+  border-radius:10px;
+  background:#6c5ce7;
+  color:white;
+  width:48px;
+  font-size:20px;
+}
+
+.message-tools{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+.message-tools button{
+  flex:1;
+  border:1px solid #ddd;
+  background:#fafafa;
+  border-radius:9px;
+  padding:9px 5px;
+}
+
+.section-title{
+  font-size:19px;
+  font-weight:bold;
+  margin:15px 0 10px;
+}
+
+.post{
+  background:white;
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:14px;
+  box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.post-user{
+  font-weight:bold;
+  margin-bottom:6px;
+}
+
+.post-date{
+  color:#888;
+  font-size:12px;
+  margin-bottom:10px;
+}
+
+.post-content{
+  white-space:pre-wrap;
+  line-height:1.5;
+}
+
+.post-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:13px;
+}
+
+.post-actions button{
+  border:1px solid #ddd;
+  background:#fafafa;
+  border-radius:8px;
+  padding:8px 9px;
+  cursor:pointer;
+}
+
+.comments{
+  display:none;
+  margin-top:12px;
+  border-top:1px solid #eee;
+  padding-top:12px;
+}
+
+.comment{
+  background:#f6f7fb;
+  border-radius:10px;
+  padding:10px;
+  margin-bottom:8px;
+}
+
+.comment-user{
+  font-weight:bold;
+  font-size:14px;
+}
+
+.comment-text{
+  margin-top:4px;
+  white-space:pre-wrap;
+}
+
+.comment-actions{
+  margin-top:7px;
+}
+
+.comment-actions button{
+  border:0;
+  background:none;
+  color:#6c5ce7;
+  padding:3px 0;
+}
+
+.comment-box{
+  display:flex;
+  gap:6px;
+  margin-top:10px;
+}
+
+.comment-box input{
+  flex:1;
+  border:1px solid #ddd;
+  border-radius:9px;
+  padding:10px;
+}
+
+.comment-box button{
+  border:0;
+  background:#6c5ce7;
+  color:white;
+  border-radius:9px;
+  padding:0 14px;
+}
+
+.comment-reply-box{
+  display:none;
+  margin-top:8px;
+  padding-left:12px;
+}
+
+.comment-reply-box input{
+  width:100%;
+  border:1px solid #ddd;
+  border-radius:9px;
+  padding:9px;
+}
+
+.empty{
+  background:white;
+  border-radius:12px;
+  padding:20px;
+  text-align:center;
+  color:#777;
+}
+
+.bottom-nav{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:200;
+  height:65px;
+  background:white;
+  border-top:1px solid #ddd;
+  display:flex;
+  justify-content:space-around;
+}
+
+.bottom-nav button{
+  flex:1;
+  border:0;
+  background:white;
+  font-size:12px;
+}
+
+.bottom-nav button span{
+  display:block;
+  font-size:20px;
+  margin-bottom:2px;
+}
+
+.notice{
+  position:fixed;
+  left:50%;
+  bottom:80px;
+  transform:translateX(-50%);
+  background:#222;
+  color:white;
+  padding:10px 15px;
+  border-radius:10px;
+  display:none;
+  z-index:500;
+  max-width:90%;
+  text-align:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="logo">
+    Socia<span>lyte</span>
+  </div>
+</header>
+
+
+<div class="container">
+
+  <!-- TOP MESSAGE BOX -->
+
+  <div class="home-message-box">
+
+    <div class="message-title">
+      💬 Message
+    </div>
+
+    <div class="message-row">
+
+      <input
+        id="chatInput"
+        type="text"
+        placeholder="Write a message..."
+        onkeydown="
+          if(event.key==='Enter'){
+            event.preventDefault();
+            sendTextMessage();
+          }
+        "
+      >
+
+      <button
+        class="chat-send"
+        onclick="sendTextMessage()">
+        ➤
+      </button>
+
+    </div>
+
+    <div class="message-tools">
+
+      <button
+        onclick="
+          document
+          .getElementById('imageInput')
+          .click()
+        ">
+        🖼️ Upload Image
+      </button>
+
+      <button
+        id="voiceBtn"
+        onclick="toggleRecording()">
+        🎤 Voice
+      </button>
+
+    </div>
+
+    <input
+      id="imageInput"
+      type="file"
+      accept="image/*"
+      style="display:none"
+      onchange="sendImage()"
+    >
+
+    <div
+      id="recordStatus"
+      style="
+        display:none;
+        font-size:12px;
+        color:#777;
+        margin-top:7px;
+      ">
+      Recording...
+    </div>
+
+  </div>
+
+
+  <div class="section-title">
+    🔥 Trending Posts
+  </div>
+
+  <div id="posts">
+    <div class="empty">
+      Loading posts...
+    </div>
+  </div>
+
+</div>
+
+
+<!-- BOTTOM NAV -->
+
+<div class="bottom-nav">
+
+  <button onclick="goHome()">
+    <span>🏠</span>
+    Home
+  </button>
+
+  <button onclick="showNotice('Private Chat coming soon')">
+    <span>💬</span>
+    Private
+  </button>
+
+  <button onclick="showNotice('Profile coming soon')">
+    <span>👤</span>
+    Profile
+  </button>
+
+  <button onclick="showNotice('Notifications coming soon')">
+    <span>🔔</span>
+    Notifications
+  </button>
+
+  <button onclick="moreMenu()">
+    <span>☰</span>
+    More
+  </button>
+
+</div>
+
+
+<div id="notice" class="notice"></div>
+
+
+<script>
+
+/* =====================================================
+   SUPABASE
+===================================================== */
+
+const SUPABASE_URL =
+  "https://szmauhxiyjffjhrcrue.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
+
+const supabaseClient =
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let currentUser = null;
+let currentUsername = "User";
+
+let mediaRecorder = null;
+let audioChunks = [];
+let isRecording = false;
+
+
+/* =====================================================
+   LOGIN CHECK
+===================================================== */
+
+async function checkUser(){
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient.auth.getUser();
+
+  if(error || !data || !data.user){
+
+    window.location.href =
+      "login.html";
+
+    return;
+  }
+
+  currentUser =
+    data.user;
+
+  currentUsername =
+    data.user.user_metadata?.username ||
+    data.user.email?.split("@")[0] ||
+    "User";
+
+  await loadPosts();
+}
+
+
+/* =====================================================
+   LOAD POSTS
+===================================================== */
+
+async function loadPosts(){
+
+  const postsBox =
+    document.getElementById("posts");
+
+  postsBox.innerHTML =
+    '<div class="empty">Loading posts...</div>';
+
+
+  const {
+    data: blocked
+  } =
+  await supabaseClient
+    .from("user_blocks")
+    .select("blocked_id")
+    .eq(
+      "blocker_id",
+      currentUser.id
+    );
+
+
+  const blockedIds =
+    (blocked || [])
+      .map(x => x.blocked_id);
+
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .from("posts")
+    .select("*")
+    .order(
+      "created_at",
+      { ascending:false }
+    );
+
+
+  if(error){
+
+    console.error(
+      "POST ERROR:",
+      error
+    );
+
+    postsBox.innerHTML =
+      '<div class="empty">Posts load nahi hue.</div>';
+
+    return;
+  }
+
+
+  const posts =
+    (data || [])
+      .filter(
+        post =>
+          !blockedIds.includes(
+            post.user_id
+          )
+      );
+
+
+  if(posts.length === 0){
+
+    postsBox.innerHTML =
+      '<div class="empty">No posts yet.</div>';
+
+    return;
+  }
+
+
+  postsBox.innerHTML =
+    posts
+      .map(renderPost)
+      .join("");
+
+}
+
+
+/* =====================================================
+   RENDER POST
+===================================================== */
+
+function renderPost(post){
+
+  const ownPost =
+    post.user_id ===
+    currentUser.id;
+
+
+  return `
+
+    <div
+      class="post"
+      id="post-${escapeAttr(post.id)}">
+
+      <div class="post-user">
+        ${escapeHtml(
+          post.username || "User"
+        )}
+      </div>
+
+      <div class="post-date">
+        ${formatDate(post.created_at)}
+      </div>
+
+      <div class="post-content">
+        ${escapeHtml(
+          post.content || ""
+        )}
+      </div>
+
+
+      <div class="post-actions">
+
+        <button
+          onclick="toggleLike('${escapeAttr(post.id)}')">
+          👍 Like
+        </button>
+
+        <button
+          onclick="toggleDislike('${escapeAttr(post.id)}')">
+          👎 Dislike
+        </button>
+
+        <button
+          onclick="toggleComments('${escapeAttr(post.id)}')">
+          💬 Comments
+        </button>
+
+        ${
+          !ownPost
+          ?
+          `
+          <button
+            onclick="blockUser(
+              '${escapeAttr(post.user_id)}'
+            )">
+            🚫 Block
+          </button>
+          `
+          :
+          `
+          <button
+            onclick="deletePost(
+              '${escapeAttr(post.id)}'
+            )">
+            🗑️ Delete Post
+          </button>
+          `
+        }
+
+      </div>
+
+
+      <div
+        class="comments"
+        id="comments-${escapeAttr(post.id)}">
+
+        <div
+          id="comment-list-${escapeAttr(post.id)}">
+        </div>
+
+
+        <div class="comment-box">
+
+          <input
+            id="comment-input-${escapeAttr(post.id)}"
+            type="text"
+            placeholder="Write a comment..."
+            onkeydown="
+              if(event.key==='Enter'){
+                event.preventDefault();
+                addComment('${escapeAttr(post.id)}');
+              }
+            "
+          >
+
+          <button
+            onclick="
+              addComment(
+                '${escapeAttr(post.id)}'
+              )
+            ">
+            ➤
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+}
+
+
+/* =====================================================
+   COMMENTS TOGGLE
+===================================================== */
+
+async function toggleComments(postId){
+
+  const box =
+    document.getElementById(
+      "comments-" + postId
+    );
+
+  if(!box) return;
+
+  if(
+    box.style.display === "block"
+  ){
+
+    box.style.display =
+      "none";
+
+    return;
+  }
+
+  box.style.display =
+    "block";
+
+  await loadComments(postId);
+}
+
+
+/* =====================================================
+   LOAD COMMENTS
+===================================================== */
+
+async function loadComments(postId){
+
+  const list =
+    document.getElementById(
+      "comment-list-" + postId
+    );
+
+  if(!list) return;
+
+  list.innerHTML =
+    '<div class="empty">Loading comments...</div>';
+
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .from("comments")
+    .select("*")
+    .eq(
+      "post_id",
+      postId
+    )
+    .order(
+      "created_at",
+      { ascending:true }
+    );
+
+
+  if(error){
+
+    console.error(
+      "COMMENTS ERROR:",
+      error
+    );
+
+    list.innerHTML =
+      '<div class="empty">Comments load nahi hue.</div>';
+
+    return;
+  }
+
+
+  if(!data || data.length === 0){
+
+    list.innerHTML =
+      '<div class="empty">No comments yet.</div>';
+
+    return;
+  }
+
+
+  list.innerHTML =
+    data
+      .map(comment => {
+
+        return `
+
+          <div
+            class="comment"
+            id="comment-${escapeAttr(comment.id)}">
+
+            <div class="comment-user">
+              ${escapeHtml(
+                comment.username || "User"
+              )}
+            </div>
+
+            <div class="comment-text">
+              ${escapeHtml(
+                comment.content || ""
+              )}
+            </div>
+
+            <div class="comment-actions">
+
+              <button
+                onclick="
+                  showCommentReply(
+                    '${escapeAttr(comment.id)}',
+                    '${escapeAttr(
+                      comment.username || "User"
+                    )}'
+                  )
+                ">
+                ↩️ Reply
+              </button>
+
+            </div>
+
+
+            <div
+              class="comment-reply-box"
+              id="reply-box-${escapeAttr(comment.id)}">
+
+              <input
+                id="reply-input-${escapeAttr(comment.id)}"
+                type="text"
+                placeholder="Reply to ${
+                  escapeAttr(
+                    comment.username || "User"
+                  )
+                }..."
+                onkeydown="
+                  if(event.key==='Enter'){
+                    event.preventDefault();
+                    sendCommentReply(
+                      '${escapeAttr(comment.id)}',
+                      '${escapeAttr(postId)}'
+                    );
+                  }
+                "
+              >
+
+              <button
+                onclick="
+                  sendCommentReply(
+                    '${escapeAttr(comment.id)}',
+                    '${escapeAttr(postId)}'
+                  )
+                ">
+                ➤
+              </button>
+
+            </div>
+
+          </div>
+
+        `;
+
+      })
+      .join("");
+}
+
+
+/* =====================================================
+   SHOW COMMENT REPLY
+===================================================== */
+
+function showCommentReply(
+  commentId,
+  username
+){
+
+  const box =
+    document.getElementById(
+      "reply-box-" + commentId
+    );
+
+  const input =
+    document.getElementById(
+      "reply-input-" + commentId
+    );
+
+  if(!box || !input) return;
+
+  box.style.display =
+    "block";
+
+  input.value =
+    "@" + username + " ";
+
+  input.focus();
+}
+
+
+/* =====================================================
+   SEND COMMENT REPLY
+===================================================== */
+
+async function sendCommentReply(
+  commentId,
+  postId
+){
+
+  if(!currentUser){
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+  }
+
+
+  const input =
+    document.getElementById(
+      "reply-input-" + commentId
+    );
+
+  if(!input) return;
+
+
+  const text =
+    input.value.trim();
+
+  if(!text) return;
+
+
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("comments")
+    .insert({
+
+      post_id:
+        postId,
+
+      user_id:
+        currentUser.id,
+
+      username:
+        currentUsername,
+
+      content:
+        text
+
+    });
+
+
+  if(error){
+
+    console.error(
+      "REPLY ERROR:",
+      error
+    );
+
+    alert(
+      "Reply send nahi hua.\n\n" +
+      error.message
+    );
+
+    return;
+  }
+
+
+  input.value = "";
+
+  await loadComments(postId);
+}
+
+
+/* =====================================================
+   ADD COMMENT
+===================================================== */
+
+async function addComment(postId){
+
+  if(!currentUser){
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+  }
+
+
+  const input =
+    document.getElementById(
+      "comment-input-" + postId
+    );
+
+  if(!input) return;
+
+
+  const text =
+    input.value.trim();
+
+  if(!text) return;
+
+
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("comments")
+    .insert({
+
+      post_id:
+        postId,
+
+      user_id:
+        currentUser.id,
+
+      username:
+        currentUsername,
+
+      content:
+        text
+
+    });
+
+
+  if(error){
+
+    console.error(
+      "COMMENT ERROR:",
+      error
+    );
+
+    alert(
+      "Comment send nahi hua.\n\n" +
+      error.message
+    );
+
+    return;
+  }
+
+
+  input.value = "";
+
+  await loadComments(postId);
+}
+
+
 /* =====================================================
    SEND TEXT MESSAGE
 ===================================================== */
@@ -21,7 +1036,14 @@ async function sendTextMessage(){
     );
 
 
-  if(!input) return;
+  if(!input){
+
+    alert(
+      "Message box nahi mila."
+    );
+
+    return;
+  }
 
 
   const text =
@@ -31,48 +1053,578 @@ async function sendTextMessage(){
   if(!text) return;
 
 
+  let result =
+    await supabaseClient
+      .from("Messages")
+      .insert({
+
+        user_id:
+          currentUser.id,
+
+        username:
+          currentUsername,
+
+        content:
+          text
+
+      });
+
+
+  if(result.error){
+
+    console.warn(
+      "Messages table failed:",
+      result.error.message
+    );
+
+
+    result =
+      await supabaseClient
+        .from("messages")
+        .insert({
+
+          user_id:
+            currentUser.id,
+
+          username:
+            currentUsername,
+
+          content:
+            text
+
+        });
+
+  }
+
+
+  if(result.error){
+
+    console.error(
+      "MESSAGE ERROR:",
+      result.error
+    );
+
+    alert(
+      "Message send nahi hua.\n\n" +
+      result.error.message
+    );
+
+    return;
+  }
+
+
+  input.value = "";
+
+}
+
+
+/* =====================================================
+   LIKE
+===================================================== */
+
+async function toggleLike(postId){
+
+  if(!currentUser){
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+  }
+
+
   const {
     error
   } =
   await supabaseClient
-    .from("Messages")
+    .from("post_actions")
     .insert({
+
+      post_id:
+        postId,
 
       user_id:
         currentUser.id,
 
-      username:
-        currentUsername,
-
-      content:
-        text
+      action_type:
+        "like"
 
     });
 
 
   if(error){
 
+    showNotice(
+      "Like save nahi hua."
+    );
+
     console.error(
-      "MESSAGE ERROR:",
       error
     );
-
-
-    alert(
-      "Message send nahi hua.\n\n" +
-      error.message
-    );
-
 
     return;
   }
 
 
-  input.value =
-    "";
+  showNotice(
+    "👍 Liked"
+  );
+}
 
 
-  cancelReply();
+/* =====================================================
+   DISLIKE
+===================================================== */
+
+async function toggleDislike(postId){
+
+  if(!currentUser){
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+  }
+
+
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("post_actions")
+    .insert({
+
+      post_id:
+        postId,
+
+      user_id:
+        currentUser.id,
+
+      action_type:
+        "dislike"
+
+    });
+
+
+  if(error){
+
+    showNotice(
+      "Dislike save nahi hua."
+    );
+
+    console.error(
+      error
+    );
+
+    return;
+  }
+
+
+  showNotice(
+    "👎 Disliked"
+  );
+}
+
+
+/* =====================================================
+   DELETE POST
+===================================================== */
+
+async function deletePost(postId){
+
+  if(!currentUser) return;
+
+
+  const ok =
+    confirm(
+      "Delete this post?"
+    );
+
+  if(!ok) return;
+
+
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("posts")
+    .delete()
+    .eq(
+      "id",
+      postId
+    )
+    .eq(
+      "user_id",
+      currentUser.id
+    );
+
+
+  if(error){
+
+    alert(
+      "Post delete nahi hui.\n\n" +
+      error.message
+    );
+
+    return;
+  }
+
+
+  const post =
+    document.getElementById(
+      "post-" + postId
+    );
+
+  if(post){
+    post.remove();
+  }
+}
+
+
+/* =====================================================
+   BLOCK USER
+===================================================== */
+
+async function blockUser(userId){
+
+  if(!currentUser) return;
+
+
+  if(
+    userId ===
+    currentUser.id
+  ){
+
+    return;
+  }
+
+
+  const ok =
+    confirm(
+      "Is user ko block karna hai?"
+    );
+
+  if(!ok) return;
+
+
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("user_blocks")
+    .insert({
+
+      blocker_id:
+        currentUser.id,
+
+      blocked_id:
+        userId
+
+    });
+
+
+  if(error){
+
+    if(
+      error.code ===
+      "23505"
+    ){
+
+      showNotice(
+        "User already blocked."
+      );
+
+      return;
+    }
+
+
+    alert(
+      "Block nahi hua.\n\n" +
+      error.message
+    );
+
+    return;
+  }
+
+
+  showNotice(
+    "User blocked."
+  );
+
+
+  await loadPosts();
+}
+
+
+/* =====================================================
+   IMAGE
+===================================================== */
+
+function sendImage(){
+
+  showNotice(
+    "Image sending ke liye Supabase Storage setup chahiye."
+  );
 
 }
+
+
+/* =====================================================
+   VOICE
+===================================================== */
+
+async function toggleRecording(){
+
+  if(!navigator.mediaDevices){
+
+    alert(
+      "Voice recording browser mein available nahi."
+    );
+
+    return;
+  }
+
+
+  if(isRecording){
+
+    mediaRecorder.stop();
+
+    return;
+  }
+
+
+  try{
+
+    const stream =
+      await navigator.mediaDevices
+        .getUserMedia({
+          audio:true
+        });
+
+
+    audioChunks = [];
+
+
+    mediaRecorder =
+      new MediaRecorder(
+        stream
+      );
+
+
+    mediaRecorder.ondataavailable =
+      event => {
+
+        if(event.data.size > 0){
+
+          audioChunks.push(
+            event.data
+          );
+
+        }
+
+      };
+
+
+    mediaRecorder.onstop =
+      () => {
+
+        stream
+          .getTracks()
+          .forEach(
+            track =>
+              track.stop()
+          );
+
+        isRecording = false;
+
+        document.getElementById(
+          "recordStatus"
+        ).style.display =
+          "none";
+
+        document.getElementById(
+          "voiceBtn"
+        ).textContent =
+          "🎤 Voice";
+
+        showNotice(
+          "Voice recording ready hai. Storage setup ke baad save hoga."
+        );
+
+      };
+
+
+    mediaRecorder.start();
+
+    isRecording = true;
+
+
+    document.getElementById(
+      "recordStatus"
+    ).style.display =
+      "block";
+
+
+    document.getElementById(
+      "voiceBtn"
+    ).textContent =
+      "⏹️ Stop";
+
+  }
+  catch(error){
+
+    console.error(
+      error
+    );
+
+    alert(
+      "Microphone permission nahi mili."
+    );
+
+  }
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function goHome(){
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+function moreMenu(){
+
+  const logout =
+    confirm(
+      "Logout karna hai?"
+    );
+
+  if(!logout) return;
+
+  supabaseClient.auth
+    .signOut()
+    .then(
+      () => {
+
+        window.location.href =
+          "login.html";
+
+      }
+    );
+
+}
+
+
+/* =====================================================
+   NOTICE
+===================================================== */
+
+function showNotice(message){
+
+  const box =
+    document.getElementById(
+      "notice"
+    );
+
+  box.textContent =
+    message;
+
+  box.style.display =
+    "block";
+
+
+  setTimeout(
+    () => {
+
+      box.style.display =
+        "none";
+
+    },
+    2200
+  );
+
+}
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function escapeHtml(value){
+
+  return String(
+    value ?? ""
+  )
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+  .replace(
+    /</g,
+    "&lt;"
+  )
+  .replace(
+    />/g,
+    "&gt;"
+  )
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+  .replace(
+    /'/g,
+    "&#039;"
+  );
+
+}
+
+
+function escapeAttr(value){
+
+  return escapeHtml(
+    value
+  );
+
+}
+
+
+function formatDate(date){
+
+  if(!date) return "";
+
+  try{
+
+    return new Date(
+      date
+    ).toLocaleString();
+
+  }
+  catch{
+
+    return "";
+
+  }
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+checkUser();
+
+</script>
+
+</body>
+</html>
 ```
