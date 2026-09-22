@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,9 +50,7 @@ body{
 }
 
 
-/* =====================================================
-   MESSAGE BOX
-===================================================== */
+/* ================= MESSAGE BOX ================= */
 
 .home-message-box{
   background:white;
@@ -76,6 +73,7 @@ body{
 
 #chatInput{
   flex:1;
+  min-width:0;
   border:1px solid #ddd;
   border-radius:10px;
   padding:12px;
@@ -109,9 +107,7 @@ body{
 }
 
 
-/* =====================================================
-   POSTS
-===================================================== */
+/* ================= POSTS ================= */
 
 .section-title{
   font-size:19px;
@@ -159,9 +155,7 @@ body{
 }
 
 
-/* =====================================================
-   COMMENTS
-===================================================== */
+/* ================= COMMENTS ================= */
 
 .comments{
   display:none;
@@ -207,6 +201,7 @@ body{
 
 .comment-box input{
   flex:1;
+  min-width:0;
   border:1px solid #ddd;
   border-radius:9px;
   padding:10px;
@@ -235,6 +230,7 @@ body{
 
 .comment-reply-row input{
   flex:1;
+  min-width:0;
   border:1px solid #ddd;
   border-radius:9px;
   padding:9px;
@@ -250,9 +246,7 @@ body{
 }
 
 
-/* =====================================================
-   EMPTY
-===================================================== */
+/* ================= EMPTY ================= */
 
 .empty{
   background:white;
@@ -263,9 +257,7 @@ body{
 }
 
 
-/* =====================================================
-   BOTTOM NAV
-===================================================== */
+/* ================= BOTTOM NAV ================= */
 
 .bottom-nav{
   position:fixed;
@@ -295,9 +287,7 @@ body{
 }
 
 
-/* =====================================================
-   NOTICE
-===================================================== */
+/* ================= NOTICE ================= */
 
 .notice{
   position:fixed;
@@ -357,6 +347,7 @@ body{
 
       <button
         class="chat-send"
+        type="button"
         onclick="sendTextMessage()">
         ➤
       </button>
@@ -367,14 +358,14 @@ body{
     <div class="message-tools">
 
       <button
-        onclick="
-          document.getElementById('imageInput').click()
-        ">
+        type="button"
+        onclick="document.getElementById('imageInput').click()">
         🖼️ Upload Image
       </button>
 
       <button
         id="voiceBtn"
+        type="button"
         onclick="toggleRecording()">
         🎤 Voice
       </button>
@@ -426,12 +417,14 @@ body{
 
 <div class="bottom-nav">
 
-  <button onclick="goHome()">
+  <button type="button" onclick="goHome()">
     <span>🏠</span>
     Home
   </button>
 
-  <button onclick="showNotice('Private Chat coming soon')">
+  <button
+    type="button"
+    onclick="showNotice('Private Chat coming soon')">
     <span>💬</span>
     Private
   </button>
@@ -443,12 +436,16 @@ body{
     Profile
   </button>
 
-  <button onclick="showNotice('Notifications coming soon')">
+  <button
+    type="button"
+    onclick="showNotice('Notifications coming soon')">
     <span>🔔</span>
     Notifications
   </button>
 
-  <button onclick="moreMenu()">
+  <button
+    type="button"
+    onclick="moreMenu()">
     <span>☰</span>
     More
   </button>
@@ -456,10 +453,7 @@ body{
 </div>
 
 
-<div
-  id="notice"
-  class="notice">
-</div>
+<div id="notice" class="notice"></div>
 
 
 <script>
@@ -496,71 +490,155 @@ let isRecording = false;
 
 /* =====================================================
    LOGIN / SESSION
+   FIXED VERSION
 ===================================================== */
 
 async function checkUser(){
 
+  console.log("Checking Socialyte session...");
+
   try{
 
-    const {
-      data,
-      error
-    } =
-    await supabaseClient.auth.getSession();
+    let session = null;
 
+    /*
+      Kabhi login ke foran baad session
+      thori der se available hota hai.
+      Isliye 3 attempts kiye ja rahe hain.
+    */
 
-    if(error){
+    for(let attempt = 1; attempt <= 3; attempt++){
 
-      console.error(
-        "SESSION ERROR:",
+      const {
+        data,
         error
+      } =
+      await supabaseClient.auth.getSession();
+
+      console.log(
+        "SESSION ATTEMPT:",
+        attempt,
+        data
       );
 
-      window.location.replace(
-        "login.html"
-      );
+      if(error){
 
-      return;
+        console.error(
+          "SESSION ERROR:",
+          error
+        );
+
+        break;
+      }
+
+      if(
+        data &&
+        data.session &&
+        data.session.user
+      ){
+
+        session = data.session;
+        break;
+      }
+
+      if(attempt < 3){
+
+        await new Promise(
+          resolve =>
+            setTimeout(resolve, 700)
+        );
+
+      }
+
     }
 
+
+    /*
+      Agar session nahi mila tab hi login page
+      par bhejna hai.
+    */
 
     if(
-      !data ||
-      !data.session ||
-      !data.session.user
+      !session ||
+      !session.user
     ){
 
-      window.location.replace(
-        "login.html"
+      console.log(
+        "NO ACTIVE SESSION - GOING TO LOGIN"
       );
+
+      window.location.href =
+        "login.html";
 
       return;
     }
 
 
+    /* ===============================
+       USER SET
+    =============================== */
+
     currentUser =
-      data.session.user;
+      session.user;
 
 
     currentUsername =
       currentUser.user_metadata?.username ||
+      currentUser.user_metadata?.name ||
       currentUser.email?.split("@")[0] ||
       "User";
 
 
-    await loadPosts();
+    console.log(
+      "LOGIN SESSION OK:",
+      currentUser.email
+    );
+
+
+    /*
+      IMPORTANT:
+      Posts mein error aaye to user ko
+      logout/login page par nahi bhejna.
+    */
+
+    try{
+
+      await loadPosts();
+
+    }
+
+    catch(postError){
+
+      console.error(
+        "POST LOAD ERROR:",
+        postError
+      );
+
+      const postsBox =
+        document.getElementById("posts");
+
+      if(postsBox){
+
+        postsBox.innerHTML =
+          '<div class="empty">Posts load nahi ho sake.</div>';
+
+      }
+
+    }
 
   }
 
   catch(error){
 
+    /*
+      Yahan redirect nahi hoga.
+      Isse temporary database/network error
+      login ko logout nahi samjhega.
+    */
+
     console.error(
       "CHECK USER ERROR:",
       error
-    );
-
-    window.location.replace(
-      "login.html"
     );
 
   }
@@ -575,8 +653,13 @@ async function checkUser(){
 supabaseClient.auth.onAuthStateChange(
   (event, session) => {
 
+    console.log(
+      "AUTH EVENT:",
+      event
+    );
+
+
     if(
-      event === "SIGNED_IN" &&
       session &&
       session.user
     ){
@@ -586,8 +669,14 @@ supabaseClient.auth.onAuthStateChange(
 
       currentUsername =
         session.user.user_metadata?.username ||
+        session.user.user_metadata?.name ||
         session.user.email?.split("@")[0] ||
         "User";
+
+      console.log(
+        "AUTH USER:",
+        currentUser.email
+      );
 
     }
 
@@ -613,10 +702,19 @@ function openProfile(){
 
 async function loadPosts(){
 
-  const postsBox =
-    document.getElementById(
-      "posts"
+  if(!currentUser){
+
+    console.warn(
+      "Cannot load posts: no user."
     );
+
+    return;
+  }
+
+
+  const postsBox =
+    document.getElementById("posts");
+
 
   if(!postsBox) return;
 
@@ -625,36 +723,63 @@ async function loadPosts(){
     '<div class="empty">Loading posts...</div>';
 
 
-  const {
-    data: blocked,
-    error: blockError
-  } =
-  await supabaseClient
-    .from("user_blocks")
-    .select("blocked_id")
-    .eq(
-      "blocker_id",
-      currentUser.id
-    );
+  /* ===============================
+     BLOCKED USERS
+  =============================== */
+
+  let blockedIds = [];
 
 
-  if(blockError){
+  try{
+
+    const {
+      data: blocked,
+      error: blockError
+    } =
+    await supabaseClient
+      .from("user_blocks")
+      .select("blocked_id")
+      .eq(
+        "blocker_id",
+        currentUser.id
+      );
+
+
+    if(blockError){
+
+      console.warn(
+        "BLOCK LOAD ERROR:",
+        blockError
+      );
+
+    }
+
+    else{
+
+      blockedIds =
+        (blocked || [])
+          .map(
+            item =>
+              item.blocked_id
+          );
+
+    }
+
+  }
+
+  catch(error){
 
     console.warn(
-      "BLOCK LOAD ERROR:",
-      blockError
+      "BLOCK CHECK FAILED:",
+      error
     );
 
   }
 
 
-  const blockedIds =
-    (blocked || [])
-      .map(
-        item =>
-          item.blocked_id
-      );
-
+  /* ===============================
+     GET POSTS
+  =============================== */
 
   const {
     data,
@@ -719,8 +844,7 @@ async function loadPosts(){
 function renderPost(post){
 
   const ownPost =
-    post.user_id ===
-    currentUser.id;
+    post.user_id === currentUser.id;
 
 
   let controls = "";
@@ -730,15 +854,19 @@ function renderPost(post){
 
     controls = `
       <button
+        type="button"
         onclick="deletePost('${escapeAttr(post.id)}')">
         🗑️ Delete Post
       </button>
     `;
 
-  }else{
+  }
+
+  else{
 
     controls = `
       <button
+        type="button"
         onclick="blockUser('${escapeAttr(post.user_id)}')">
         🚫 Block
       </button>
@@ -754,41 +882,38 @@ function renderPost(post){
       id="post-${escapeAttr(post.id)}">
 
       <div class="post-user">
-        ${escapeHtml(
-          post.username || "User"
-        )}
+        ${escapeHtml(post.username || "User")}
       </div>
 
 
       <div class="post-date">
-        ${formatDate(
-          post.created_at
-        )}
+        ${formatDate(post.created_at)}
       </div>
 
 
       <div class="post-content">
-        ${escapeHtml(
-          post.content || ""
-        )}
+        ${escapeHtml(post.content || "")}
       </div>
 
 
       <div class="post-actions">
 
         <button
+          type="button"
           onclick="toggleLike('${escapeAttr(post.id)}')">
           👍 Like
         </button>
 
 
         <button
+          type="button"
           onclick="toggleDislike('${escapeAttr(post.id)}')">
           👎 Dislike
         </button>
 
 
         <button
+          type="button"
           onclick="toggleComments('${escapeAttr(post.id)}')">
           💬 Comments
         </button>
@@ -802,7 +927,6 @@ function renderPost(post){
       <div
         class="comments"
         id="comments-${escapeAttr(post.id)}">
-
 
         <div
           id="comment-list-${escapeAttr(post.id)}">
@@ -825,6 +949,7 @@ function renderPost(post){
 
 
           <button
+            type="button"
             onclick="addComment('${escapeAttr(post.id)}')">
             ➤
           </button>
@@ -871,9 +996,7 @@ async function toggleComments(postId){
     "block";
 
 
-  await loadComments(
-    postId
-  );
+  await loadComments(postId);
 
 }
 
@@ -927,7 +1050,6 @@ async function loadComments(postId){
       '<div class="empty">Comments load nahi hue.</div>';
 
     return;
-
   }
 
 
@@ -940,7 +1062,6 @@ async function loadComments(postId){
       '<div class="empty">No comments yet.</div>';
 
     return;
-
   }
 
 
@@ -960,22 +1081,20 @@ async function loadComments(postId){
               class="comment"
               id="comment-${escapeAttr(comment.id)}">
 
-
               <div class="comment-user">
                 ${escapeHtml(username)}
               </div>
 
 
               <div class="comment-text">
-                ${escapeHtml(
-                  comment.content || ""
-                )}
+                ${escapeHtml(comment.content || "")}
               </div>
 
 
               <div class="comment-actions">
 
                 <button
+                  type="button"
                   onclick="
                     showCommentReply(
                       '${escapeAttr(comment.id)}',
@@ -988,12 +1107,9 @@ async function loadComments(postId){
               </div>
 
 
-              <!-- REPLY BOX INSIDE COMMENT -->
-
               <div
                 class="comment-reply-box"
                 id="reply-box-${escapeAttr(comment.id)}">
-
 
                 <div class="comment-reply-row">
 
@@ -1004,7 +1120,6 @@ async function loadComments(postId){
                     onkeydown="
                       if(event.key === 'Enter'){
                         event.preventDefault();
-
                         sendCommentReply(
                           '${escapeAttr(comment.id)}',
                           '${escapeAttr(postId)}'
@@ -1015,6 +1130,7 @@ async function loadComments(postId){
 
 
                   <button
+                    type="button"
                     onclick="
                       sendCommentReply(
                         '${escapeAttr(comment.id)}',
@@ -1050,26 +1166,17 @@ function showCommentReply(
 
   const box =
     document.getElementById(
-      "reply-box-" +
-      commentId
+      "reply-box-" + commentId
     );
 
 
   const input =
     document.getElementById(
-      "reply-input-" +
-      commentId
+      "reply-input-" + commentId
     );
 
 
-  if(
-    !box ||
-    !input
-  ){
-
-    return;
-
-  }
+  if(!box || !input) return;
 
 
   box.style.display =
@@ -1077,9 +1184,7 @@ function showCommentReply(
 
 
   input.value =
-    "@" +
-    username +
-    " ";
+    "@" + username + " ";
 
 
   input.focus();
@@ -1098,19 +1203,15 @@ async function sendCommentReply(
 
   if(!currentUser){
 
-    alert(
-      "Please login first."
-    );
+    alert("Please login first.");
 
     return;
-
   }
 
 
   const input =
     document.getElementById(
-      "reply-input-" +
-      commentId
+      "reply-input-" + commentId
     );
 
 
@@ -1124,12 +1225,6 @@ async function sendCommentReply(
   if(!text) return;
 
 
-  /*
-    Reply Home Message box mein nahi jayega.
-    Ye comments table mein same post ke
-    comments ke andar save hoga.
-  */
-
   const {
     error
   } =
@@ -1137,17 +1232,10 @@ async function sendCommentReply(
     .from("comments")
     .insert({
 
-      post_id:
-        postId,
-
-      user_id:
-        currentUser.id,
-
-      username:
-        currentUsername,
-
-      content:
-        text
+      post_id:postId,
+      user_id:currentUser.id,
+      username:currentUsername,
+      content:text
 
     });
 
@@ -1165,17 +1253,13 @@ async function sendCommentReply(
     );
 
     return;
-
   }
 
 
-  input.value =
-    "";
+  input.value = "";
 
 
-  await loadComments(
-    postId
-  );
+  await loadComments(postId);
 
 }
 
@@ -1188,19 +1272,15 @@ async function addComment(postId){
 
   if(!currentUser){
 
-    alert(
-      "Please login first."
-    );
+    alert("Please login first.");
 
     return;
-
   }
 
 
   const input =
     document.getElementById(
-      "comment-input-" +
-      postId
+      "comment-input-" + postId
     );
 
 
@@ -1221,17 +1301,10 @@ async function addComment(postId){
     .from("comments")
     .insert({
 
-      post_id:
-        postId,
-
-      user_id:
-        currentUser.id,
-
-      username:
-        currentUsername,
-
-      content:
-        text
+      post_id:postId,
+      user_id:currentUser.id,
+      username:currentUsername,
+      content:text
 
     });
 
@@ -1249,17 +1322,13 @@ async function addComment(postId){
     );
 
     return;
-
   }
 
 
-  input.value =
-    "";
+  input.value = "";
 
 
-  await loadComments(
-    postId
-  );
+  await loadComments(postId);
 
 }
 
@@ -1272,12 +1341,9 @@ async function sendTextMessage(){
 
   if(!currentUser){
 
-    alert(
-      "Please login first."
-    );
+    alert("Please login first.");
 
     return;
-
   }
 
 
@@ -1289,12 +1355,9 @@ async function sendTextMessage(){
 
   if(!input){
 
-    alert(
-      "Message box nahi mila."
-    );
+    alert("Message box nahi mila.");
 
     return;
-
   }
 
 
@@ -1310,38 +1373,34 @@ async function sendTextMessage(){
       .from("Messages")
       .insert({
 
-        user_id:
-          currentUser.id,
-
-        username:
-          currentUsername,
-
-        content:
-          text
+        user_id:currentUser.id,
+        username:currentUsername,
+        content:text
 
       });
 
 
   /*
-    Agar lowercase messages table ho
-    to fallback try hoga.
+    Agar table lowercase messages ho
+    to second attempt.
   */
 
   if(result.error){
+
+    console.warn(
+      "Messages table failed:",
+      result.error.message
+    );
+
 
     result =
       await supabaseClient
         .from("messages")
         .insert({
 
-          user_id:
-            currentUser.id,
-
-          username:
-            currentUsername,
-
-          content:
-            text
+          user_id:currentUser.id,
+          username:currentUsername,
+          content:text
 
         });
 
@@ -1361,17 +1420,13 @@ async function sendTextMessage(){
     );
 
     return;
-
   }
 
 
-  input.value =
-    "";
+  input.value = "";
 
 
-  showNotice(
-    "Message sent."
-  );
+  showNotice("Message sent.");
 
 }
 
@@ -1384,12 +1439,9 @@ async function toggleLike(postId){
 
   if(!currentUser){
 
-    alert(
-      "Please login first."
-    );
+    alert("Please login first.");
 
     return;
-
   }
 
 
@@ -1400,14 +1452,9 @@ async function toggleLike(postId){
     .from("post_actions")
     .insert({
 
-      post_id:
-        postId,
-
-      user_id:
-        currentUser.id,
-
-      action_type:
-        "like"
+      post_id:postId,
+      user_id:currentUser.id,
+      action_type:"like"
 
     });
 
@@ -1424,13 +1471,10 @@ async function toggleLike(postId){
     );
 
     return;
-
   }
 
 
-  showNotice(
-    "👍 Liked"
-  );
+  showNotice("👍 Liked");
 
 }
 
@@ -1443,12 +1487,9 @@ async function toggleDislike(postId){
 
   if(!currentUser){
 
-    alert(
-      "Please login first."
-    );
+    alert("Please login first.");
 
     return;
-
   }
 
 
@@ -1459,14 +1500,9 @@ async function toggleDislike(postId){
     .from("post_actions")
     .insert({
 
-      post_id:
-        postId,
-
-      user_id:
-        currentUser.id,
-
-      action_type:
-        "dislike"
+      post_id:postId,
+      user_id:currentUser.id,
+      action_type:"dislike"
 
     });
 
@@ -1483,13 +1519,10 @@ async function toggleDislike(postId){
     );
 
     return;
-
   }
 
 
-  showNotice(
-    "👎 Disliked"
-  );
+  showNotice("👎 Disliked");
 
 }
 
@@ -1518,14 +1551,8 @@ async function deletePost(postId){
   await supabaseClient
     .from("posts")
     .delete()
-    .eq(
-      "id",
-      postId
-    )
-    .eq(
-      "user_id",
-      currentUser.id
-    );
+    .eq("id",postId)
+    .eq("user_id",currentUser.id);
 
 
   if(error){
@@ -1536,14 +1563,12 @@ async function deletePost(postId){
     );
 
     return;
-
   }
 
 
   const post =
     document.getElementById(
-      "post-" +
-      postId
+      "post-" + postId
     );
 
 
@@ -1566,12 +1591,10 @@ async function blockUser(userId){
 
 
   if(
-    userId ===
-    currentUser.id
+    userId === currentUser.id
   ){
 
     return;
-
   }
 
 
@@ -1591,28 +1614,21 @@ async function blockUser(userId){
     .from("user_blocks")
     .insert({
 
-      blocker_id:
-        currentUser.id,
-
-      blocked_id:
-        userId
+      blocker_id:currentUser.id,
+      blocked_id:userId
 
     });
 
 
   if(error){
 
-    if(
-      error.code ===
-      "23505"
-    ){
+    if(error.code === "23505"){
 
       showNotice(
         "User already blocked."
       );
 
       return;
-
     }
 
 
@@ -1622,13 +1638,10 @@ async function blockUser(userId){
     );
 
     return;
-
   }
 
 
-  showNotice(
-    "User blocked."
-  );
+  showNotice("User blocked.");
 
 
   await loadPosts();
@@ -1642,9 +1655,30 @@ async function blockUser(userId){
 
 function sendImage(){
 
+  const input =
+    document.getElementById(
+      "imageInput"
+    );
+
+
+  if(!input || !input.files.length){
+
+    return;
+  }
+
+
+  /*
+    Abhi image ko database/storage mein save
+    karne ke liye Supabase Storage bucket
+    required hai.
+  */
+
   showNotice(
-    "Image Storage setup ke baad send hogi."
+    "Image Storage bucket setup karna baqi hai."
   );
+
+
+  input.value = "";
 
 }
 
@@ -1665,7 +1699,6 @@ async function toggleRecording(){
     );
 
     return;
-
   }
 
 
@@ -1678,7 +1711,6 @@ async function toggleRecording(){
     }
 
     return;
-
   }
 
 
@@ -1695,17 +1727,13 @@ async function toggleRecording(){
 
 
     mediaRecorder =
-      new MediaRecorder(
-        stream
-      );
+      new MediaRecorder(stream);
 
 
     mediaRecorder.ondataavailable =
       event => {
 
-        if(
-          event.data.size > 0
-        ){
+        if(event.data.size > 0){
 
           audioChunks.push(
             event.data
@@ -1727,8 +1755,7 @@ async function toggleRecording(){
           );
 
 
-        isRecording =
-          false;
+        isRecording = false;
 
 
         const status =
@@ -1760,7 +1787,7 @@ async function toggleRecording(){
 
 
         showNotice(
-          "Voice recording ready hai. Storage setup ke baad save hoga."
+          "Voice recording ready hai. Save karne ke liye Storage setup chahiye."
         );
 
       };
@@ -1769,8 +1796,7 @@ async function toggleRecording(){
     mediaRecorder.start();
 
 
-    isRecording =
-      true;
+    isRecording = true;
 
 
     const status =
@@ -1863,13 +1889,11 @@ async function moreMenu(){
     );
 
     return;
-
   }
 
 
-  window.location.replace(
-    "login.html"
-  );
+  window.location.href =
+    "login.html";
 
 }
 
@@ -1916,38 +1940,19 @@ function showNotice(message){
 
 function escapeHtml(value){
 
-  return String(
-    value ?? ""
-  )
-  .replace(
-    /&/g,
-    "&amp;"
-  )
-  .replace(
-    /</g,
-    "&lt;"
-  )
-  .replace(
-    />/g,
-    "&gt;"
-  )
-  .replace(
-    /"/g,
-    "&quot;"
-  )
-  .replace(
-    /'/g,
-    "&#039;"
-  );
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
 
 function escapeAttr(value){
 
-  return escapeHtml(
-    value
-  );
+  return escapeHtml(value);
 
 }
 
@@ -1959,9 +1964,8 @@ function formatDate(date){
 
   try{
 
-    return new Date(
-      date
-    ).toLocaleString();
+    return new Date(date)
+      .toLocaleString();
 
   }
 
@@ -1975,7 +1979,7 @@ function formatDate(date){
 
 
 /* =====================================================
-   START
+   START WEBSITE
 ===================================================== */
 
 checkUser();
@@ -1984,4 +1988,3 @@ checkUser();
 
 </body>
 </html>
-```
