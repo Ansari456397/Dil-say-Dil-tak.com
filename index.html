@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -70,7 +70,8 @@ body{
 /* ================= BOXES ================= */
 
 .create-post-box,
-.welcome-box{
+.welcome-box,
+.profile-box{
   background:white;
   border-radius:14px;
   padding:14px;
@@ -100,7 +101,7 @@ body{
   border-color:#7b61d9;
 }
 
-/* ================= SEND POST BUTTON ================= */
+/* ================= SEND POST ================= */
 
 .post-send-btn{
   width:100%;
@@ -151,6 +152,8 @@ body{
   font-size:12px;
 }
 
+/* ================= WELCOME ================= */
+
 .welcome-title{
   font-size:17px;
   font-weight:bold;
@@ -168,6 +171,26 @@ body{
   font-size:18px;
   font-weight:bold;
   margin:15px 3px 10px;
+}
+
+.refresh-center{
+  text-align:center;
+  margin:-3px 0 12px;
+}
+
+.refresh-btn{
+  border:0;
+  background:#eeeaff;
+  color:#6045c5;
+  padding:8px 16px;
+  border-radius:9px;
+  font-size:12px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.refresh-btn:active{
+  transform:scale(.96);
 }
 
 /* ================= FEED ================= */
@@ -212,7 +235,7 @@ body{
   color:#999;
 }
 
-/* ================= ACTION BUTTONS ================= */
+/* ================= ACTIONS ================= */
 
 .action-row{
   display:flex;
@@ -291,7 +314,8 @@ body{
   cursor:pointer;
 }
 
-.comment-input-row{
+.comment-input-row,
+.reply-input-row{
   display:flex;
   gap:6px;
   margin-top:8px;
@@ -307,7 +331,8 @@ body{
   font-size:13px;
 }
 
-.comment-send{
+.comment-send,
+.reply-send{
   border:0;
   background:#6c5ce7;
   color:white;
@@ -321,13 +346,9 @@ body{
   margin-top:6px;
 }
 
-.reply-input-row{
-  display:flex;
-  gap:5px;
-}
-
 .reply-input{
   flex:1;
+  min-width:0;
   border:1px solid #ddd;
   border-radius:8px;
   padding:7px;
@@ -335,12 +356,145 @@ body{
   outline:none;
 }
 
-.reply-send{
+/* ================= PROFILE ================= */
+
+.profile-page{
+  display:none;
+}
+
+.profile-header{
+  background:linear-gradient(135deg,#6c5ce7,#8e44ad);
+  color:white;
+  border-radius:15px;
+  padding:20px 15px;
+  text-align:center;
+  margin-bottom:12px;
+}
+
+.profile-avatar{
+  width:72px;
+  height:72px;
+  border-radius:50%;
+  background:white;
+  color:#6c5ce7;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 10px;
+  font-size:35px;
+  font-weight:bold;
+}
+
+.profile-name-display{
+  font-size:20px;
+  font-weight:bold;
+}
+
+.profile-username-display{
+  margin-top:4px;
+  font-size:12px;
+  opacity:.85;
+}
+
+.profile-info{
+  background:#fff;
+  border-radius:12px;
+  padding:12px;
+  margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+
+.profile-info-row{
+  padding:10px 3px;
+  border-bottom:1px solid #eee;
+  font-size:13px;
+}
+
+.profile-info-row:last-child{
+  border-bottom:0;
+}
+
+.profile-info-label{
+  font-weight:bold;
+  color:#5d42c5;
+  margin-bottom:3px;
+}
+
+.profile-info-value{
+  color:#555;
+  word-break:break-word;
+}
+
+.profile-edit{
+  display:none;
+  background:white;
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+
+.profile-field{
+  margin-bottom:12px;
+}
+
+.profile-field label{
+  display:block;
+  font-size:12px;
+  font-weight:bold;
+  color:#555;
+  margin-bottom:5px;
+}
+
+.profile-field input,
+.profile-field textarea,
+.profile-field select{
+  width:100%;
+  border:1px solid #ddd;
+  border-radius:9px;
+  padding:10px;
+  font-size:13px;
+  outline:none;
+  font-family:Arial,sans-serif;
+}
+
+.profile-field textarea{
+  min-height:80px;
+  resize:none;
+}
+
+.profile-save-btn{
+  width:100%;
   border:0;
   background:#6c5ce7;
   color:white;
-  border-radius:8px;
-  padding:0 10px;
+  padding:11px;
+  border-radius:9px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.profile-action-row{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+.profile-action-btn{
+  flex:1;
+  border:0;
+  background:#eeeaff;
+  color:#5d42c5;
+  padding:10px;
+  border-radius:9px;
+  font-size:13px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.profile-logout{
+  background:#ffecec;
+  color:#d63031;
 }
 
 /* ================= EMPTY ================= */
@@ -516,102 +670,343 @@ body{
 <main class="container">
 
 
-  <!-- ================= CREATE POST ================= -->
+  <!-- ================= HOME PAGE ================= -->
 
-  <div class="create-post-box">
+  <div id="homePage">
 
-    <div class="box-title">
-      📝 Create Post
-    </div>
+    <!-- CREATE POST -->
 
-    <textarea
-      id="postInput"
-      placeholder="Write a post..."
-      autocomplete="off"></textarea>
+    <div class="create-post-box">
 
-    <!-- SEND POST BUTTON -->
+      <div class="box-title">
+        📝 Create Post
+      </div>
 
-    <button
-      id="publishPostBtn"
-      class="post-send-btn"
-      type="button">
-      📤 Send a Post
-    </button>
-
-    <!-- MEDIA BUTTONS -->
-
-    <div class="post-media-row">
+      <textarea
+        id="postInput"
+        placeholder="Write a post..."
+        autocomplete="off"></textarea>
 
       <button
-        id="uploadImageBtn"
-        class="media-btn"
+        id="publishPostBtn"
+        class="post-send-btn"
         type="button">
-        🖼️ Upload Image
+        📤 Send a Post
       </button>
 
-      <button
-        id="voiceBtn"
-        class="media-btn"
-        type="button">
-        🎤 Voice
-      </button>
+      <div class="post-media-row">
+
+        <button
+          id="uploadImageBtn"
+          class="media-btn"
+          type="button">
+          🖼️ Upload Image
+        </button>
+
+        <button
+          id="voiceBtn"
+          class="media-btn"
+          type="button">
+          🎤 Voice
+        </button>
+
+      </div>
+
+      <input
+        id="imageInput"
+        type="file"
+        accept="image/*"
+        style="display:none;">
+
+      <div id="recordStatus">
+        Recording... Tap 🎤 again to stop
+      </div>
 
     </div>
 
-    <input
-      id="imageInput"
-      type="file"
-      accept="image/*"
-      style="display:none;">
 
-    <div id="recordStatus">
-      Recording... Tap 🎤 again to stop
+    <!-- WELCOME -->
+
+    <div class="welcome-box">
+
+      <div class="welcome-title">
+        Welcome to Socialyte ♥️
+      </div>
+
+      <div class="username-line">
+        Logged in as:
+        <strong id="loggedInUsername">User</strong>
+      </div>
+
     </div>
 
-  </div>
 
+    <!-- HOME FEED -->
 
-  <!-- ================= WELCOME ================= -->
-
-  <div class="welcome-box">
-
-    <div class="welcome-title">
-      Welcome to Socialyte ♥️
+    <div class="section-title">
+      🏠 Home Feed
     </div>
 
-    <div class="username-line">
-      Logged in as:
-      <strong id="loggedInUsername">User</strong>
-    </div>
-
-  </div>
-
-
-  <!-- ================= HOME FEED ================= -->
-
-  <div class="feed-heading">
-
-  <div class="section-title">
-    🏠 Home Feed
-  </div>
-
-  <button
     <div class="refresh-center">
-  <button
-    class="refresh-btn"
-    type="button"
-    onclick="loadFeed()">
-    🔄 Refresh
-  </button>
-</div>
 
-</div>
+      <button
+        class="refresh-btn"
+        type="button"
+        onclick="loadFeed()">
+        🔄 Refresh
+      </button>
+
+    </div>
+
+    <div id="homeFeed">
+
+      <div class="empty">
+        Loading feed...
+      </div>
+
+    </div>
+
   </div>
 
-  <div id="homeFeed">
 
-    <div class="empty">
-      Loading feed...
+  <!-- ================= PROFILE PAGE ================= -->
+
+  <div id="profilePage" class="profile-page">
+
+    <div class="profile-header">
+
+      <div
+        id="profileAvatar"
+        class="profile-avatar">
+        👤
+      </div>
+
+      <div
+        id="profileNameDisplay"
+        class="profile-name-display">
+        User
+      </div>
+
+      <div
+        id="profileUsernameDisplay"
+        class="profile-username-display">
+        @User
+      </div>
+
+    </div>
+
+
+    <!-- PROFILE INFORMATION -->
+
+    <div class="profile-info">
+
+      <div class="profile-info-row">
+
+        <div class="profile-info-label">
+          👤 Profile Name
+        </div>
+
+        <div
+          id="profileNameValue"
+          class="profile-info-value">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="profile-info-row">
+
+        <div class="profile-info-label">
+          🎂 Date of Birth
+        </div>
+
+        <div
+          id="profileDobValue"
+          class="profile-info-value">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="profile-info-row">
+
+        <div class="profile-info-label">
+          📍 City
+        </div>
+
+        <div
+          id="profileCityValue"
+          class="profile-info-value">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="profile-info-row">
+
+        <div class="profile-info-label">
+          🔒 Profile
+        </div>
+
+        <div
+          id="profilePrivacyValue"
+          class="profile-info-value">
+          Public
+        </div>
+
+      </div>
+
+
+      <div class="profile-info-row">
+
+        <div class="profile-info-label">
+          📝 Bio
+        </div>
+
+        <div
+          id="profileBioValue"
+          class="profile-info-value">
+          —
+        </div>
+
+      </div>
+
+
+      <div class="profile-action-row">
+
+        <button
+          class="profile-action-btn"
+          type="button"
+          onclick="showEditProfile()">
+          ✏️ Edit Profile
+        </button>
+
+        <button
+          class="profile-action-btn profile-logout"
+          type="button"
+          onclick="signOut()">
+          🚪 Logout
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- EDIT PROFILE -->
+
+    <div
+      id="profileEdit"
+      class="profile-edit">
+
+      <div class="box-title">
+        ✏️ Edit Profile
+      </div>
+
+
+      <div class="profile-field">
+
+        <label>
+          👤 Profile Name
+        </label>
+
+        <input
+          id="editName"
+          type="text"
+          placeholder="Enter your name"
+          autocomplete="off">
+
+      </div>
+
+
+      <div class="profile-field">
+
+        <label>
+          🎂 Date of Birth
+        </label>
+
+        <input
+          id="editDob"
+          type="date">
+
+      </div>
+
+
+      <div class="profile-field">
+
+        <label>
+          📍 City
+        </label>
+
+        <input
+          id="editCity"
+          type="text"
+          placeholder="Enter your city"
+          autocomplete="off">
+
+      </div>
+
+
+      <div class="profile-field">
+
+        <label>
+          🔒 Profile Privacy
+        </label>
+
+        <select id="editPrivacy">
+
+          <option value="public">
+            Public
+          </option>
+
+          <option value="private">
+            Private
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="profile-field">
+
+        <label>
+          📝 Bio
+        </label>
+
+        <textarea
+          id="editBio"
+          placeholder="Write something about yourself..."
+          maxlength="350"></textarea>
+
+      </div>
+
+
+      <button
+        class="profile-save-btn"
+        type="button"
+        onclick="saveProfile()">
+        💾 Save Profile
+      </button>
+
+    </div>
+
+
+    <!-- MY POSTS -->
+
+    <div class="section-title">
+      📝 My Posts
+    </div>
+
+    <div id="myPosts">
+
+      <div class="empty">
+        Loading your posts...
+      </div>
+
     </div>
 
   </div>
@@ -629,6 +1024,7 @@ body{
 <nav class="bottom-nav">
 
   <button
+    id="homeNavBtn"
     class="nav-btn active"
     type="button"
     onclick="goHome()">
@@ -651,6 +1047,7 @@ body{
 
 
   <button
+    id="profileNavBtn"
     class="nav-btn"
     type="button"
     onclick="goProfile()">
@@ -757,9 +1154,7 @@ function formatDate(date){
 function showNotice(message){
 
   const notice =
-    document.getElementById(
-      "notice"
-    );
+    document.getElementById("notice");
 
   if(!notice){
     return;
@@ -776,6 +1171,7 @@ function showNotice(message){
       notice.style.display = "none";
 
     },3000);
+
 }
 
 
@@ -800,6 +1196,7 @@ function setCurrentUser(user){
     user.user_metadata?.name ||
     user.email?.split("@")[0] ||
     "User";
+
 
   const usernameElement =
     document.getElementById(
@@ -839,6 +1236,7 @@ async function checkUser(){
 
     }
 
+
     if(!user){
 
       const userResult =
@@ -856,6 +1254,7 @@ async function checkUser(){
 
     }
 
+
     if(!user){
 
       window.location.href =
@@ -864,6 +1263,7 @@ async function checkUser(){
       return;
 
     }
+
 
     setCurrentUser(user);
 
@@ -919,10 +1319,12 @@ async function addPost(){
 
   }
 
+
   const input =
     document.getElementById(
       "postInput"
     );
+
 
   if(!input){
 
@@ -934,12 +1336,15 @@ async function addPost(){
 
   }
 
+
   const text =
     input.value.trim();
+
 
   if(!text){
     return;
   }
+
 
   const { error } =
     await supabaseClient
@@ -957,6 +1362,7 @@ async function addPost(){
 
       });
 
+
   if(error){
 
     console.error(
@@ -972,6 +1378,7 @@ async function addPost(){
     return;
 
   }
+
 
   input.value = "";
 
@@ -991,18 +1398,22 @@ async function loadFeed(){
       "homeFeed"
     );
 
+
   if(!feed){
     return;
   }
 
+
   feed.innerHTML =
     '<div class="loading">Loading feed...</div>';
 
+
   try{
 
-    /* ---------- BLOCKED USERS ---------- */
-
     let blockedIds = [];
+
+
+    /* ---------- BLOCKED USERS ---------- */
 
     if(currentUser){
 
@@ -1014,6 +1425,7 @@ async function loadFeed(){
             "blocker_id",
             currentUser.id
           );
+
 
       if(
         !blockedResult.error &&
@@ -1227,7 +1639,7 @@ function renderPost(post){
       </button>
 
       <button
-        id="follow-${post.user_id}"
+        id="follow-${escapeAttr(post.user_id)}"
         class="action-btn follow-btn"
         onclick="toggleFollow('${escapeAttr(post.user_id)}')">
         Follow
@@ -1411,6 +1823,7 @@ async function deletePost(postId){
     return;
   }
 
+
   if(
     !confirm(
       "Delete this post?"
@@ -1418,6 +1831,7 @@ async function deletePost(postId){
   ){
     return;
   }
+
 
   const { error } =
     await supabaseClient
@@ -1432,6 +1846,7 @@ async function deletePost(postId){
         currentUser.id
       );
 
+
   if(error){
 
     showNotice(
@@ -1443,13 +1858,14 @@ async function deletePost(postId){
 
   }
 
+
   await loadFeed();
 
 }
 
 
 /* =====================================================
-   DELETE HOME MESSAGE
+   DELETE MESSAGE
 ===================================================== */
 
 async function deleteHomeMessage(messageId){
@@ -1458,6 +1874,7 @@ async function deleteHomeMessage(messageId){
     return;
   }
 
+
   if(
     !confirm(
       "Delete this message?"
@@ -1465,6 +1882,7 @@ async function deleteHomeMessage(messageId){
   ){
     return;
   }
+
 
   const { error } =
     await supabaseClient
@@ -1479,6 +1897,7 @@ async function deleteHomeMessage(messageId){
         currentUser.id
       );
 
+
   if(error){
 
     showNotice(
@@ -1489,6 +1908,7 @@ async function deleteHomeMessage(messageId){
     return;
 
   }
+
 
   await loadFeed();
 
@@ -1505,6 +1925,7 @@ async function loadPostActions(){
     await supabaseClient
       .from("post_actions")
       .select("*");
+
 
   if(error){
 
@@ -1530,12 +1951,12 @@ async function loadPostActions(){
 
       const postId =
         Number(
-          element.id
-            .replace(
-              "like-count-",
-              ""
-            )
+          element.id.replace(
+            "like-count-",
+            ""
+          )
         );
+
 
       const count =
         actions.filter(
@@ -1543,6 +1964,7 @@ async function loadPostActions(){
             row.post_id === postId &&
             row.action_type === "like"
         ).length;
+
 
       element.textContent =
         count;
@@ -1558,12 +1980,12 @@ async function loadPostActions(){
 
       const postId =
         Number(
-          element.id
-            .replace(
-              "dislike-count-",
-              ""
-            )
+          element.id.replace(
+            "dislike-count-",
+            ""
+          )
         );
+
 
       const count =
         actions.filter(
@@ -1571,6 +1993,7 @@ async function loadPostActions(){
             row.post_id === postId &&
             row.action_type === "dislike"
         ).length;
+
 
       element.textContent =
         count;
@@ -1667,7 +2090,8 @@ async function setPostAction(
         .from("post_actions")
         .insert({
 
-          post_id:postId,
+          post_id:
+            postId,
 
           user_id:
             currentUser.id,
@@ -1688,6 +2112,7 @@ async function setPostAction(
     }
 
   }
+
 
   await loadPostActions();
 
@@ -1728,6 +2153,7 @@ async function loadFollowStatus(){
     return;
   }
 
+
   const { data,error } =
     await supabaseClient
       .from("user_follows")
@@ -1736,6 +2162,7 @@ async function loadFollowStatus(){
         "follower_id",
         currentUser.id
       );
+
 
   if(error){
 
@@ -1765,11 +2192,13 @@ async function loadFollowStatus(){
           ""
         );
 
+
       const following =
         follows.some(
           row =>
             row.following_id === userId
         );
+
 
       button.textContent =
         following
@@ -1877,6 +2306,7 @@ async function blockUser(userId){
     return;
   }
 
+
   if(
     userId ===
     currentUser.id
@@ -1934,6 +2364,7 @@ async function blockUser(userId){
     "User blocked."
   );
 
+
   await loadFeed();
 
 }
@@ -1949,6 +2380,7 @@ async function toggleComments(postId){
     document.getElementById(
       "comments-" + postId
     );
+
 
   if(!box){
     return;
@@ -1990,6 +2422,7 @@ async function loadComments(postId){
     document.getElementById(
       "comments-list-" + postId
     );
+
 
   if(!list){
     return;
@@ -2109,6 +2542,7 @@ function setupCommentInput(postId){
     document.getElementById(
       "comment-input-" + postId
     );
+
 
   if(!input){
     return;
@@ -2390,6 +2824,7 @@ function chooseImage(){
       "imageInput"
     );
 
+
   if(input){
     input.click();
   }
@@ -2403,6 +2838,7 @@ function sendImage(){
     document.getElementById(
       "imageInput"
     );
+
 
   if(
     !input ||
@@ -2435,6 +2871,7 @@ async function toggleRecording(){
     document.getElementById(
       "voiceBtn"
     );
+
 
   const status =
     document.getElementById(
@@ -2509,12 +2946,14 @@ async function toggleRecording(){
 
         isRecording = false;
 
+
         if(voiceBtn){
 
           voiceBtn.textContent =
             "🎤 Voice";
 
         }
+
 
         if(status){
 
@@ -2656,10 +3095,24 @@ async function loadOnlineUsers(){
 
 
 /* =====================================================
-   NAVIGATION
+   PROFILE
 ===================================================== */
 
-function goHome(){
+function goProfile(){
+
+  document.getElementById(
+    "homePage"
+  ).style.display = "none";
+
+
+  document.getElementById(
+    "profilePage"
+  ).style.display = "block";
+
+
+  setActiveNav("profile");
+
+  loadProfile();
 
   window.scrollTo({
     top:0,
@@ -2669,6 +3122,571 @@ function goHome(){
 }
 
 
+function loadProfile(){
+
+  if(!currentUser){
+    return;
+  }
+
+
+  const metadata =
+    currentUser.user_metadata || {};
+
+
+  const name =
+    metadata.name ||
+    metadata.username ||
+    currentUser.email?.split("@")[0] ||
+    "User";
+
+
+  const username =
+    metadata.username ||
+    name;
+
+
+  const dob =
+    metadata.date_of_birth ||
+    "";
+
+
+  const city =
+    metadata.city ||
+    "";
+
+
+  const privacy =
+    metadata.profile_privacy ||
+    "public";
+
+
+  const bio =
+    metadata.bio ||
+    "";
+
+
+  const nameDisplay =
+    document.getElementById(
+      "profileNameDisplay"
+    );
+
+
+  const usernameDisplay =
+    document.getElementById(
+      "profileUsernameDisplay"
+    );
+
+
+  const avatar =
+    document.getElementById(
+      "profileAvatar"
+    );
+
+
+  if(nameDisplay){
+
+    nameDisplay.textContent =
+      name;
+
+  }
+
+
+  if(usernameDisplay){
+
+    usernameDisplay.textContent =
+      "@" + username;
+
+  }
+
+
+  if(avatar){
+
+    avatar.textContent =
+      name.charAt(0).toUpperCase();
+
+  }
+
+
+  document.getElementById(
+    "profileNameValue"
+  ).textContent =
+    name || "—";
+
+
+  document.getElementById(
+    "profileDobValue"
+  ).textContent =
+    dob || "—";
+
+
+  document.getElementById(
+    "profileCityValue"
+  ).textContent =
+    city || "—";
+
+
+  document.getElementById(
+    "profilePrivacyValue"
+  ).textContent =
+    privacy === "private"
+      ? "Private"
+      : "Public";
+
+
+  document.getElementById(
+    "profileBioValue"
+  ).textContent =
+    bio || "—";
+
+
+  document.getElementById(
+    "editName"
+  ).value =
+    name === "User" ? "" : name;
+
+
+  document.getElementById(
+    "editDob"
+  ).value =
+    dob;
+
+
+  document.getElementById(
+    "editCity"
+  ).value =
+    city;
+
+
+  document.getElementById(
+    "editPrivacy"
+  ).value =
+    privacy;
+
+
+  document.getElementById(
+    "editBio"
+  ).value =
+    bio;
+
+
+  loadMyPosts();
+
+}
+
+
+function showEditProfile(){
+
+  const edit =
+    document.getElementById(
+      "profileEdit"
+    );
+
+
+  if(!edit){
+    return;
+  }
+
+
+  edit.style.display =
+    edit.style.display === "block"
+      ? "none"
+      : "block";
+
+}
+
+
+async function saveProfile(){
+
+  if(!currentUser){
+
+    showNotice(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+
+  const name =
+    document.getElementById(
+      "editName"
+    ).value.trim();
+
+
+  const dob =
+    document.getElementById(
+      "editDob"
+    ).value;
+
+
+  const city =
+    document.getElementById(
+      "editCity"
+    ).value.trim();
+
+
+  const privacy =
+    document.getElementById(
+      "editPrivacy"
+    ).value;
+
+
+  const bio =
+    document.getElementById(
+      "editBio"
+    ).value.trim();
+
+
+  if(!name){
+
+    showNotice(
+      "Profile name zaroor likhein."
+    );
+
+    return;
+
+  }
+
+
+  const oldMetadata =
+    currentUser.user_metadata || {};
+
+
+  const username =
+    oldMetadata.username ||
+    name;
+
+
+  const { data,error } =
+    await supabaseClient.auth.updateUser({
+
+      data:{
+
+        ...oldMetadata,
+
+        username:
+          username,
+
+        name:
+          name,
+
+        date_of_birth:
+          dob,
+
+        city:
+          city,
+
+        bio:
+          bio,
+
+        profile_privacy:
+          privacy
+
+      }
+
+    });
+
+
+  if(error){
+
+    console.error(
+      "PROFILE UPDATE ERROR:",
+      error
+    );
+
+    showNotice(
+      "Profile save nahi hua: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  if(data && data.user){
+
+    setCurrentUser(
+      data.user
+    );
+
+  }
+
+
+  const edit =
+    document.getElementById(
+      "profileEdit"
+    );
+
+
+  if(edit){
+
+    edit.style.display =
+      "none";
+
+  }
+
+
+  loadProfile();
+
+
+  showNotice(
+    "✅ Profile successfully updated."
+  );
+
+}
+
+
+/* =====================================================
+   MY POSTS
+===================================================== */
+
+async function loadMyPosts(){
+
+  const container =
+    document.getElementById(
+      "myPosts"
+    );
+
+
+  if(!container){
+    return;
+  }
+
+
+  if(!currentUser){
+
+    container.innerHTML =
+      '<div class="empty">Please login first.</div>';
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    '<div class="loading">Loading your posts...</div>';
+
+
+  const { data,error } =
+    await supabaseClient
+      .from("posts")
+      .select("*")
+      .eq(
+        "user_id",
+        currentUser.id
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+  if(error){
+
+    console.error(
+      "MY POSTS ERROR:",
+      error
+    );
+
+    container.innerHTML =
+      '<div class="empty">My Posts load nahi ho sake.</div>';
+
+    return;
+
+  }
+
+
+  const posts =
+    data || [];
+
+
+  if(posts.length === 0){
+
+    container.innerHTML =
+      '<div class="empty">Aap ne abhi koi post nahi ki.</div>';
+
+    return;
+
+  }
+
+
+  container.innerHTML =
+    posts
+      .map(post => `
+
+        <div
+          class="feed-item">
+
+          <div class="feed-head">
+
+            <div class="feed-user">
+              👤 ${escapeHtml(post.username || currentUsername)}
+            </div>
+
+            <div class="feed-date">
+              ${formatDate(post.created_at)}
+            </div>
+
+          </div>
+
+          <div class="feed-content">
+            ${escapeHtml(post.content)}
+          </div>
+
+          <div class="feed-type">
+            📝 Post
+          </div>
+
+          <div class="action-row">
+
+            <button
+              class="action-btn delete-btn"
+              onclick="deletePostFromProfile(${post.id})">
+              🗑️ Delete
+            </button>
+
+          </div>
+
+        </div>
+
+      `)
+      .join("");
+
+}
+
+
+async function deletePostFromProfile(postId){
+
+  if(!currentUser){
+    return;
+  }
+
+
+  if(
+    !confirm(
+      "Delete this post?"
+    )
+  ){
+    return;
+  }
+
+
+  const { error } =
+    await supabaseClient
+      .from("posts")
+      .delete()
+      .eq(
+        "id",
+        postId
+      )
+      .eq(
+        "user_id",
+        currentUser.id
+      );
+
+
+  if(error){
+
+    showNotice(
+      "Delete nahi hua: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  await loadMyPosts();
+
+  await loadFeed();
+
+
+  showNotice(
+    "Post deleted."
+  );
+
+}
+
+
+/* =====================================================
+   HOME
+===================================================== */
+
+function goHome(){
+
+  document.getElementById(
+    "profilePage"
+  ).style.display = "none";
+
+
+  document.getElementById(
+    "homePage"
+  ).style.display = "block";
+
+
+  setActiveNav("home");
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+function setActiveNav(type){
+
+  document
+    .querySelectorAll(
+      ".nav-btn"
+    )
+    .forEach(btn => {
+
+      btn.classList.remove(
+        "active"
+      );
+
+    });
+
+
+  if(type === "home"){
+
+    document
+      .getElementById(
+        "homeNavBtn"
+      )
+      .classList.add(
+        "active"
+      );
+
+  }
+
+
+  if(type === "profile"){
+
+    document
+      .getElementById(
+        "profileNavBtn"
+      )
+      .classList.add(
+        "active"
+      );
+
+  }
+
+}
+
+
+/* =====================================================
+   PRIVATE
+===================================================== */
+
 function goPrivate(){
 
   window.location.href =
@@ -2677,13 +3695,9 @@ function goPrivate(){
 }
 
 
-function goProfile(){
-
-  window.location.href =
-    "profile.html";
-
-}
-
+/* =====================================================
+   NOTIFICATIONS
+===================================================== */
 
 function goNotifications(){
 
@@ -2693,6 +3707,10 @@ function goNotifications(){
 
 }
 
+
+/* =====================================================
+   MORE
+===================================================== */
 
 function goMore(){
 
@@ -2745,6 +3763,7 @@ document.addEventListener(
       document.getElementById(
         "onlinePopup"
       );
+
 
     const button =
       document.querySelector(
@@ -2807,7 +3826,7 @@ document.addEventListener(
     }
 
 
-    /* ---------- SEND POST BUTTON ---------- */
+    /* ---------- SEND POST ---------- */
 
     const publishPostBtn =
       document.getElementById(
