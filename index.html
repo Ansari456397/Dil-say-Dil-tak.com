@@ -20,41 +20,45 @@ body{
   font-family:Arial,sans-serif;
   background:#f4f6fb;
   color:#222;
-  padding-bottom:75px;
+  padding-bottom:80px;
 }
+
+/* ================= HEADER ================= */
 
 .header{
   position:sticky;
   top:0;
   z-index:1000;
+  height:60px;
+  background:linear-gradient(135deg,#6c5ce7,#8e44ad);
+  color:white;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:14px 15px;
-  background:linear-gradient(135deg,#6c5ce7,#8e44ad);
-  color:white;
+  padding:0 15px;
   box-shadow:0 2px 10px rgba(0,0,0,.15);
 }
 
 .logo{
-  font-size:25px;
+  font-size:24px;
   font-weight:bold;
 }
 
 .logo span{
-  color:#ffd6ff;
+  font-weight:normal;
 }
 
-.online-users-btn{
-  border:none;
-  background:rgba(255,255,255,.18);
+.online-btn{
+  border:0;
+  background:rgba(255,255,255,.15);
   color:white;
   padding:9px 12px;
   border-radius:20px;
   font-size:13px;
-  font-weight:bold;
   cursor:pointer;
 }
+
+/* ================= CONTAINER ================= */
 
 .container{
   width:100%;
@@ -63,120 +67,81 @@ body{
   padding:12px;
 }
 
-/* MESSAGE BOX */
+/* ================= BOXES ================= */
 
-.home-message-box,
 .create-post-box,
 .welcome-box{
   background:white;
   border-radius:14px;
-  padding:13px;
+  padding:14px;
   margin-bottom:12px;
-  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  box-shadow:0 2px 8px rgba(0,0,0,.07);
 }
 
 .box-title{
-  font-size:16px;
+  font-size:17px;
   font-weight:bold;
   margin-bottom:10px;
 }
 
-.message-row{
-  display:flex;
-  gap:7px;
-}
-
-#chatInput{
-  flex:1;
-  min-width:0;
+#postInput{
+  width:100%;
+  min-height:90px;
+  resize:none;
   border:1px solid #ddd;
-  border-radius:22px;
-  padding:11px 14px;
+  border-radius:10px;
+  padding:12px;
+  font-size:15px;
   outline:none;
-  font-size:14px;
+  font-family:Arial,sans-serif;
 }
 
-.chat-send{
-  border:none;
-  background:#6c5ce7;
-  color:white;
-  width:43px;
-  border-radius:22px;
-  font-size:19px;
-  cursor:pointer;
+#postInput:focus{
+  border-color:#7b61d9;
 }
 
-.media-row{
+.post-media-row{
   display:flex;
-  gap:7px;
-  margin-top:9px;
+  gap:8px;
+  margin-top:10px;
 }
 
 .media-btn{
   flex:1;
-  border:1px solid #ddd;
-  background:#fafafa;
-  padding:9px 5px;
-  border-radius:10px;
-  cursor:pointer;
+  border:0;
+  background:#f0edff;
+  color:#6045c5;
+  padding:10px 7px;
+  border-radius:9px;
   font-size:13px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.media-btn:active{
+  transform:scale(.98);
 }
 
 #recordStatus{
   display:none;
-  margin-top:7px;
+  margin-top:8px;
+  text-align:center;
   color:#e74c3c;
   font-size:12px;
 }
 
-/* CREATE POST */
-
-#postInput{
-  width:100%;
-  min-height:85px;
-  resize:vertical;
-  border:1px solid #ddd;
-  border-radius:11px;
-  padding:11px;
-  outline:none;
-  font-size:14px;
-}
-
-.post-btn{
-  width:100%;
-  margin-top:8px;
-  border:none;
-  background:#6c5ce7;
-  color:white;
-  padding:11px;
-  border-radius:10px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.post-btn:disabled{
-  opacity:.6;
-}
-
-/* WELCOME */
-
-.welcome-box{
-  text-align:center;
-}
-
 .welcome-title{
-  font-size:18px;
+  font-size:17px;
   font-weight:bold;
-  color:#6c5ce7;
+  margin-bottom:5px;
 }
 
 .username-line{
-  margin-top:5px;
+  color:#777;
   font-size:13px;
-  color:#666;
 }
 
-/* FEED */
+/* ================= SECTION ================= */
 
 .section-title{
   font-size:18px;
@@ -184,133 +149,124 @@ body{
   margin:15px 3px 10px;
 }
 
+/* ================= FEED ================= */
+
 .feed-item{
   background:white;
   border-radius:14px;
   padding:13px;
-  margin-bottom:11px;
-  box-shadow:0 2px 8px rgba(0,0,0,.08);
+  margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);
 }
 
-.feed-header{
+.feed-head{
   display:flex;
-  justify-content:space-between;
   align-items:center;
-  margin-bottom:8px;
+  justify-content:space-between;
+  gap:8px;
 }
 
 .feed-user{
   font-weight:bold;
-  color:#5d45c7;
-}
-
-.feed-type{
-  font-size:11px;
-  color:#999;
+  color:#5d42c5;
+  font-size:15px;
 }
 
 .feed-date{
-  font-size:11px;
   color:#999;
-  margin-bottom:9px;
+  font-size:11px;
 }
 
 .feed-content{
+  margin-top:9px;
   font-size:15px;
   line-height:1.5;
-  white-space:pre-wrap;
   word-break:break-word;
 }
 
-.post-actions{
+.feed-type{
+  display:inline-block;
+  margin-top:7px;
+  font-size:11px;
+  color:#999;
+}
+
+/* ================= ACTION BUTTONS ================= */
+
+.action-row{
   display:flex;
   flex-wrap:wrap;
   gap:6px;
   margin-top:12px;
-  padding-top:10px;
-  border-top:1px solid #eee;
 }
 
-.post-actions button{
-  border:1px solid #ddd;
-  background:#fff;
-  color:#333;
-  border-radius:9px;
+.action-btn{
+  border:0;
+  background:#f3f4f8;
+  color:#444;
   padding:7px 9px;
+  border-radius:8px;
   font-size:12px;
   cursor:pointer;
 }
 
-.post-actions button:hover{
-  background:#f5f3ff;
-}
-
-.post-actions button.active{
-  background:#eee9ff;
-  border-color:#6c5ce7;
-  color:#5d45c7;
-}
-
-.action-count{
-  font-weight:bold;
+.action-btn:hover{
+  background:#e9e7f7;
 }
 
 .delete-btn{
-  color:#e74c3c !important;
+  background:#ffecec;
+  color:#d63031;
 }
 
 .block-btn{
-  color:#c0392b !important;
+  background:#fff3f3;
+  color:#c0392b;
 }
 
-.follow-btn.active{
-  background:#eee9ff !important;
+.follow-btn{
+  background:#eeeaff;
+  color:#5d42c5;
 }
 
-/* COMMENTS */
+/* ================= COMMENTS ================= */
 
 .comments-box{
   display:none;
   margin-top:10px;
-  padding-top:10px;
   border-top:1px solid #eee;
+  padding-top:10px;
 }
 
-.comment{
-  background:#f7f7fb;
-  border-radius:10px;
-  padding:9px;
+.comment-item{
+  background:#f7f7fa;
+  border-radius:9px;
+  padding:8px;
   margin-bottom:7px;
 }
 
 .comment-user{
   font-weight:bold;
-  color:#5d45c7;
-  font-size:13px;
+  font-size:12px;
+  color:#5d42c5;
 }
 
 .comment-text{
-  margin-top:4px;
   font-size:13px;
-  white-space:pre-wrap;
+  margin-top:3px;
   word-break:break-word;
 }
 
-.comment-date{
-  color:#999;
-  font-size:10px;
-  margin-top:3px;
-}
-
 .comment-actions{
-  margin-top:6px;
+  margin-top:5px;
 }
 
-.comment-actions button{
+.reply-btn{
   border:0;
   background:none;
   color:#6c5ce7;
   font-size:11px;
+  padding:0;
   cursor:pointer;
 }
 
@@ -322,136 +278,147 @@ body{
 
 .comment-input{
   flex:1;
+  min-width:0;
   border:1px solid #ddd;
-  border-radius:20px;
-  padding:9px 12px;
+  border-radius:8px;
+  padding:8px;
   outline:none;
+  font-size:13px;
 }
 
 .comment-send{
   border:0;
   background:#6c5ce7;
   color:white;
-  border-radius:20px;
-  padding:0 14px;
+  border-radius:8px;
+  padding:0 12px;
+  cursor:pointer;
 }
 
-/* NOTICE */
+.reply-box{
+  display:none;
+  margin-top:6px;
+}
+
+.reply-input-row{
+  display:flex;
+  gap:5px;
+}
+
+.reply-input{
+  flex:1;
+  border:1px solid #ddd;
+  border-radius:8px;
+  padding:7px;
+  font-size:12px;
+  outline:none;
+}
+
+.reply-send{
+  border:0;
+  background:#6c5ce7;
+  color:white;
+  border-radius:8px;
+  padding:0 10px;
+}
+
+/* ================= EMPTY ================= */
+
+.empty{
+  background:white;
+  border-radius:12px;
+  padding:25px;
+  text-align:center;
+  color:#999;
+}
+
+/* ================= NOTICE ================= */
 
 .notice{
-  display:none;
   position:fixed;
   left:50%;
-  bottom:80px;
+  bottom:85px;
   transform:translateX(-50%);
+  z-index:3000;
   background:#222;
   color:white;
   padding:10px 15px;
   border-radius:10px;
-  z-index:2000;
   font-size:13px;
   max-width:90%;
   text-align:center;
+  display:none;
 }
 
-/* BOTTOM NAV */
+/* ================= ONLINE POPUP ================= */
+
+.online-popup{
+  display:none;
+  position:fixed;
+  top:65px;
+  right:10px;
+  z-index:2000;
+  width:240px;
+  max-width:90%;
+  background:white;
+  border-radius:12px;
+  box-shadow:0 5px 20px rgba(0,0,0,.2);
+  padding:12px;
+}
+
+.online-popup h3{
+  margin:0 0 10px;
+  font-size:16px;
+}
+
+.online-user{
+  padding:8px;
+  border-bottom:1px solid #eee;
+  font-size:13px;
+}
+
+.online-dot{
+  color:#16a085;
+}
+
+/* ================= BOTTOM NAV ================= */
 
 .bottom-nav{
   position:fixed;
+  bottom:0;
   left:0;
   right:0;
-  bottom:0;
-  height:64px;
+  z-index:1500;
+  height:65px;
   background:white;
   border-top:1px solid #ddd;
   display:flex;
   justify-content:space-around;
   align-items:center;
-  z-index:1500;
   box-shadow:0 -2px 10px rgba(0,0,0,.08);
 }
 
-.bottom-nav button{
+.nav-btn{
   border:0;
   background:none;
-  color:#555;
+  color:#666;
   font-size:11px;
-  cursor:pointer;
   display:flex;
   flex-direction:column;
   align-items:center;
   gap:3px;
-}
-
-.bottom-nav button:first-child{
-  color:#6c5ce7;
-  font-weight:bold;
-}
-
-.nav-icon{
-  font-size:20px;
-}
-
-/* EMPTY */
-
-.empty{
-  background:white;
-  border-radius:14px;
-  padding:25px;
-  text-align:center;
-  color:#888;
-  box-shadow:0 2px 8px rgba(0,0,0,.06);
-}
-
-/* ONLINE POPUP */
-
-.online-popup{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.45);
-  z-index:3000;
-}
-
-.online-card{
-  width:90%;
-  max-width:400px;
-  max-height:75vh;
-  overflow:auto;
-  background:white;
-  border-radius:16px;
-  padding:16px;
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-}
-
-.online-card h3{
-  margin-top:0;
-  color:#6c5ce7;
-}
-
-.close-online{
-  float:right;
-  border:0;
-  background:#eee;
-  border-radius:50%;
-  width:30px;
-  height:30px;
   cursor:pointer;
 }
 
-.online-user{
-  padding:10px;
-  border-bottom:1px solid #eee;
+.nav-icon{
+  font-size:21px;
 }
 
-.online-dot{
-  color:#2ecc71;
+.nav-btn.active{
+  color:#6c5ce7;
 }
 
-/* MOBILE */
+/* ================= MOBILE ================= */
 
 @media(max-width:480px){
 
@@ -459,23 +426,40 @@ body{
     font-size:22px;
   }
 
-  .online-users-btn{
+  .online-btn{
     font-size:12px;
     padding:8px 10px;
   }
 
-  .post-actions button{
-    font-size:11px;
-    padding:7px 8px;
+  .container{
+    padding:10px;
+  }
+
+  .post-media-row{
+    gap:6px;
+  }
+
+  .media-btn{
+    font-size:12px;
+    padding:9px 4px;
   }
 
 }
 
-</style>
+/* ================= LOADING ================= */
 
+.loading{
+  text-align:center;
+  color:#888;
+  padding:20px;
+}
+
+</style>
 </head>
 
 <body>
+
+<!-- ================= HEADER ================= -->
 
 <header class="header">
 
@@ -484,42 +468,47 @@ body{
   </div>
 
   <button
-    class="online-users-btn"
-    onclick="showOnlineUsers()">
+    class="online-btn"
+    type="button"
+    onclick="toggleOnlineUsers()">
     🟢 Online Users
   </button>
 
 </header>
 
 
+<!-- ================= ONLINE USERS ================= -->
+
+<div id="onlinePopup" class="online-popup">
+
+  <h3>🟢 Online Users</h3>
+
+  <div id="onlineUsersList">
+    Loading...
+  </div>
+
+</div>
+
+
+<!-- ================= MAIN ================= -->
+
 <main class="container">
 
-  <!-- MESSAGE -->
 
-  <div class="home-message-box">
+  <!-- ================= CREATE POST ================= -->
+
+  <div class="create-post-box">
 
     <div class="box-title">
-      💬 Message
+      📝 Create Post
     </div>
 
-    <div class="message-row">
+    <textarea
+      id="postInput"
+      placeholder="Write a post..."
+      autocomplete="off"></textarea>
 
-      <input
-        id="chatInput"
-        type="text"
-        placeholder="Write a message..."
-        autocomplete="off">
-
-      <button
-        id="sendMessageBtn"
-        class="chat-send"
-        type="button">
-        ➤
-      </button>
-
-    </div>
-
-    <div class="media-row">
+    <div class="post-media-row">
 
       <button
         id="uploadImageBtn"
@@ -550,29 +539,7 @@ body{
   </div>
 
 
-  <!-- CREATE POST -->
-
-  <div class="create-post-box">
-
-    <div class="box-title">
-      📝 Create Post
-    </div>
-
-    <textarea
-      id="postInput"
-      placeholder="Write a post..."></textarea>
-
-    <button
-      id="publishPostBtn"
-      class="post-btn"
-      type="button">
-      📝 Post
-    </button>
-
-  </div>
-
-
-  <!-- WELCOME -->
+  <!-- ================= WELCOME ================= -->
 
   <div class="welcome-box">
 
@@ -588,81 +555,84 @@ body{
   </div>
 
 
-  <!-- ONLY HOME FEED -->
+  <!-- ================= HOME FEED ================= -->
 
   <div class="section-title">
     🏠 Home Feed
   </div>
 
   <div id="homeFeed">
+
     <div class="empty">
       Loading feed...
     </div>
+
   </div>
 
 </main>
 
 
-<!-- NOTICE -->
+<!-- ================= NOTICE ================= -->
 
 <div id="notice" class="notice"></div>
 
 
-<!-- ONLINE USERS -->
-
-<div
-  id="onlinePopup"
-  class="online-popup"
-  onclick="closeOnlineUsers(event)">
-
-  <div
-    class="online-card"
-    onclick="event.stopPropagation()">
-
-    <button
-      class="close-online"
-      onclick="hideOnlineUsers()">
-      ✕
-    </button>
-
-    <h3>🟢 Online Users</h3>
-
-    <div id="onlineUsersList">
-      Loading...
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- BOTTOM NAV -->
+<!-- ================= BOTTOM NAV ================= -->
 
 <nav class="bottom-nav">
 
-  <button onclick="goHome()">
+  <button
+    class="nav-btn active"
+    type="button"
+    onclick="goHome()">
+
     <span class="nav-icon">🏠</span>
-    Home
+    <span>Home</span>
+
   </button>
 
-  <button onclick="openPrivate()">
+
+  <button
+    class="nav-btn"
+    type="button"
+    onclick="goPrivate()">
+
     <span class="nav-icon">💬</span>
-    Private
+    <span>Private</span>
+
   </button>
 
-  <button onclick="openProfile()">
+
+  <button
+    class="nav-btn"
+    type="button"
+    onclick="goProfile()">
+
     <span class="nav-icon">👤</span>
-    Profile
+    <span>Profile</span>
+
   </button>
 
-  <button onclick="openNotifications()">
+
+  <button
+    class="nav-btn"
+    type="button"
+    onclick="goNotifications()">
+
     <span class="nav-icon">🔔</span>
-    Notifications
+    <span>Notifications</span>
+
   </button>
 
-  <button onclick="moreMenu()">
+
+  <button
+    class="nav-btn"
+    type="button"
+    onclick="goMore()">
+
     <span class="nav-icon">☰</span>
-    More
+    <span>More</span>
+
   </button>
 
 </nav>
@@ -670,7 +640,9 @@ body{
 
 <script>
 
-/* ================= SUPABASE ================= */
+/* =====================================================
+   SUPABASE
+===================================================== */
 
 const SUPABASE_URL =
   "https://szmauhxiyjffjhrcruee.supabase.co";
@@ -681,18 +653,13 @@ const SUPABASE_KEY =
 const supabaseClient =
   window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_KEY,
-    {
-      auth:{
-        persistSession:true,
-        autoRefreshToken:true,
-        detectSessionInUrl:true
-      }
-    }
+    SUPABASE_KEY
   );
 
 
-/* ================= GLOBAL ================= */
+/* =====================================================
+   GLOBAL VARIABLES
+===================================================== */
 
 let currentUser = null;
 let currentUsername = "User";
@@ -702,46 +669,52 @@ let audioChunks = [];
 let isRecording = false;
 
 
-/* ================= HELPERS ================= */
+/* =====================================================
+   HELPERS
+===================================================== */
 
 function escapeHtml(value){
 
-  return String(value ?? "")
+  if(value === null || value === undefined){
+    return "";
+  }
+
+  return String(value)
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#039;");
-
 }
+
 
 function escapeAttr(value){
 
-  return String(value ?? "")
-    .replace(/\\/g,"\\\\")
-    .replace(/'/g,"\\'")
-    .replace(/"/g,"&quot;");
-
+  return escapeHtml(value)
+    .replace(/`/g,"&#096;");
 }
 
-function formatDate(value){
 
-  if(!value) return "";
+function formatDate(date){
 
-  try{
-    return new Date(value).toLocaleString();
-  }catch{
+  if(!date){
     return "";
   }
 
+  const d = new Date(date);
+
+  return d.toLocaleString();
 }
+
 
 function showNotice(message){
 
   const notice =
     document.getElementById("notice");
 
-  if(!notice) return;
+  if(!notice){
+    return;
+  }
 
   notice.textContent = message;
   notice.style.display = "block";
@@ -749,93 +722,122 @@ function showNotice(message){
   clearTimeout(window.noticeTimer);
 
   window.noticeTimer =
-    setTimeout(function(){
-      notice.style.display = "none";
-    },2500);
+    setTimeout(() => {
 
+      notice.style.display = "none";
+
+    },3000);
 }
 
 
-/* ================= USER ================= */
+/* =====================================================
+   CURRENT USER
+===================================================== */
 
 function setCurrentUser(user){
 
-  currentUser = user || null;
+  currentUser = user;
 
-  if(!currentUser){
+  if(!user){
+    currentUsername = "User";
     return;
   }
 
   currentUsername =
-    currentUser.user_metadata?.username ||
-    currentUser.email?.split("@")[0] ||
+    user.user_metadata?.username ||
+    user.user_metadata?.name ||
+    user.email?.split("@")[0] ||
     "User";
 
   const usernameElement =
-    document.getElementById("loggedInUsername");
+    document.getElementById(
+      "loggedInUsername"
+    );
 
   if(usernameElement){
+
     usernameElement.textContent =
       currentUsername;
+
   }
 
 }
 
 
-/* ================= SESSION ================= */
+/* =====================================================
+   CHECK USER
+===================================================== */
 
 async function checkUser(){
 
-  for(let i=0;i<8;i++){
+  try{
 
-    const {
-      data
-    } =
+    let user = null;
+
+    const sessionResult =
       await supabaseClient.auth.getSession();
 
-    if(data && data.session){
+    if(
+      sessionResult.data &&
+      sessionResult.data.session
+    ){
 
-      setCurrentUser(
-        data.session.user
-      );
+      user =
+        sessionResult.data.session.user;
 
-      await loadFeed();
-
-      return;
     }
 
-    await new Promise(
-      resolve => setTimeout(resolve,300)
-    );
+    if(!user){
 
-  }
+      const userResult =
+        await supabaseClient.auth.getUser();
 
-  const {
-    data
-  } =
-    await supabaseClient.auth.getUser();
+      if(
+        userResult.data &&
+        userResult.data.user
+      ){
 
-  if(data && data.user){
+        user =
+          userResult.data.user;
 
-    setCurrentUser(data.user);
+      }
+
+    }
+
+    if(!user){
+
+      window.location.href = "login.html";
+      return;
+
+    }
+
+    setCurrentUser(user);
 
     await loadFeed();
 
-    return;
-  }
+  }catch(error){
 
-  window.location.href =
-    "login.html";
+    console.error(
+      "CHECK USER ERROR:",
+      error
+    );
+
+    window.location.href =
+      "login.html";
+
+  }
 
 }
 
 
-/* ================= AUTH LISTENER ================= */
+/* =====================================================
+   AUTH STATE
+===================================================== */
 
 supabaseClient.auth.onAuthStateChange(
-  function(event,session){
+  async (event,session) => {
 
-    if(session){
+    if(session?.user){
 
       setCurrentUser(
         session.user
@@ -847,107 +849,35 @@ supabaseClient.auth.onAuthStateChange(
 );
 
 
-/* ================= ADD POST ================= */
+/* =====================================================
+   ADD POST
+===================================================== */
 
 async function addPost(){
 
   if(!currentUser){
-    alert("Please login first.");
-    return;
-  }
-
-  const input =
-    document.getElementById("postInput");
-
-  if(!input){
-    alert("Post box nahi mila.");
-    return;
-  }
-
-  const text =
-    input.value.trim();
-
-  if(!text){
-    showNotice("Post likho pehle.");
-    input.focus();
-    return;
-  }
-
-  const button =
-    document.getElementById(
-      "publishPostBtn"
-    );
-
-  if(button){
-    button.disabled = true;
-    button.textContent = "Posting...";
-  }
-
-  try{
-
-    const {
-      error
-    } =
-      await supabaseClient
-        .from("posts")
-        .insert({
-          user_id:currentUser.id,
-          username:currentUsername,
-          content:text
-        });
-
-    if(error){
-
-      console.error(
-        "POST ERROR:",
-        error
-      );
-
-      alert(
-        "Post save nahi hui.\n\n" +
-        error.message
-      );
-
-      return;
-    }
-
-    input.value = "";
-
-    await loadFeed();
 
     showNotice(
-      "📝 Post published."
+      "Please login first."
     );
 
-  }finally{
-
-    if(button){
-
-      button.disabled = false;
-      button.textContent = "📝 Post";
-
-    }
-
-  }
-
-}
-
-
-/* ================= SEND MESSAGE ================= */
-
-async function sendTextMessage(){
-
-  if(!currentUser){
-    alert("Please login first.");
     return;
+
   }
 
   const input =
-    document.getElementById("chatInput");
+    document.getElementById(
+      "postInput"
+    );
 
   if(!input){
-    alert("Message box nahi mila.");
+
+    showNotice(
+      "Post box nahi mila."
+    );
+
     return;
+
   }
 
   const text =
@@ -957,107 +887,98 @@ async function sendTextMessage(){
     return;
   }
 
-  const button =
-    document.getElementById(
-      "sendMessageBtn"
-    );
+  const { error } =
+    await supabaseClient
+      .from("posts")
+      .insert({
 
-  if(button){
-    button.disabled = true;
-  }
+        user_id:
+          currentUser.id,
 
-  try{
+        username:
+          currentUsername,
 
-    const {
+        content:
+          text
+
+      });
+
+  if(error){
+
+    console.error(
+      "POST ERROR:",
       error
-    } =
-      await supabaseClient
-        .from("home_messages")
-        .insert({
-          user_id:currentUser.id,
-          username:currentUsername,
-          message:text
-        });
-
-    if(error){
-
-      console.error(
-        "MESSAGE ERROR:",
-        error
-      );
-
-      alert(
-        "Message send nahi hua.\n\n" +
-        error.message
-      );
-
-      return;
-    }
-
-    input.value = "";
-
-    await loadFeed();
+    );
 
     showNotice(
-      "💬 Message sent."
+      "Post send nahi hua: " +
+      error.message
     );
 
-  }finally{
-
-    if(button){
-      button.disabled = false;
-    }
+    return;
 
   }
+
+  input.value = "";
+
+  await loadFeed();
 
 }
 
 
-/* ================= LOAD FEED ================= */
+/* =====================================================
+   LOAD FEED
+===================================================== */
 
 async function loadFeed(){
 
   const feed =
-    document.getElementById("homeFeed");
+    document.getElementById(
+      "homeFeed"
+    );
 
-  if(!feed) return;
+  if(!feed){
+    return;
+  }
 
   feed.innerHTML =
-    '<div class="empty">Loading feed...</div>';
+    '<div class="loading">Loading feed...</div>';
 
   try{
 
-    /* BLOCKED USERS */
+    /* ---------- BLOCKED USERS ---------- */
 
     let blockedIds = [];
 
-    const {
-      data:blocks
-    } =
-      await supabaseClient
-        .from("user_blocks")
-        .select("blocked_id")
-        .eq(
-          "blocker_id",
-          currentUser.id
-        );
+    if(currentUser){
 
-    if(blocks){
+      const blockedResult =
+        await supabaseClient
+          .from("user_blocks")
+          .select("blocked_id")
+          .eq(
+            "blocker_id",
+            currentUser.id
+          );
 
-      blockedIds =
-        blocks.map(
-          item => item.blocked_id
-        );
+      if(
+        !blockedResult.error &&
+        blockedResult.data
+      ){
+
+        blockedIds =
+          blockedResult.data.map(
+            row => row.blocked_id
+          );
+
+      }
 
     }
 
 
-    /* POSTS */
+    /* ---------- POSTS ---------- */
 
-    const {
-      data:posts,
-      error:postError
-    } =
+    const postsResult =
       await supabaseClient
         .from("posts")
         .select("*")
@@ -1068,20 +989,20 @@ async function loadFeed(){
           }
         );
 
-    if(postError){
+
+    if(postsResult.error){
+
       console.error(
         "POST LOAD ERROR:",
-        postError
+        postsResult.error
       );
+
     }
 
 
-    /* MESSAGES */
+    /* ---------- MESSAGES ---------- */
 
-    const {
-      data:messages,
-      error:messageError
-    } =
+    const messagesResult =
       await supabaseClient
         .from("home_messages")
         .select("*")
@@ -1092,87 +1013,86 @@ async function loadFeed(){
           }
         );
 
-    if(messageError){
+
+    if(messagesResult.error){
+
       console.error(
         "MESSAGE LOAD ERROR:",
-        messageError
+        messagesResult.error
       );
+
     }
 
+
+    const posts =
+      postsResult.data || [];
+
+    const messages =
+      messagesResult.data || [];
+
+
+    /* ---------- COMBINE ---------- */
 
     let feedItems = [];
 
 
-    /* ADD POSTS */
-
-    (posts || []).forEach(function(post){
+    posts.forEach(post => {
 
       if(
-        blockedIds.includes(
+        !blockedIds.includes(
           post.user_id
         )
       ){
-        return;
-      }
 
-      feedItems.push({
-        type:"post",
-        id:post.id,
-        user_id:post.user_id,
-        username:post.username,
-        content:post.content,
-        created_at:post.created_at,
-        raw:post
-      });
+        feedItems.push({
+
+          type:"post",
+          data:post
+
+        });
+
+      }
 
     });
 
 
-    /* ADD MESSAGES */
-
-    (messages || []).forEach(function(message){
+    messages.forEach(message => {
 
       if(
-        blockedIds.includes(
+        !blockedIds.includes(
           message.user_id
         )
       ){
-        return;
+
+        feedItems.push({
+
+          type:"message",
+          data:message
+
+        });
+
       }
 
-      feedItems.push({
-        type:"message",
-        id:message.id,
-        user_id:message.user_id,
-        username:message.username,
-        content:message.message,
-        created_at:message.created_at,
-        raw:message
-      });
-
     });
 
 
-    /* NEWEST FIRST */
+    /* ---------- NEWEST FIRST ---------- */
 
-    feedItems.sort(function(a,b){
-
-      return new Date(
-        b.created_at || 0
-      ) -
-      new Date(
-        a.created_at || 0
-      );
-
-    });
+    feedItems.sort(
+      (a,b) =>
+        new Date(
+          b.data.created_at
+        ) -
+        new Date(
+          a.data.created_at
+        )
+    );
 
 
     if(feedItems.length === 0){
 
       feed.innerHTML =
-        '<div class="empty">' +
-        'No posts or messages yet.' +
-        '</div>';
+        '<div class="empty">No posts or messages yet.</div>';
 
       return;
 
@@ -1181,44 +1101,27 @@ async function loadFeed(){
 
     feed.innerHTML =
       feedItems
-        .map(function(item){
+        .map(item => {
 
           if(item.type === "post"){
-            return renderPost(item);
+
+            return renderPost(
+              item.data
+            );
+
           }
 
-          return renderMessage(item);
+          return renderMessage(
+            item.data
+          );
 
         })
         .join("");
 
 
-    /* LOAD ACTIONS */
+    await loadPostActions();
 
-    for(
-      const item of feedItems
-    ){
-
-      if(item.type === "post"){
-
-        await loadPostActions(
-          item.id
-        );
-
-        if(
-          item.user_id &&
-          item.user_id !== currentUser.id
-        ){
-
-          await loadFollowStatus(
-            item.user_id
-          );
-
-        }
-
-      }
-
-    }
+    await loadFollowStatus();
 
   }catch(error){
 
@@ -1228,53 +1131,52 @@ async function loadFeed(){
     );
 
     feed.innerHTML =
-      '<div class="empty">' +
-      'Feed load nahi ho saki.' +
-      '</div>';
+      '<div class="empty">Feed load nahi ho saki.</div>';
 
   }
 
 }
 
 
-/* ================= RENDER POST ================= */
+/* =====================================================
+   RENDER POST
+===================================================== */
 
-function renderPost(item){
+function renderPost(post){
 
-  const isMine =
+  const isOwn =
     currentUser &&
-    item.user_id === currentUser.id;
+    post.user_id ===
+    currentUser.id;
 
-  let controls = "";
+
+  let buttons = "";
 
 
-  if(isMine){
+  if(isOwn){
 
-    controls += `
+    buttons += `
       <button
-        class="delete-btn"
-        type="button"
-        onclick="deletePost('${escapeAttr(item.id)}')">
+        class="action-btn delete-btn"
+        onclick="deletePost(${post.id})">
         🗑️ Delete
       </button>
     `;
 
   }else{
 
-    controls += `
+    buttons += `
       <button
-        class="block-btn"
-        type="button"
-        onclick="blockUser('${escapeAttr(item.user_id)}')">
+        class="action-btn block-btn"
+        onclick="blockUser('${escapeAttr(post.user_id)}')">
         🚫 Block
       </button>
 
       <button
-        class="follow-btn"
-        id="follow-btn-${escapeAttr(item.user_id)}"
-        type="button"
-        onclick="toggleFollow('${escapeAttr(item.user_id)}')">
-        👥 Follow
+        id="follow-${post.user_id}"
+        class="action-btn follow-btn"
+        onclick="toggleFollow('${escapeAttr(post.user_id)}')">
+        Follow
       </button>
     `;
 
@@ -1283,112 +1185,122 @@ function renderPost(item){
 
   return `
 
-    <article class="feed-item">
+    <div
+      class="feed-item"
+      id="post-${post.id}">
 
-      <div class="feed-header">
+      <div class="feed-head">
 
         <div class="feed-user">
-          📝 ${escapeHtml(item.username || "User")}
+          👤 ${escapeHtml(post.username || "User")}
         </div>
 
-        <div class="feed-type">
-          POST
+        <div class="feed-date">
+          ${formatDate(post.created_at)}
         </div>
 
-      </div>
-
-      <div class="feed-date">
-        ${escapeHtml(formatDate(item.created_at))}
       </div>
 
       <div class="feed-content">
-        ${escapeHtml(item.content)}
+        ${escapeHtml(post.content)}
       </div>
 
-      <div class="post-actions">
+      <div class="feed-type">
+        📝 Post
+      </div>
 
-        ${controls}
+      <div class="action-row">
+
+        ${buttons}
 
         <button
-          type="button"
-          id="like-btn-${escapeAttr(item.id)}"
-          onclick="toggleLike('${escapeAttr(item.id)}')">
-
-          ❤️ Like
-          <span
-            class="action-count"
-            id="like-count-${escapeAttr(item.id)}">
-            0
-          </span>
-
+          id="like-btn-${post.id}"
+          class="action-btn"
+          onclick="toggleLike(${post.id})">
+          ❤️ Like <span id="like-count-${post.id}">0</span>
         </button>
 
         <button
-          type="button"
-          id="dislike-btn-${escapeAttr(item.id)}"
-          onclick="toggleDislike('${escapeAttr(item.id)}')">
-
-          👎 Dislike
-          <span
-            class="action-count"
-            id="dislike-count-${escapeAttr(item.id)}">
-            0
-          </span>
-
+          id="dislike-btn-${post.id}"
+          class="action-btn"
+          onclick="toggleDislike(${post.id})">
+          👎 Dislike <span id="dislike-count-${post.id}">0</span>
         </button>
 
         <button
-          type="button"
-          onclick="toggleComments('${escapeAttr(item.id)}')">
-
+          class="action-btn"
+          onclick="toggleComments(${post.id})">
           💬 Comments
-
         </button>
 
       </div>
 
       <div
-        id="comments-${escapeAttr(item.id)}"
+        id="comments-${post.id}"
         class="comments-box">
+
+        <div
+          id="comments-list-${post.id}">
+          Loading comments...
+        </div>
+
+        <div class="comment-input-row">
+
+          <input
+            id="comment-input-${post.id}"
+            class="comment-input"
+            type="text"
+            placeholder="Write a comment..."
+            autocomplete="off">
+
+          <button
+            class="comment-send"
+            onclick="addComment(${post.id})">
+            ➤
+          </button>
+
+        </div>
 
       </div>
 
-    </article>
+    </div>
 
   `;
 
 }
 
 
-/* ================= RENDER MESSAGE ================= */
+/* =====================================================
+   RENDER MESSAGE
+===================================================== */
 
-function renderMessage(item){
+function renderMessage(message){
 
-  const isMine =
+  const isOwn =
     currentUser &&
-    item.user_id === currentUser.id;
+    message.user_id ===
+    currentUser.id;
 
-  let controls = "";
+
+  let buttons = "";
 
 
-  if(isMine){
+  if(isOwn){
 
-    controls = `
+    buttons += `
       <button
-        class="delete-btn"
-        type="button"
-        onclick="deleteHomeMessage('${escapeAttr(item.id)}')">
+        class="action-btn delete-btn"
+        onclick="deleteHomeMessage(${message.id})">
         🗑️ Delete
       </button>
     `;
 
   }else{
 
-    controls = `
+    buttons += `
       <button
-        class="block-btn"
-        type="button"
-        onclick="blockUser('${escapeAttr(item.user_id)}')">
+        class="action-btn block-btn"
+        onclick="blockUser('${escapeAttr(message.user_id)}')">
         🚫 Block
       </button>
     `;
@@ -1398,58 +1310,69 @@ function renderMessage(item){
 
   return `
 
-    <article class="feed-item">
+    <div
+      class="feed-item"
+      id="message-${message.id}">
 
-      <div class="feed-header">
+      <div class="feed-head">
 
         <div class="feed-user">
-          💬 ${escapeHtml(item.username || "User")}
+          👤 ${escapeHtml(message.username || "User")}
         </div>
 
-        <div class="feed-type">
-          MESSAGE
+        <div class="feed-date">
+          ${formatDate(message.created_at)}
         </div>
 
-      </div>
-
-      <div class="feed-date">
-        ${escapeHtml(formatDate(item.created_at))}
       </div>
 
       <div class="feed-content">
-        ${escapeHtml(item.content)}
+        ${escapeHtml(message.message)}
       </div>
 
-      <div class="post-actions">
+      <div class="feed-type">
+        💬 Message
+      </div>
 
-        ${controls}
+      <div class="action-row">
+
+        ${buttons}
 
       </div>
 
-    </article>
+    </div>
 
   `;
 
 }
 
 
-/* ================= DELETE POST ================= */
+/* =====================================================
+   DELETE POST
+===================================================== */
 
 async function deletePost(postId){
 
-  if(!currentUser) return;
-
-  if(!confirm("Delete this post?")){
+  if(!currentUser){
     return;
   }
 
-  const {
-    error
-  } =
+  if(
+    !confirm(
+      "Delete this post?"
+    )
+  ){
+    return;
+  }
+
+  const { error } =
     await supabaseClient
       .from("posts")
       .delete()
-      .eq("id",postId)
+      .eq(
+        "id",
+        postId
+      )
       .eq(
         "user_id",
         currentUser.id
@@ -1457,8 +1380,8 @@ async function deletePost(postId){
 
   if(error){
 
-    alert(
-      "Delete nahi hui.\n\n" +
+    showNotice(
+      "Delete nahi hua: " +
       error.message
     );
 
@@ -1468,30 +1391,35 @@ async function deletePost(postId){
 
   await loadFeed();
 
-  showNotice(
-    "🗑️ Post deleted."
-  );
-
 }
 
 
-/* ================= DELETE MESSAGE ================= */
+/* =====================================================
+   DELETE HOME MESSAGE
+===================================================== */
 
 async function deleteHomeMessage(messageId){
 
-  if(!currentUser) return;
-
-  if(!confirm("Delete this message?")){
+  if(!currentUser){
     return;
   }
 
-  const {
-    error
-  } =
+  if(
+    !confirm(
+      "Delete this message?"
+    )
+  ){
+    return;
+  }
+
+  const { error } =
     await supabaseClient
       .from("home_messages")
       .delete()
-      .eq("id",messageId)
+      .eq(
+        "id",
+        messageId
+      )
       .eq(
         "user_id",
         currentUser.id
@@ -1499,8 +1427,8 @@ async function deleteHomeMessage(messageId){
 
   if(error){
 
-    alert(
-      "Message delete nahi hua.\n\n" +
+    showNotice(
+      "Message delete nahi hua: " +
       error.message
     );
 
@@ -1510,30 +1438,19 @@ async function deleteHomeMessage(messageId){
 
   await loadFeed();
 
-  showNotice(
-    "🗑️ Message deleted."
-  );
-
 }
 
 
-/* ================= POST ACTIONS ================= */
+/* =====================================================
+   POST ACTIONS
+===================================================== */
 
-async function loadPostActions(postId){
+async function loadPostActions(){
 
-  const {
-    data,
-    error
-  } =
+  const { data,error } =
     await supabaseClient
       .from("post_actions")
-      .select(
-        "id,user_id,action_type"
-      )
-      .eq(
-        "post_id",
-        postId
-      );
+      .select("*");
 
   if(error){
 
@@ -1547,81 +1464,71 @@ async function loadPostActions(postId){
   }
 
 
-  let likes = 0;
-  let dislikes = 0;
-  let myAction = null;
+  const actions =
+    data || [];
 
 
-  (data || []).forEach(function(row){
+  document
+    .querySelectorAll(
+      "[id^='like-count-']"
+    )
+    .forEach(element => {
 
-    if(row.action_type === "like"){
-      likes++;
-    }
+      const postId =
+        Number(
+          element.id
+            .replace(
+              "like-count-",
+              ""
+            )
+        );
 
-    if(row.action_type === "dislike"){
-      dislikes++;
-    }
+      const count =
+        actions.filter(
+          row =>
+            row.post_id === postId &&
+            row.action_type === "like"
+        ).length;
 
-    if(
-      currentUser &&
-      row.user_id === currentUser.id
-    ){
-      myAction =
-        row.action_type;
-    }
+      element.textContent =
+        count;
 
-  });
-
-
-  const likeCount =
-    document.getElementById(
-      "like-count-" + postId
-    );
-
-  const dislikeCount =
-    document.getElementById(
-      "dislike-count-" + postId
-    );
-
-  const likeBtn =
-    document.getElementById(
-      "like-btn-" + postId
-    );
-
-  const dislikeBtn =
-    document.getElementById(
-      "dislike-btn-" + postId
-    );
+    });
 
 
-  if(likeCount){
-    likeCount.textContent =
-      likes;
-  }
+  document
+    .querySelectorAll(
+      "[id^='dislike-count-']"
+    )
+    .forEach(element => {
 
-  if(dislikeCount){
-    dislikeCount.textContent =
-      dislikes;
-  }
+      const postId =
+        Number(
+          element.id
+            .replace(
+              "dislike-count-",
+              ""
+            )
+        );
 
-  if(likeBtn){
-    likeBtn.classList.toggle(
-      "active",
-      myAction === "like"
-    );
-  }
+      const count =
+        actions.filter(
+          row =>
+            row.post_id === postId &&
+            row.action_type === "dislike"
+        ).length;
 
-  if(dislikeBtn){
-    dislikeBtn.classList.toggle(
-      "active",
-      myAction === "dislike"
-    );
-  }
+      element.textContent =
+        count;
+
+    });
 
 }
 
 
-/* ================= SET ACTION ================= */
+/* =====================================================
+   SET POST ACTION
+===================================================== */
 
 async function setPostAction(
   postId,
@@ -1629,20 +1536,26 @@ async function setPostAction(
 ){
 
   if(!currentUser){
-    alert("Please login first.");
+
+    showNotice(
+      "Please login first."
+    );
+
     return;
+
   }
 
 
-  const {
-    data:existing,
-    error:findError
-  } =
+  const opposite =
+    actionType === "like"
+      ? "dislike"
+      : "like";
+
+
+  const existing =
     await supabaseClient
       .from("post_actions")
-      .select(
-        "id,action_type"
-      )
+      .select("*")
       .eq(
         "post_id",
         postId
@@ -1651,130 +1564,85 @@ async function setPostAction(
         "user_id",
         currentUser.id
       )
+      .eq(
+        "action_type",
+        actionType
+      )
       .maybeSingle();
 
 
-  if(findError){
+  if(existing.data){
 
-    console.error(
-      "ACTION FIND ERROR:",
-      findError
-    );
-
-    return;
-
-  }
-
-
-  if(existing){
-
-    if(
-      existing.action_type ===
-      actionType
-    ){
-
-      const {
-        error
-      } =
-        await supabaseClient
-          .from("post_actions")
-          .delete()
-          .eq(
-            "id",
-            existing.id
-          );
-
-      if(error){
-
-        alert(
-          error.message
-        );
-
-        return;
-
-      }
-
-    }else{
-
-      const {
-        error:deleteError
-      } =
-        await supabaseClient
-          .from("post_actions")
-          .delete()
-          .eq(
-            "id",
-            existing.id
-          );
-
-      if(deleteError){
-
-        alert(
-          deleteError.message
-        );
-
-        return;
-
-      }
-
-
-      const {
-        error:insertError
-      } =
-        await supabaseClient
-          .from("post_actions")
-          .insert({
-            post_id:postId,
-            user_id:currentUser.id,
-            action_type:actionType
-          });
-
-      if(insertError){
-
-        alert(
-          insertError.message
-        );
-
-        return;
-
-      }
-
-    }
+    await supabaseClient
+      .from("post_actions")
+      .delete()
+      .eq(
+        "post_id",
+        postId
+      )
+      .eq(
+        "user_id",
+        currentUser.id
+      )
+      .eq(
+        "action_type",
+        actionType
+      );
 
   }else{
 
-    const {
-      error
-    } =
+    await supabaseClient
+      .from("post_actions")
+      .delete()
+      .eq(
+        "post_id",
+        postId
+      )
+      .eq(
+        "user_id",
+        currentUser.id
+      )
+      .eq(
+        "action_type",
+        opposite
+      );
+
+
+    const { error } =
       await supabaseClient
         .from("post_actions")
         .insert({
+
           post_id:postId,
-          user_id:currentUser.id,
-          action_type:actionType
+
+          user_id:
+            currentUser.id,
+
+          action_type:
+            actionType
+
         });
+
 
     if(error){
 
-      alert(
-        error.message
+      console.error(
+        "ACTION ERROR:",
+        error
       );
-
-      return;
 
     }
 
   }
 
-
-  await loadPostActions(
-    postId
-  );
+  await loadPostActions();
 
 }
 
 
-/* ================= LIKE ================= */
+/* =====================================================
+   LIKE / DISLIKE
+===================================================== */
 
 async function toggleLike(postId){
 
@@ -1786,8 +1654,6 @@ async function toggleLike(postId){
 }
 
 
-/* ================= DISLIKE ================= */
-
 async function toggleDislike(postId){
 
   await setPostAction(
@@ -1798,25 +1664,96 @@ async function toggleDislike(postId){
 }
 
 
-/* ================= FOLLOW ================= */
+/* =====================================================
+   FOLLOW
+===================================================== */
 
-async function loadFollowStatus(userId){
+async function loadFollowStatus(){
 
-  const button =
-    document.getElementById(
-      "follow-btn-" + userId
-    );
+  if(!currentUser){
+    return;
+  }
 
-  if(!button) return;
-
-
-  const {
-    data,
-    error
-  } =
+  const { data,error } =
     await supabaseClient
       .from("user_follows")
-      .select("id")
+      .select("*")
+      .eq(
+        "follower_id",
+        currentUser.id
+      );
+
+  if(error){
+
+    console.error(
+      "FOLLOW LOAD ERROR:",
+      error
+    );
+
+    return;
+
+  }
+
+
+  const follows =
+    data || [];
+
+
+  document
+    .querySelectorAll(
+      "[id^='follow-']"
+    )
+    .forEach(button => {
+
+      const userId =
+        button.id.replace(
+          "follow-",
+          ""
+        );
+
+      const following =
+        follows.some(
+          row =>
+            row.following_id === userId
+        );
+
+      button.textContent =
+        following
+          ? "Following"
+          : "Follow";
+
+    });
+
+}
+
+
+async function toggleFollow(userId){
+
+  if(!currentUser){
+
+    showNotice(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+
+  if(
+    userId ===
+    currentUser.id
+  ){
+
+    return;
+
+  }
+
+
+  const { data,error } =
+    await supabaseClient
+      .from("user_follows")
+      .select("*")
       .eq(
         "follower_id",
         currentUser.id
@@ -1829,57 +1766,22 @@ async function loadFollowStatus(userId){
 
 
   if(error){
+
+    showNotice(
+      "Follow error: " +
+      error.message
+    );
+
     return;
+
   }
 
 
   if(data){
 
-    button.textContent =
-      "👥 Following";
-
-    button.classList.add(
-      "active"
-    );
-
-  }else{
-
-    button.textContent =
-      "👥 Follow";
-
-    button.classList.remove(
-      "active"
-    );
-
-  }
-
-}
-
-
-/* ================= TOGGLE FOLLOW ================= */
-
-async function toggleFollow(userId){
-
-  if(!currentUser){
-    alert("Please login first.");
-    return;
-  }
-
-
-  if(
-    userId === currentUser.id
-  ){
-    return;
-  }
-
-
-  const {
-    data:existing,
-    error:findError
-  } =
     await supabaseClient
       .from("user_follows")
-      .select("id")
+      .delete()
       .eq(
         "follower_id",
         currentUser.id
@@ -1887,87 +1789,43 @@ async function toggleFollow(userId){
       .eq(
         "following_id",
         userId
-      )
-      .maybeSingle();
-
-
-  if(findError){
-
-    alert(
-      findError.message
-    );
-
-    return;
-
-  }
-
-
-  if(existing){
-
-    const {
-      error
-    } =
-      await supabaseClient
-        .from("user_follows")
-        .delete()
-        .eq(
-          "id",
-          existing.id
-        );
-
-    if(error){
-
-      alert(
-        error.message
       );
-
-      return;
-
-    }
 
   }else{
 
-    const {
-      error
-    } =
-      await supabaseClient
-        .from("user_follows")
-        .insert({
-          follower_id:currentUser.id,
-          following_id:userId
-        });
+    await supabaseClient
+      .from("user_follows")
+      .insert({
 
-    if(error){
+        follower_id:
+          currentUser.id,
 
-      alert(
-        error.message
-      );
+        following_id:
+          userId
 
-      return;
-
-    }
+      });
 
   }
 
 
-  await loadFollowStatus(
-    userId
-  );
+  await loadFollowStatus();
 
 }
 
 
-/* ================= BLOCK ================= */
+/* =====================================================
+   BLOCK USER
+===================================================== */
 
 async function blockUser(userId){
 
   if(!currentUser){
-    alert("Please login first.");
     return;
   }
 
   if(
-    userId === currentUser.id
+    userId ===
+    currentUser.id
   ){
     return;
   }
@@ -1975,21 +1833,24 @@ async function blockUser(userId){
 
   if(
     !confirm(
-      "Is user ko block karna hai?"
+      "Block this user?"
     )
   ){
     return;
   }
 
 
-  const {
-    error
-  } =
+  const { error } =
     await supabaseClient
       .from("user_blocks")
       .insert({
-        blocker_id:currentUser.id,
-        blocked_id:userId
+
+        blocker_id:
+          currentUser.id,
+
+        blocked_id:
+          userId
+
       });
 
 
@@ -2003,8 +1864,8 @@ async function blockUser(userId){
 
     }else{
 
-      alert(
-        "Block nahi hua.\n\n" +
+      showNotice(
+        "Block nahi hua: " +
         error.message
       );
 
@@ -2015,16 +1876,18 @@ async function blockUser(userId){
   }
 
 
-  await loadFeed();
-
   showNotice(
-    "🚫 User blocked."
+    "User blocked."
   );
+
+  await loadFeed();
 
 }
 
 
-/* ================= COMMENTS ================= */
+/* =====================================================
+   COMMENTS
+===================================================== */
 
 async function toggleComments(postId){
 
@@ -2033,11 +1896,14 @@ async function toggleComments(postId){
       "comments-" + postId
     );
 
-  if(!box) return;
+  if(!box){
+    return;
+  }
 
 
   if(
-    box.style.display === "block"
+    box.style.display ===
+    "block"
   ){
 
     box.style.display =
@@ -2051,29 +1917,32 @@ async function toggleComments(postId){
   box.style.display =
     "block";
 
+
   await loadComments(
+    postId
+  );
+
+
+  setupCommentInput(
     postId
   );
 
 }
 
 
-/* ================= LOAD COMMENTS ================= */
-
 async function loadComments(postId){
 
-  const box =
+  const list =
     document.getElementById(
-      "comments-" + postId
+      "comments-list-" + postId
     );
 
-  if(!box) return;
+  if(!list){
+    return;
+  }
 
 
-  const {
-    data,
-    error
-  } =
+  const { data,error } =
     await supabaseClient
       .from("comments")
       .select("*")
@@ -2091,111 +1960,94 @@ async function loadComments(postId){
 
   if(error){
 
-    box.innerHTML =
-      "<div>Comments load nahi huay.</div>";
-
     console.error(
+      "COMMENTS ERROR:",
       error
     );
+
+    list.innerHTML =
+      "<div>No comments found.</div>";
 
     return;
 
   }
 
 
-  let html = "";
+  const comments =
+    data || [];
 
 
-  (data || []).forEach(
-    function(comment){
+  if(comments.length === 0){
 
-      html += `
+    list.innerHTML =
+      '<div style="color:#999;font-size:12px;">No comments yet.</div>';
 
-        <div class="comment">
+    return;
+
+  }
+
+
+  list.innerHTML =
+    comments
+      .map(comment => `
+
+        <div
+          class="comment-item"
+          id="comment-${comment.id}">
 
           <div class="comment-user">
-            ${escapeHtml(
-              comment.username || "User"
-            )}
+            @${escapeHtml(comment.username || "User")}
           </div>
 
           <div class="comment-text">
-            ${escapeHtml(
-              comment.content
-            )}
-          </div>
-
-          <div class="comment-date">
-            ${escapeHtml(
-              formatDate(
-                comment.created_at
-              )
-            )}
+            ${escapeHtml(comment.content)}
           </div>
 
           <div class="comment-actions">
 
             <button
-              type="button"
+              class="reply-btn"
               onclick="showCommentReply(
-                '${escapeAttr(comment.id)}',
+                ${comment.id},
                 '${escapeAttr(comment.username || "User")}'
               )">
-
-              ↩️ Reply
-
+              ↩ Reply
             </button>
+
+          </div>
+
+          <div
+            id="reply-box-${comment.id}-${postId}"
+            class="reply-box">
+
+            <div class="reply-input-row">
+
+              <input
+                id="reply-input-${comment.id}-${postId}"
+                class="reply-input"
+                type="text"
+                placeholder="@${escapeAttr(comment.username || "User")}">
+
+              <button
+                class="reply-send"
+                onclick="sendCommentReply(
+                  ${comment.id},
+                  ${postId}
+                )">
+                ➤
+              </button>
+
+            </div>
 
           </div>
 
         </div>
 
-      `;
-
-    }
-  );
-
-
-  html += `
-
-    <div
-      id="reply-box-${escapeAttr(postId)}">
-    </div>
-
-    <div class="comment-input-row">
-
-      <input
-        class="comment-input"
-        id="comment-input-${escapeAttr(postId)}"
-        placeholder="Write a comment..."
-        type="text">
-
-      <button
-        class="comment-send"
-        type="button"
-        onclick="addComment('${escapeAttr(postId)}')">
-
-        ➤
-
-      </button>
-
-    </div>
-
-  `;
-
-
-  box.innerHTML =
-    html;
-
-
-  setupCommentInput(
-    postId
-  );
+      `)
+      .join("");
 
 }
 
-
-/* ================= COMMENT ENTER ================= */
 
 function setupCommentInput(postId){
 
@@ -2204,15 +2056,17 @@ function setupCommentInput(postId){
       "comment-input-" + postId
     );
 
-  if(!input) return;
+  if(!input){
+    return;
+  }
 
 
-  input.addEventListener(
-    "keydown",
+  input.onkeydown =
     function(event){
 
       if(
-        event.key === "Enter"
+        event.key ===
+        "Enter"
       ){
 
         event.preventDefault();
@@ -2223,19 +2077,25 @@ function setupCommentInput(postId){
 
       }
 
-    }
-  );
+    };
 
 }
 
 
-/* ================= ADD COMMENT ================= */
+/* =====================================================
+   ADD COMMENT
+===================================================== */
 
 async function addComment(postId){
 
   if(!currentUser){
-    alert("Please login first.");
+
+    showNotice(
+      "Please login first."
+    );
+
     return;
+
   }
 
 
@@ -2244,32 +2104,56 @@ async function addComment(postId){
       "comment-input-" + postId
     );
 
-  if(!input) return;
+
+  if(!input){
+
+    showNotice(
+      "Comment box nahi mila."
+    );
+
+    return;
+
+  }
 
 
   const text =
     input.value.trim();
 
-  if(!text) return;
+
+  if(!text){
+    return;
+  }
 
 
-  const {
-    error
-  } =
+  const { error } =
     await supabaseClient
       .from("comments")
       .insert({
-        post_id:postId,
-        user_id:currentUser.id,
-        username:currentUsername,
-        content:text
+
+        post_id:
+          postId,
+
+        user_id:
+          currentUser.id,
+
+        username:
+          currentUsername,
+
+        content:
+          text
+
       });
 
 
   if(error){
 
-    alert(
-      "Comment send nahi hua.\n\n" +
+    console.error(
+      "COMMENT ERROR:",
+      error
+    );
+
+    showNotice(
+      "Comment send nahi hua: " +
       error.message
     );
 
@@ -2278,6 +2162,8 @@ async function addComment(postId){
   }
 
 
+  input.value = "";
+
   await loadComments(
     postId
   );
@@ -2285,114 +2171,143 @@ async function addComment(postId){
 }
 
 
-/* ================= COMMENT REPLY ================= */
+/* =====================================================
+   COMMENT REPLY
+===================================================== */
 
 function showCommentReply(
   commentId,
   username
 ){
 
-  const box =
-    document.querySelector(
+  const boxes =
+    document.querySelectorAll(
       '[id^="reply-box-"]'
     );
 
-  if(!box) return;
+
+  boxes.forEach(box => {
+
+    box.style.display =
+      "none";
+
+  });
 
 
-  const postId =
-    box.id.replace(
-      "reply-box-",
-      ""
-    );
+  let targetBox = null;
 
 
-  box.innerHTML = `
+  boxes.forEach(box => {
 
-    <div class="comment-input-row">
+    if(
+      box.id.startsWith(
+        "reply-box-" +
+        commentId +
+        "-"
+      )
+    ){
 
-      <input
-        class="comment-input"
-        id="reply-input-${escapeAttr(commentId)}"
-        value="@${escapeHtml(username)} "
-        type="text">
+      targetBox =
+        box;
 
-      <button
-        class="comment-send"
-        type="button"
-        onclick="sendCommentReply(
-          '${escapeAttr(commentId)}',
-          '${escapeAttr(postId)}'
-        )">
+    }
 
-        ➤
+  });
 
-      </button>
 
-    </div>
+  if(!targetBox){
+    return;
+  }
 
-  `;
+
+  targetBox.style.display =
+    "block";
+
 
   const input =
-    document.getElementById(
-      "reply-input-" + commentId
+    targetBox.querySelector(
+      "input"
     );
+
 
   if(input){
 
-    input.focus();
+    input.placeholder =
+      "@" + username;
 
-    input.setSelectionRange(
-      input.value.length,
-      input.value.length
-    );
+    input.focus();
 
   }
 
 }
 
 
-/* ================= SEND REPLY ================= */
+/* =====================================================
+   SEND COMMENT REPLY
+===================================================== */
 
 async function sendCommentReply(
   commentId,
   postId
 ){
 
-  if(!currentUser) return;
+  if(!currentUser){
+    return;
+  }
 
 
   const input =
     document.getElementById(
-      "reply-input-" + commentId
+      "reply-input-" +
+      commentId +
+      "-" +
+      postId
     );
 
-  if(!input) return;
+
+  if(!input){
+    return;
+  }
 
 
   const text =
     input.value.trim();
 
-  if(!text) return;
+
+  if(!text){
+    return;
+  }
 
 
-  const {
-    error
-  } =
+  const { error } =
     await supabaseClient
       .from("comments")
       .insert({
-        post_id:postId,
-        user_id:currentUser.id,
-        username:currentUsername,
-        content:text
+
+        post_id:
+          postId,
+
+        user_id:
+          currentUser.id,
+
+        username:
+          currentUsername,
+
+        content:
+          text
+
       });
 
 
   if(error){
 
-    alert(
-      "Reply send nahi hui.\n\n" +
+    console.error(
+      "REPLY ERROR:",
+      error
+    );
+
+    showNotice(
+      "Reply send nahi hui: " +
       error.message
     );
 
@@ -2401,6 +2316,8 @@ async function sendCommentReply(
   }
 
 
+  input.value = "";
+
   await loadComments(
     postId
   );
@@ -2408,7 +2325,9 @@ async function sendCommentReply(
 }
 
 
-/* ================= IMAGE ================= */
+/* =====================================================
+   IMAGE
+===================================================== */
 
 function chooseImage(){
 
@@ -2426,16 +2345,42 @@ function chooseImage(){
 
 function sendImage(){
 
+  const input =
+    document.getElementById(
+      "imageInput"
+    );
+
+  if(
+    !input ||
+    !input.files ||
+    !input.files.length
+  ){
+
+    return;
+
+  }
+
+
   showNotice(
     "🖼️ Image Storage abhi setup nahi hai."
   );
 
+
+  input.value = "";
+
 }
 
 
-/* ================= VOICE ================= */
+/* =====================================================
+   VOICE
+===================================================== */
 
 async function toggleRecording(){
+
+  const voiceBtn =
+    document.getElementById(
+      "voiceBtn"
+    );
 
   const status =
     document.getElementById(
@@ -2443,141 +2388,212 @@ async function toggleRecording(){
     );
 
 
-  if(!isRecording){
+  if(
+    !navigator.mediaDevices ||
+    !navigator.mediaDevices.getUserMedia
+  ){
 
-    try{
+    showNotice(
+      "Voice recording browser mein available nahi."
+    );
 
-      const stream =
-        await navigator.mediaDevices
-          .getUserMedia({
-            audio:true
-          });
+    return;
 
-
-      audioChunks = [];
-
-
-      mediaRecorder =
-        new MediaRecorder(
-          stream
-        );
+  }
 
 
-      mediaRecorder.ondataavailable =
-        function(event){
+  if(isRecording){
 
-          if(event.data.size > 0){
-
-            audioChunks.push(
-              event.data
-            );
-
-          }
-
-        };
-
-
-      mediaRecorder.onstop =
-        function(){
-
-          stream
-            .getTracks()
-            .forEach(
-              track => track.stop()
-            );
-
-          if(status){
-
-            status.style.display =
-              "none";
-
-          }
-
-          showNotice(
-            "🎤 Voice recording ready hai."
-          );
-
-        };
-
-
-      mediaRecorder.start();
-
-      isRecording = true;
-
-      if(status){
-
-        status.style.display =
-          "block";
-
-      }
-
-    }catch(error){
-
-      console.error(
-        error
-      );
-
-      alert(
-        "Microphone permission nahi mili."
-      );
-
-    }
-
-  }else{
-
-    if(
-      mediaRecorder &&
-      mediaRecorder.state !== "inactive"
-    ){
+    if(mediaRecorder){
 
       mediaRecorder.stop();
 
     }
 
-    isRecording = false;
+    return;
+
+  }
+
+
+  try{
+
+    const stream =
+      await navigator.mediaDevices
+        .getUserMedia({
+          audio:true
+        });
+
+
+    audioChunks = [];
+
+
+    mediaRecorder =
+      new MediaRecorder(
+        stream
+      );
+
+
+    mediaRecorder.ondataavailable =
+      event => {
+
+        if(
+          event.data &&
+          event.data.size > 0
+        ){
+
+          audioChunks.push(
+            event.data
+          );
+
+        }
+
+      };
+
+
+    mediaRecorder.onstop =
+      () => {
+
+        isRecording = false;
+
+        if(voiceBtn){
+
+          voiceBtn.textContent =
+            "🎤 Voice";
+
+        }
+
+        if(status){
+
+          status.style.display =
+            "none";
+
+        }
+
+
+        stream
+          .getTracks()
+          .forEach(
+            track =>
+              track.stop()
+          );
+
+
+        showNotice(
+          "🎤 Voice recording complete. Storage abhi setup nahi hai."
+        );
+
+      };
+
+
+    mediaRecorder.start();
+
+    isRecording = true;
+
+
+    if(voiceBtn){
+
+      voiceBtn.textContent =
+        "⏹️ Stop Voice";
+
+    }
+
+
+    if(status){
+
+      status.style.display =
+        "block";
+
+    }
+
+  }catch(error){
+
+    console.error(
+      "VOICE ERROR:",
+      error
+    );
+
+    showNotice(
+      "Microphone permission allow karein."
+    );
 
   }
 
 }
 
 
-/* ================= ONLINE USERS ================= */
+/* =====================================================
+   ONLINE USERS
+===================================================== */
 
-async function showOnlineUsers(){
+function toggleOnlineUsers(){
 
   const popup =
     document.getElementById(
       "onlinePopup"
     );
 
-  const list =
-    document.getElementById(
-      "onlineUsersList"
-    );
 
-  if(!popup || !list) return;
+  if(!popup){
+    return;
+  }
+
+
+  if(
+    popup.style.display ===
+    "block"
+  ){
+
+    popup.style.display =
+      "none";
+
+    return;
+
+  }
 
 
   popup.style.display =
     "block";
 
-  list.innerHTML =
-    "Loading...";
+
+  loadOnlineUsers();
+
+}
 
 
-  /*
-    Abhi users table ka exact structure
-    project mein confirm nahi hai.
-    Isliye current logged-in user ko
-    online list mein show kar rahe hain.
-  */
+async function loadOnlineUsers(){
+
+  const list =
+    document.getElementById(
+      "onlineUsersList"
+    );
+
+
+  if(!list){
+    return;
+  }
+
+
+  if(!currentUser){
+
+    list.innerHTML =
+      "No online users.";
+
+    return;
+
+  }
+
 
   list.innerHTML = `
 
     <div class="online-user">
-      <span class="online-dot">●</span>
+
+      <span class="online-dot">
+        🟢
+      </span>
+
       ${escapeHtml(currentUsername)}
-      <small> — You</small>
+      <small>(You)</small>
+
     </div>
 
   `;
@@ -2585,39 +2601,9 @@ async function showOnlineUsers(){
 }
 
 
-function hideOnlineUsers(){
-
-  const popup =
-    document.getElementById(
-      "onlinePopup"
-    );
-
-  if(popup){
-
-    popup.style.display =
-      "none";
-
-  }
-
-}
-
-
-function closeOnlineUsers(event){
-
-  if(
-    event.target &&
-    event.target.id ===
-    "onlinePopup"
-  ){
-
-    hideOnlineUsers();
-
-  }
-
-}
-
-
-/* ================= NAVIGATION ================= */
+/* =====================================================
+   NAVIGATION
+===================================================== */
 
 function goHome(){
 
@@ -2629,7 +2615,7 @@ function goHome(){
 }
 
 
-function openPrivate(){
+function goPrivate(){
 
   window.location.href =
     "private.html";
@@ -2637,7 +2623,7 @@ function openPrivate(){
 }
 
 
-function openProfile(){
+function goProfile(){
 
   window.location.href =
     "profile.html";
@@ -2645,100 +2631,104 @@ function openProfile(){
 }
 
 
-function openNotifications(){
+function goNotifications(){
 
   showNotice(
-    "🔔 Notifications page abhi setup nahi hai."
+    "Notifications page abhi setup nahi hai."
   );
 
 }
 
 
-async function moreMenu(){
+function goMore(){
 
   const logout =
     confirm(
       "Logout karna hai?"
     );
 
-  if(!logout) return;
 
+  if(logout){
 
-  await supabaseClient.auth.signOut();
+    signOut();
 
-  window.location.href =
-    "login.html";
+  }
 
 }
 
 
-/* ================= EVENTS ================= */
+/* =====================================================
+   SIGN OUT
+===================================================== */
+
+async function signOut(){
+
+  try{
+
+    await supabaseClient
+      .auth
+      .signOut();
+
+  }finally{
+
+    window.location.href =
+      "login.html";
+
+  }
+
+}
+
+
+/* =====================================================
+   CLOSE ONLINE POPUP
+===================================================== */
+
+document.addEventListener(
+  "click",
+  function(event){
+
+    const popup =
+      document.getElementById(
+        "onlinePopup"
+      );
+
+    const button =
+      document.querySelector(
+        ".online-btn"
+      );
+
+
+    if(
+      popup &&
+      popup.style.display === "block" &&
+      !popup.contains(event.target) &&
+      !button.contains(event.target)
+    ){
+
+      popup.style.display =
+        "none";
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   DOM READY
+===================================================== */
 
 document.addEventListener(
   "DOMContentLoaded",
   function(){
 
-    const sendButton =
-      document.getElementById(
-        "sendMessageBtn"
-      );
-
-    if(sendButton){
-
-      sendButton.addEventListener(
-        "click",
-        sendTextMessage
-      );
-
-    }
-
-
-    const chatInput =
-      document.getElementById(
-        "chatInput"
-      );
-
-    if(chatInput){
-
-      chatInput.addEventListener(
-        "keydown",
-        function(event){
-
-          if(
-            event.key === "Enter"
-          ){
-
-            event.preventDefault();
-
-            sendTextMessage();
-
-          }
-
-        }
-      );
-
-    }
-
-
-    const postButton =
-      document.getElementById(
-        "publishPostBtn"
-      );
-
-    if(postButton){
-
-      postButton.addEventListener(
-        "click",
-        addPost
-      );
-
-    }
-
+    /* ---------- CREATE POST ---------- */
 
     const postInput =
       document.getElementById(
         "postInput"
       );
+
 
     if(postInput){
 
@@ -2763,14 +2753,17 @@ document.addEventListener(
     }
 
 
-    const uploadButton =
+    /* ---------- IMAGE ---------- */
+
+    const uploadImageBtn =
       document.getElementById(
         "uploadImageBtn"
       );
 
-    if(uploadButton){
 
-      uploadButton.addEventListener(
+    if(uploadImageBtn){
+
+      uploadImageBtn.addEventListener(
         "click",
         chooseImage
       );
@@ -2783,6 +2776,7 @@ document.addEventListener(
         "imageInput"
       );
 
+
     if(imageInput){
 
       imageInput.addEventListener(
@@ -2793,27 +2787,30 @@ document.addEventListener(
     }
 
 
-    const voiceButton =
+    /* ---------- VOICE ---------- */
+
+    const voiceBtn =
       document.getElementById(
         "voiceBtn"
       );
 
-    if(voiceButton){
 
-      voiceButton.addEventListener(
+    if(voiceBtn){
+
+      voiceBtn.addEventListener(
         "click",
         toggleRecording
       );
 
     }
 
+
+    /* ---------- START ---------- */
+
+    checkUser();
+
   }
 );
-
-
-/* ================= START ================= */
-
-checkUser();
 
 </script>
 
