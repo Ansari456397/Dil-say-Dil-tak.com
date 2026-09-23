@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -210,15 +210,43 @@ body{
   gap:8px;
 }
 
+.feed-user-wrap{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+
+.feed-avatar,
+.avatar-fallback{
+  width:38px;
+  height:38px;
+  min-width:38px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.avatar-fallback{
+  background:#eeeaff;
+  color:#6c5ce7;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  font-weight:bold;
+}
+
 .feed-user{
   font-weight:bold;
   color:#5d42c5;
   font-size:15px;
+  word-break:break-word;
 }
 
 .feed-date{
   color:#999;
   font-size:11px;
+  white-space:nowrap;
 }
 
 .feed-content{
@@ -371,9 +399,15 @@ body{
   margin-bottom:12px;
 }
 
+.profile-avatar-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
 .profile-avatar{
-  width:72px;
-  height:72px;
+  width:82px;
+  height:82px;
   border-radius:50%;
   background:white;
   color:#6c5ce7;
@@ -383,11 +417,35 @@ body{
   margin:0 auto 10px;
   font-size:35px;
   font-weight:bold;
+  overflow:hidden;
+  border:3px solid rgba(255,255,255,.7);
+}
+
+.profile-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.profile-picture-btn{
+  border:0;
+  background:rgba(255,255,255,.16);
+  color:white;
+  padding:8px 12px;
+  border-radius:9px;
+  font-size:12px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.profile-picture-btn:active{
+  transform:scale(.97);
 }
 
 .profile-name-display{
   font-size:20px;
   font-weight:bold;
+  margin-top:10px;
 }
 
 .profile-username-display{
@@ -775,10 +833,27 @@ body{
 
     <div class="profile-header">
 
-      <div
-        id="profileAvatar"
-        class="profile-avatar">
-        👤
+      <div class="profile-avatar-wrap">
+
+        <div
+          id="profileAvatar"
+          class="profile-avatar">
+          👤
+        </div>
+
+        <button
+          class="profile-picture-btn"
+          type="button"
+          onclick="chooseProfilePicture()">
+          🖼️ Change Profile Picture
+        </button>
+
+        <input
+          id="profileImageInput"
+          type="file"
+          accept="image/*"
+          style="display:none;">
+
       </div>
 
       <div
@@ -1176,6 +1251,55 @@ function showNotice(message){
 
 
 /* =====================================================
+   AVATAR
+===================================================== */
+
+function renderUserAvatar(
+  username,
+  avatarUrl,
+  sizeClass = "feed-avatar"
+){
+
+  const safeName =
+    escapeHtml(username || "User");
+
+  const initial =
+    escapeHtml(
+      (username || "U")
+        .charAt(0)
+        .toUpperCase()
+    );
+
+
+  if(avatarUrl){
+
+    return `
+      <img
+        class="${sizeClass}"
+        src="${escapeAttr(avatarUrl)}"
+        alt=""
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+      <span
+        class="${sizeClass} avatar-fallback"
+        style="display:none;">
+        ${initial}
+      </span>
+    `;
+
+  }
+
+
+  return `
+    <span class="${sizeClass} avatar-fallback">
+      ${initial}
+    </span>
+  `;
+
+}
+
+
+/* =====================================================
    CURRENT USER
 ===================================================== */
 
@@ -1190,6 +1314,7 @@ function setCurrentUser(user){
     return;
 
   }
+
 
   currentUsername =
     user.user_metadata?.username ||
@@ -1214,6 +1339,88 @@ function setCurrentUser(user){
 
 
 /* =====================================================
+   SYNC PROFILE
+===================================================== */
+
+async function syncMyProfile(){
+
+  if(!currentUser){
+    return;
+  }
+
+
+  const metadata =
+    currentUser.user_metadata || {};
+
+
+  const username =
+    metadata.username ||
+    metadata.name ||
+    currentUser.email?.split("@")[0] ||
+    "User";
+
+
+  const name =
+    metadata.name ||
+    username;
+
+
+  const payload = {
+
+    id:
+      currentUser.id,
+
+    username:
+      username,
+
+    name:
+      name,
+
+    avatar_url:
+      metadata.avatar_url || null,
+
+    date_of_birth:
+      metadata.date_of_birth || null,
+
+    city:
+      metadata.city || null,
+
+    bio:
+      metadata.bio || null,
+
+    profile_privacy:
+      metadata.profile_privacy || "public",
+
+    updated_at:
+      new Date().toISOString()
+
+  };
+
+
+  const { error } =
+    await supabaseClient
+      .from("profiles")
+      .upsert(
+        payload,
+        {
+          onConflict:"id"
+        }
+      );
+
+
+  if(error){
+
+    console.error(
+      "PROFILE SYNC ERROR:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =====================================================
    CHECK USER
 ===================================================== */
 
@@ -1223,8 +1430,10 @@ async function checkUser(){
 
     let user = null;
 
+
     const sessionResult =
       await supabaseClient.auth.getSession();
+
 
     if(
       sessionResult.data &&
@@ -1241,6 +1450,7 @@ async function checkUser(){
 
       const userResult =
         await supabaseClient.auth.getUser();
+
 
       if(
         userResult.data &&
@@ -1266,6 +1476,8 @@ async function checkUser(){
 
 
     setCurrentUser(user);
+
+    await syncMyProfile();
 
     await loadFeed();
 
@@ -1493,6 +1705,7 @@ async function loadFeed(){
     const posts =
       postsResult.data || [];
 
+
     const messages =
       messagesResult.data || [];
 
@@ -1553,6 +1766,97 @@ async function loadFeed(){
           a.data.created_at
         )
     );
+
+
+    /* ---------- LOAD PROFILES ---------- */
+
+    const userIds =
+      [
+        ...new Set(
+          feedItems
+            .map(
+              item =>
+                item.data.user_id
+            )
+            .filter(Boolean)
+        )
+      ];
+
+
+    let profileMap = {};
+
+
+    if(userIds.length){
+
+      const {
+        data:profileRows,
+        error:profileError
+      } =
+        await supabaseClient
+          .from("profiles")
+          .select(
+            "id,avatar_url,username,name"
+          )
+          .in(
+            "id",
+            userIds
+          );
+
+
+      if(
+        !profileError &&
+        profileRows
+      ){
+
+        profileRows.forEach(
+          profile => {
+
+            profileMap[
+              profile.id
+            ] = profile;
+
+          }
+        );
+
+      }
+
+
+      if(profileError){
+
+        console.error(
+          "PROFILE LOAD ERROR:",
+          profileError
+        );
+
+      }
+
+    }
+
+
+    /* ---------- ADD AVATARS ---------- */
+
+    feedItems.forEach(item => {
+
+      const profile =
+        profileMap[
+          item.data.user_id
+        ];
+
+
+      item.data.avatar_url =
+        profile?.avatar_url || "";
+
+
+      if(!item.data.username){
+
+        item.data.username =
+          profile?.username ||
+          profile?.name ||
+          "User";
+
+      }
+
+    });
 
 
     if(feedItems.length === 0){
@@ -1657,8 +1961,19 @@ function renderPost(post){
 
       <div class="feed-head">
 
-        <div class="feed-user">
-          👤 ${escapeHtml(post.username || "User")}
+        <div class="feed-user-wrap">
+
+          ${renderUserAvatar(
+            post.username || "User",
+            post.avatar_url
+          )}
+
+          <div class="feed-user">
+            ${escapeHtml(
+              post.username || "User"
+            )}
+          </div>
+
         </div>
 
         <div class="feed-date">
@@ -1769,6 +2084,13 @@ function renderMessage(message){
         onclick="blockUser('${escapeAttr(message.user_id)}')">
         🚫 Block
       </button>
+
+      <button
+        id="follow-${escapeAttr(message.user_id)}"
+        class="action-btn follow-btn"
+        onclick="toggleFollow('${escapeAttr(message.user_id)}')">
+        Follow
+      </button>
     `;
 
   }
@@ -1782,8 +2104,19 @@ function renderMessage(message){
 
       <div class="feed-head">
 
-        <div class="feed-user">
-          👤 ${escapeHtml(message.username || "User")}
+        <div class="feed-user-wrap">
+
+          ${renderUserAvatar(
+            message.username || "User",
+            message.avatar_url
+          )}
+
+          <div class="feed-user">
+            ${escapeHtml(
+              message.username || "User"
+            )}
+          </div>
+
         </div>
 
         <div class="feed-date">
@@ -2483,11 +2816,15 @@ async function loadComments(postId){
           id="comment-${comment.id}">
 
           <div class="comment-user">
-            @${escapeHtml(comment.username || "User")}
+            @${escapeHtml(
+              comment.username || "User"
+            )}
           </div>
 
           <div class="comment-text">
-            ${escapeHtml(comment.content)}
+            ${escapeHtml(
+              comment.content
+            )}
           </div>
 
           <div class="comment-actions">
@@ -2496,7 +2833,9 @@ async function loadComments(postId){
               class="reply-btn"
               onclick="showCommentReply(
                 ${comment.id},
-                '${escapeAttr(comment.username || "User")}'
+                '${escapeAttr(
+                  comment.username || "User"
+                )}'
               )">
               ↩ Reply
             </button>
@@ -2513,7 +2852,9 @@ async function loadComments(postId){
                 id="reply-input-${comment.id}-${postId}"
                 class="reply-input"
                 type="text"
-                placeholder="@${escapeAttr(comment.username || "User")}">
+                placeholder="@${escapeAttr(
+                  comment.username || "User"
+                )}">
 
               <button
                 class="reply-send"
@@ -2814,7 +3155,7 @@ async function sendCommentReply(
 
 
 /* =====================================================
-   IMAGE
+   POST IMAGE
 ===================================================== */
 
 function chooseImage(){
@@ -2852,7 +3193,7 @@ function sendImage(){
 
 
   showNotice(
-    "🖼️ Image Storage abhi setup nahi hai."
+    "🖼️ Post image storage abhi setup nahi hai."
   );
 
 
@@ -3165,6 +3506,11 @@ function loadProfile(){
     "";
 
 
+  const avatarUrl =
+    metadata.avatar_url ||
+    "";
+
+
   const nameDisplay =
     document.getElementById(
       "profileNameDisplay"
@@ -3199,10 +3545,52 @@ function loadProfile(){
   }
 
 
+  /* ---------- PROFILE PICTURE ---------- */
+
   if(avatar){
 
-    avatar.textContent =
-      name.charAt(0).toUpperCase();
+    avatar.innerHTML = "";
+
+
+    if(avatarUrl){
+
+      const img =
+        document.createElement(
+          "img"
+        );
+
+
+      img.src =
+        avatarUrl;
+
+
+      img.alt =
+        "Profile Picture";
+
+
+      img.onerror =
+        () => {
+
+          avatar.textContent =
+            name
+              .charAt(0)
+              .toUpperCase();
+
+        };
+
+
+      avatar.appendChild(
+        img
+      );
+
+    }else{
+
+      avatar.textContent =
+        name
+          .charAt(0)
+          .toUpperCase();
+
+    }
 
   }
 
@@ -3242,7 +3630,9 @@ function loadProfile(){
   document.getElementById(
     "editName"
   ).value =
-    name === "User" ? "" : name;
+    name === "User"
+      ? ""
+      : name;
 
 
   document.getElementById(
@@ -3274,6 +3664,251 @@ function loadProfile(){
 }
 
 
+/* =====================================================
+   CHOOSE PROFILE PICTURE
+===================================================== */
+
+function chooseProfilePicture(){
+
+  const input =
+    document.getElementById(
+      "profileImageInput"
+    );
+
+
+  if(input){
+
+    input.click();
+
+  }
+
+}
+
+
+/* =====================================================
+   UPLOAD PROFILE PICTURE
+===================================================== */
+
+async function uploadProfilePicture(){
+
+  if(!currentUser){
+
+    showNotice(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+
+  const input =
+    document.getElementById(
+      "profileImageInput"
+    );
+
+
+  const file =
+    input?.files?.[0];
+
+
+  if(!file){
+    return;
+  }
+
+
+  if(
+    !file.type.startsWith(
+      "image/"
+    )
+  ){
+
+    showNotice(
+      "Sirf image file select karein."
+    );
+
+    input.value = "";
+
+    return;
+
+  }
+
+
+  if(
+    file.size >
+    5 * 1024 * 1024
+  ){
+
+    showNotice(
+      "Image 5MB se chhoti honi chahiye."
+    );
+
+    input.value = "";
+
+    return;
+
+  }
+
+
+  showNotice(
+    "🖼️ Profile picture upload ho rahi hai..."
+  );
+
+
+  const ext =
+    (
+      file.name
+        .split(".")
+        .pop() ||
+      "jpg"
+    )
+      .toLowerCase()
+      .replace(
+        /[^a-z0-9]/g,
+        ""
+      );
+
+
+  const path =
+    `${currentUser.id}/avatar-${Date.now()}.${ext || "jpg"}`;
+
+
+  const {
+    error:uploadError
+  } =
+    await supabaseClient
+      .storage
+      .from("avatars")
+      .upload(
+        path,
+        file,
+        {
+          cacheControl:"3600",
+          upsert:false,
+          contentType:file.type
+        }
+      );
+
+
+  if(uploadError){
+
+    console.error(
+      "AVATAR UPLOAD ERROR:",
+      uploadError
+    );
+
+    showNotice(
+      "Profile picture upload nahi hui: " +
+      uploadError.message
+    );
+
+    input.value = "";
+
+    return;
+
+  }
+
+
+  const {
+    data:publicData
+  } =
+    supabaseClient
+      .storage
+      .from("avatars")
+      .getPublicUrl(
+        path
+      );
+
+
+  const avatarUrl =
+    publicData?.publicUrl;
+
+
+  if(!avatarUrl){
+
+    showNotice(
+      "Profile picture URL nahi mili."
+    );
+
+    input.value = "";
+
+    return;
+
+  }
+
+
+  const oldMetadata =
+    currentUser.user_metadata || {};
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.updateUser({
+
+      data:{
+
+        ...oldMetadata,
+
+        avatar_url:
+          avatarUrl
+
+      }
+
+    });
+
+
+  if(error){
+
+    console.error(
+      "AVATAR PROFILE UPDATE ERROR:",
+      error
+    );
+
+    showNotice(
+      "Picture save nahi hui: " +
+      error.message
+    );
+
+    input.value = "";
+
+    return;
+
+  }
+
+
+  if(
+    data &&
+    data.user
+  ){
+
+    setCurrentUser(
+      data.user
+    );
+
+  }
+
+
+  await syncMyProfile();
+
+  loadProfile();
+
+  await loadFeed();
+
+  input.value = "";
+
+  showNotice(
+    "✅ Profile picture updated."
+  );
+
+}
+
+
+/* =====================================================
+   EDIT PROFILE
+===================================================== */
+
 function showEditProfile(){
 
   const edit =
@@ -3294,6 +3929,10 @@ function showEditProfile(){
 
 }
 
+
+/* =====================================================
+   SAVE PROFILE
+===================================================== */
 
 async function saveProfile(){
 
@@ -3358,7 +3997,10 @@ async function saveProfile(){
     name;
 
 
-  const { data,error } =
+  const {
+    data,
+    error
+  } =
     await supabaseClient.auth.updateUser({
 
       data:{
@@ -3405,13 +4047,19 @@ async function saveProfile(){
   }
 
 
-  if(data && data.user){
+  if(
+    data &&
+    data.user
+  ){
 
     setCurrentUser(
       data.user
     );
 
   }
+
+
+  await syncMyProfile();
 
 
   const edit =
@@ -3429,6 +4077,8 @@ async function saveProfile(){
 
 
   loadProfile();
+
+  await loadFeed();
 
 
   showNotice(
@@ -3469,7 +4119,10 @@ async function loadMyPosts(){
     '<div class="loading">Loading your posts...</div>';
 
 
-  const { data,error } =
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("posts")
       .select("*")
@@ -3514,6 +4167,11 @@ async function loadMyPosts(){
   }
 
 
+  const avatarUrl =
+    currentUser.user_metadata?.avatar_url ||
+    "";
+
+
   container.innerHTML =
     posts
       .map(post => `
@@ -3523,18 +4181,35 @@ async function loadMyPosts(){
 
           <div class="feed-head">
 
-            <div class="feed-user">
-              👤 ${escapeHtml(post.username || currentUsername)}
+            <div class="feed-user-wrap">
+
+              ${renderUserAvatar(
+                post.username ||
+                currentUsername,
+                avatarUrl
+              )}
+
+              <div class="feed-user">
+                ${escapeHtml(
+                  post.username ||
+                  currentUsername
+                )}
+              </div>
+
             </div>
 
             <div class="feed-date">
-              ${formatDate(post.created_at)}
+              ${formatDate(
+                post.created_at
+              )}
             </div>
 
           </div>
 
           <div class="feed-content">
-            ${escapeHtml(post.content)}
+            ${escapeHtml(
+              post.content
+            )}
           </div>
 
           <div class="feed-type">
@@ -3558,6 +4233,10 @@ async function loadMyPosts(){
 
 }
 
+
+/* =====================================================
+   DELETE POST FROM PROFILE
+===================================================== */
 
 async function deletePostFromProfile(postId){
 
@@ -3775,6 +4454,7 @@ document.addEventListener(
       popup &&
       popup.style.display === "block" &&
       !popup.contains(event.target) &&
+      button &&
       !button.contains(event.target)
     ){
 
@@ -3844,7 +4524,7 @@ document.addEventListener(
     }
 
 
-    /* ---------- IMAGE ---------- */
+    /* ---------- POST IMAGE ---------- */
 
     const uploadImageBtn =
       document.getElementById(
@@ -3873,6 +4553,24 @@ document.addEventListener(
       imageInput.addEventListener(
         "change",
         sendImage
+      );
+
+    }
+
+
+    /* ---------- PROFILE PICTURE ---------- */
+
+    const profileImageInput =
+      document.getElementById(
+        "profileImageInput"
+      );
+
+
+    if(profileImageInput){
+
+      profileImageInput.addEventListener(
+        "change",
+        uploadProfilePicture
       );
 
     }
