@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 
@@ -203,6 +204,19 @@ body{
   border-radius:8px;
   padding:8px 9px;
   cursor:pointer;
+  font-size:13px;
+}
+
+.post-actions button.active{
+  background:#eee9ff;
+  border-color:#6c5ce7;
+  color:#6c5ce7;
+  font-weight:bold;
+}
+
+.action-count{
+  font-weight:bold;
+  margin-left:2px;
 }
 
 
@@ -401,7 +415,6 @@ body{
 
 <body>
 
-
 <!-- ================= HEADER ================= -->
 
 <header class="header">
@@ -412,93 +425,93 @@ body{
 
 </header>
 
-
 <div class="container">
-
 
   <!-- ================= TOP MESSAGE BOX ================= -->
 
   <div class="home-message-box">
 
-    <div class="message-title">
-      💬 Message
-    </div>
+```
+<div class="message-title">
+  💬 Message
+</div>
 
-    <div class="message-row">
+<div class="message-row">
 
-      <input
-        id="chatInput"
-        type="text"
-        placeholder="Write a message..."
-        maxlength="1000"
-      >
+  <input
+    id="chatInput"
+    type="text"
+    placeholder="Write a message..."
+    maxlength="1000"
+  >
 
-      <button
-        class="chat-send"
-        type="button"
-        id="sendMessageBtn">
-        ➤
-      </button>
+  <button
+    class="chat-send"
+    type="button"
+    id="sendMessageBtn">
+    ➤
+  </button>
 
-    </div>
-
-
-    <div class="message-tools">
-
-      <button
-        type="button"
-        id="uploadImageBtn">
-        🖼️ Upload Image
-      </button>
-
-      <button
-        type="button"
-        id="voiceBtn">
-        🎤 Voice
-      </button>
-
-    </div>
+</div>
 
 
-    <input
-      id="imageInput"
-      type="file"
-      accept="image/*"
-      style="display:none"
-    >
+<div class="message-tools">
+
+  <button
+    type="button"
+    id="uploadImageBtn">
+    🖼️ Upload Image
+  </button>
+
+  <button
+    type="button"
+    id="voiceBtn">
+    🎤 Voice
+  </button>
+
+</div>
 
 
-    <div
-      id="recordStatus"
-      style="
-        display:none;
-        font-size:12px;
-        color:#777;
-        margin-top:7px;
-      ">
-      Recording...
-    </div>
+<input
+  id="imageInput"
+  type="file"
+  accept="image/*"
+  style="display:none"
+>
+
+
+<div
+  id="recordStatus"
+  style="
+    display:none;
+    font-size:12px;
+    color:#777;
+    margin-top:7px;
+  ">
+  Recording...
+</div>
+```
 
   </div>
-
 
   <!-- ================= WELCOME ================= -->
 
   <div class="welcome-box">
 
-    <div class="welcome-title">
-      Welcome to Socialyte ♥️
-    </div>
+```
+<div class="welcome-title">
+  Welcome to Socialyte ♥️
+</div>
 
-    <div class="logged-in">
-      Logged in as:
-      <span id="loggedInUsername">
-        User
-      </span>
-    </div>
+<div class="logged-in">
+  Logged in as:
+  <span id="loggedInUsername">
+    User
+  </span>
+</div>
+```
 
   </div>
-
 
   <!-- ================= HOME FEED ================= -->
 
@@ -508,79 +521,81 @@ body{
 
   <div id="homeFeed">
 
-    <div class="empty">
-      Loading feed...
-    </div>
+```
+<div class="empty">
+  Loading feed...
+</div>
+```
 
   </div>
 
-
 </div>
-
 
 <!-- ================= BOTTOM NAVIGATION ================= -->
 
 <div class="bottom-nav">
 
+<button
+ type="button"
+ onclick="goHome()">
 
-  <button
-    type="button"
-    onclick="goHome()">
-
-    <span>🏠</span>
-    Home
-
-  </button>
-
-
-  <button
-    type="button"
-    onclick="showNotice('Private Chat coming soon')">
-
-    <span>💬</span>
-    Private
+```
+<span>🏠</span>
+Home
+```
 
   </button>
 
+<button
+ type="button"
+ onclick="showNotice('Private Chat coming soon')">
 
-  <button
-    type="button"
-    onclick="openProfile()">
-
-    <span>👤</span>
-    Profile
-
-  </button>
-
-
-  <button
-    type="button"
-    onclick="showNotice('Notifications coming soon')">
-
-    <span>🔔</span>
-    Notifications
+```
+<span>💬</span>
+Private
+```
 
   </button>
 
+<button
+ type="button"
+ onclick="openProfile()">
 
-  <button
-    type="button"
-    onclick="moreMenu()">
-
-    <span>☰</span>
-    More
+```
+<span>👤</span>
+Profile
+```
 
   </button>
 
+<button
+ type="button"
+ onclick="showNotice('Notifications coming soon')">
+
+```
+<span>🔔</span>
+Notifications
+```
+
+  </button>
+
+<button
+ type="button"
+ onclick="moreMenu()">
+
+```
+<span>☰</span>
+More
+```
+
+  </button>
 
 </div>
-
 
 <div
   id="notice"
   class="notice">
 </div>
-
 
 <script>
 
@@ -631,9 +646,7 @@ function setCurrentUser(user){
     return false;
   }
 
-
   currentUser = user;
-
 
   currentUsername =
     user.user_metadata?.username ||
@@ -641,12 +654,10 @@ function setCurrentUser(user){
     user.email?.split("@")[0] ||
     "User";
 
-
   const usernameBox =
     document.getElementById(
       "loggedInUsername"
     );
-
 
   if(usernameBox){
 
@@ -655,12 +666,10 @@ function setCurrentUser(user){
 
   }
 
-
   console.log(
     "CURRENT USER:",
     user.email
   );
-
 
   return true;
 
@@ -677,7 +686,6 @@ async function checkUser(){
     "Checking Socialyte login session..."
   );
 
-
   for(
     let attempt = 1;
     attempt <= 8;
@@ -692,13 +700,11 @@ async function checkUser(){
       } =
         await supabaseClient.auth.getSession();
 
-
       console.log(
         "Session check:",
         attempt,
         data
       );
-
 
       if(error){
 
@@ -708,7 +714,6 @@ async function checkUser(){
         );
 
       }
-
 
       if(
         data &&
@@ -720,14 +725,11 @@ async function checkUser(){
           data.session.user
         );
 
-
         console.log(
           "SESSION FOUND"
         );
 
-
         await loadPosts();
-
 
         return;
 
@@ -741,7 +743,6 @@ async function checkUser(){
       );
 
     }
-
 
     if(attempt < 8){
 
@@ -763,13 +764,11 @@ async function checkUser(){
     } =
       await supabaseClient.auth.getUser();
 
-
     console.log(
       "FINAL USER CHECK:",
       data,
       error
     );
-
 
     if(
       !error &&
@@ -781,9 +780,7 @@ async function checkUser(){
         data.user
       );
 
-
       await loadPosts();
-
 
       return;
 
@@ -803,7 +800,6 @@ async function checkUser(){
     "NO SESSION FOUND - LOGIN PAGE"
   );
 
-
   window.location.replace(
     "login.html"
   );
@@ -822,7 +818,6 @@ supabaseClient.auth.onAuthStateChange(
       "AUTH EVENT:",
       event
     );
-
 
     if(
       session &&
@@ -861,21 +856,17 @@ async function loadPosts(){
     return;
   }
 
-
   const feedBox =
     document.getElementById(
       "homeFeed"
     );
 
-
   if(!feedBox){
     return;
   }
 
-
   feedBox.innerHTML =
     '<div class="empty">Loading feed...</div>';
-
 
   let blockedIds = [];
 
@@ -895,7 +886,6 @@ async function loadPosts(){
           "blocker_id",
           currentUser.id
         );
-
 
     if(!blockError){
 
@@ -934,7 +924,6 @@ async function loadPosts(){
         }
       );
 
-
   if(postError){
 
     console.error(
@@ -962,7 +951,6 @@ async function loadPosts(){
           ascending:false
         }
       );
-
 
   if(messageError){
 
@@ -1075,7 +1063,6 @@ async function loadPosts(){
 
           }
 
-
           return renderFeedMessage(
             item.data
           );
@@ -1083,6 +1070,39 @@ async function loadPosts(){
         }
       )
       .join("");
+
+
+  /* ================= LOAD ACTION STATES ================= */
+
+  await Promise.all(
+
+    safePosts.map(
+      post =>
+        loadPostActions(
+          post.id
+        )
+    )
+
+  );
+
+
+  /* ================= LOAD FOLLOW STATES ================= */
+
+  await Promise.all(
+
+    safePosts
+      .filter(
+        post =>
+          post.user_id !== currentUser.id
+      )
+      .map(
+        post =>
+          loadFollowStatus(
+            post.user_id
+          )
+      )
+
+  );
 
 }
 
@@ -1096,7 +1116,6 @@ function renderFeedPost(post){
   const ownPost =
     post.user_id === currentUser.id;
 
-
   let controls = "";
 
 
@@ -1108,7 +1127,7 @@ function renderFeedPost(post){
         type="button"
         onclick="deletePost('${escapeAttr(post.id)}')">
 
-        🗑️ Delete Post
+        🗑️ Delete
 
       </button>
 
@@ -1123,6 +1142,16 @@ function renderFeedPost(post){
         onclick="blockUser('${escapeAttr(post.user_id)}')">
 
         🚫 Block
+
+      </button>
+
+
+      <button
+        type="button"
+        id="follow-btn-${escapeAttr(post.user_id)}"
+        onclick="toggleFollow('${escapeAttr(post.user_id)}')">
+
+        👥 Follow
 
       </button>
 
@@ -1167,21 +1196,37 @@ function renderFeedPost(post){
 
       <div class="post-actions">
 
+        ${controls}
+
 
         <button
           type="button"
+          id="like-btn-${escapeAttr(post.id)}"
           onclick="toggleLike('${escapeAttr(post.id)}')">
 
-          👍 Like
+          ❤️ Like
+
+          <span
+            class="action-count"
+            id="like-count-${escapeAttr(post.id)}">
+            0
+          </span>
 
         </button>
 
 
         <button
           type="button"
+          id="dislike-btn-${escapeAttr(post.id)}"
           onclick="toggleDislike('${escapeAttr(post.id)}')">
 
           👎 Dislike
+
+          <span
+            class="action-count"
+            id="dislike-count-${escapeAttr(post.id)}">
+            0
+          </span>
 
         </button>
 
@@ -1193,9 +1238,6 @@ function renderFeedPost(post){
           💬 Comments
 
         </button>
-
-
-        ${controls}
 
 
       </div>
@@ -1314,10 +1356,612 @@ function renderFeedMessage(message){
 
 
 /* =====================================================
+   POST ACTIONS - LOAD COUNTS
+===================================================== */
+
+async function loadPostActions(postId){
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("post_actions")
+      .select(
+        "user_id,action_type"
+      )
+      .eq(
+        "post_id",
+        postId
+      );
+
+
+  if(error){
+
+    console.error(
+      "POST ACTIONS ERROR:",
+      error
+    );
+
+    return;
+
+  }
+
+
+  const actions =
+    data || [];
+
+
+  /*
+    Count unique users.
+    This prevents old duplicate rows
+    from inflating the displayed count.
+  */
+
+  const likeUsers =
+    new Set(
+      actions
+        .filter(
+          item =>
+            item.action_type === "like"
+        )
+        .map(
+          item =>
+            item.user_id
+        )
+    );
+
+
+  const dislikeUsers =
+    new Set(
+      actions
+        .filter(
+          item =>
+            item.action_type === "dislike"
+        )
+        .map(
+          item =>
+            item.user_id
+        )
+    );
+
+
+  const likes =
+    likeUsers.size;
+
+
+  const dislikes =
+    dislikeUsers.size;
+
+
+  const myAction =
+    actions.find(
+      item =>
+        item.user_id === currentUser.id
+    );
+
+
+  const likeCount =
+    document.getElementById(
+      "like-count-" + postId
+    );
+
+
+  const dislikeCount =
+    document.getElementById(
+      "dislike-count-" + postId
+    );
+
+
+  if(likeCount){
+
+    likeCount.textContent =
+      likes;
+
+  }
+
+
+  if(dislikeCount){
+
+    dislikeCount.textContent =
+      dislikes;
+
+  }
+
+
+  const likeBtn =
+    document.getElementById(
+      "like-btn-" + postId
+    );
+
+
+  const dislikeBtn =
+    document.getElementById(
+      "dislike-btn-" + postId
+    );
+
+
+  if(likeBtn){
+
+    likeBtn.classList.toggle(
+      "active",
+      myAction?.action_type === "like"
+    );
+
+  }
+
+
+  if(dislikeBtn){
+
+    dislikeBtn.classList.toggle(
+      "active",
+      myAction?.action_type === "dislike"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   SET POST ACTION
+===================================================== */
+
+async function setPostAction(
+  postId,
+  actionType
+){
+
+  if(!currentUser){
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Get current user's existing actions.
+  */
+
+  const {
+    data:existingRows,
+    error:checkError
+  } =
+    await supabaseClient
+      .from("post_actions")
+      .select(
+        "id,action_type"
+      )
+      .eq(
+        "post_id",
+        postId
+      )
+      .eq(
+        "user_id",
+        currentUser.id
+      );
+
+
+  if(checkError){
+
+    console.error(
+      "ACTION CHECK ERROR:",
+      checkError
+    );
+
+    showNotice(
+      "Action check nahi hua."
+    );
+
+    return;
+
+  }
+
+
+  const existing =
+    existingRows &&
+    existingRows.length
+      ? existingRows[0]
+      : null;
+
+
+  /*
+    Same action:
+    remove all existing rows.
+  */
+
+  if(
+    existing &&
+    existing.action_type === actionType
+  ){
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("post_actions")
+        .delete()
+        .eq(
+          "post_id",
+          postId
+        )
+        .eq(
+          "user_id",
+          currentUser.id
+        );
+
+
+    if(error){
+
+      console.error(
+        "ACTION DELETE ERROR:",
+        error
+      );
+
+      showNotice(
+        "Action remove nahi hua."
+      );
+
+      return;
+
+    }
+
+
+    await loadPostActions(
+      postId
+    );
+
+    return;
+
+  }
+
+
+  /*
+    Remove any previous action first.
+    This guarantees one active action
+    per user for this post.
+  */
+
+  if(
+    existingRows &&
+    existingRows.length > 0
+  ){
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("post_actions")
+        .delete()
+        .eq(
+          "post_id",
+          postId
+        )
+        .eq(
+          "user_id",
+          currentUser.id
+        );
+
+
+    if(error){
+
+      console.error(
+        "OLD ACTION DELETE ERROR:",
+        error
+      );
+
+      showNotice(
+        "Previous action remove nahi hua."
+      );
+
+      return;
+
+    }
+
+  }
+
+
+  /*
+    Save new action.
+  */
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("post_actions")
+      .insert({
+
+        post_id:
+          postId,
+
+        user_id:
+          currentUser.id,
+
+        action_type:
+          actionType
+
+      });
+
+
+  if(error){
+
+    console.error(
+      "ACTION INSERT ERROR:",
+      error
+    );
+
+    showNotice(
+      "Action save nahi hua."
+    );
+
+    return;
+
+  }
+
+
+  await loadPostActions(
+    postId
+  );
+
+}
+
+
+/* =====================================================
+   LIKE
+===================================================== */
+
+async function toggleLike(postId){
+
+  await setPostAction(
+    postId,
+    "like"
+  );
+
+}
+
+
+/* =====================================================
+   DISLIKE
+===================================================== */
+
+async function toggleDislike(postId){
+
+  await setPostAction(
+    postId,
+    "dislike"
+  );
+
+}
+
+
+/* =====================================================
+   FOLLOW STATUS
+===================================================== */
+
+async function loadFollowStatus(
+  userId
+){
+
+  const button =
+    document.getElementById(
+      "follow-btn-" + userId
+    );
+
+
+  if(!button){
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("user_follows")
+      .select("id")
+      .eq(
+        "follower_id",
+        currentUser.id
+      )
+      .eq(
+        "following_id",
+        userId
+      )
+      .maybeSingle();
+
+
+  if(error){
+
+    console.error(
+      "FOLLOW STATUS ERROR:",
+      error
+    );
+
+    return;
+
+  }
+
+
+  if(data){
+
+    button.textContent =
+      "👥 Following";
+
+    button.classList.add(
+      "active"
+    );
+
+  }else{
+
+    button.textContent =
+      "👥 Follow";
+
+    button.classList.remove(
+      "active"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   FOLLOW / UNFOLLOW
+===================================================== */
+
+async function toggleFollow(
+  userId
+){
+
+  if(!currentUser){
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+
+  }
+
+
+  if(
+    userId === currentUser.id
+  ){
+
+    return;
+
+  }
+
+
+  const {
+    data:existing,
+    error:checkError
+  } =
+    await supabaseClient
+      .from("user_follows")
+      .select("id")
+      .eq(
+        "follower_id",
+        currentUser.id
+      )
+      .eq(
+        "following_id",
+        userId
+      )
+      .maybeSingle();
+
+
+  if(checkError){
+
+    console.error(
+      "FOLLOW CHECK ERROR:",
+      checkError
+    );
+
+    showNotice(
+      "Follow check nahi hua."
+    );
+
+    return;
+
+  }
+
+
+  if(existing){
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("user_follows")
+        .delete()
+        .eq(
+          "id",
+          existing.id
+        );
+
+
+    if(error){
+
+      console.error(
+        "UNFOLLOW ERROR:",
+        error
+      );
+
+      showNotice(
+        "Unfollow nahi hua."
+      );
+
+      return;
+
+    }
+
+
+    showNotice(
+      "Unfollowed."
+    );
+
+  }else{
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("user_follows")
+        .insert({
+
+          follower_id:
+            currentUser.id,
+
+          following_id:
+            userId
+
+        });
+
+
+    if(error){
+
+      console.error(
+        "FOLLOW ERROR:",
+        error
+      );
+
+      showNotice(
+        "Follow nahi hua."
+      );
+
+      return;
+
+    }
+
+
+    showNotice(
+      "👥 Following"
+    );
+
+  }
+
+
+  await loadFollowStatus(
+    userId
+  );
+
+}
+
+
+/* =====================================================
    COMMENTS
 ===================================================== */
 
-async function toggleComments(postId){
+async function toggleComments(
+  postId
+){
 
   const box =
     document.getElementById(
@@ -1346,7 +1990,9 @@ async function toggleComments(postId){
     "block";
 
 
-  await loadComments(postId);
+  await loadComments(
+    postId
+  );
 
 }
 
@@ -1355,7 +2001,9 @@ async function toggleComments(postId){
    LOAD COMMENTS
 ===================================================== */
 
-async function loadComments(postId){
+async function loadComments(
+  postId
+){
 
   const list =
     document.getElementById(
@@ -1402,7 +2050,6 @@ async function loadComments(postId){
     list.innerHTML =
       '<div class="empty">Comments load nahi hue.</div>';
 
-
     return;
 
   }
@@ -1416,6 +2063,9 @@ async function loadComments(postId){
     list.innerHTML =
       '<div class="empty">No comments yet.</div>';
 
+    setupCommentInput(
+      postId
+    );
 
     return;
 
@@ -1440,7 +2090,9 @@ async function loadComments(postId){
 
             <div class="comment-user">
 
-              ${escapeHtml(username)}
+              ${escapeHtml(
+                username
+              )}
 
             </div>
 
@@ -1456,7 +2108,6 @@ async function loadComments(postId){
 
             <div class="comment-actions">
 
-
               <button
                 type="button"
                 onclick="
@@ -1470,7 +2121,6 @@ async function loadComments(postId){
 
               </button>
 
-
             </div>
 
 
@@ -1480,7 +2130,6 @@ async function loadComments(postId){
 
 
               <div class="comment-reply-row">
-
 
                 <input
                   id="reply-input-${escapeAttr(comment.id)}"
@@ -1502,7 +2151,6 @@ async function loadComments(postId){
 
                 </button>
 
-
               </div>
 
 
@@ -1517,30 +2165,9 @@ async function loadComments(postId){
     ).join("");
 
 
-  const commentInput =
-    document.getElementById(
-      "comment-input-" + postId
-    );
-
-
-  if(commentInput){
-
-    commentInput.onkeydown =
-      function(event){
-
-        if(
-          event.key === "Enter"
-        ){
-
-          event.preventDefault();
-
-          addComment(postId);
-
-        }
-
-      };
-
-  }
+  setupCommentInput(
+    postId
+  );
 
 
   data.forEach(
@@ -1581,7 +2208,45 @@ async function loadComments(postId){
 
 
 /* =====================================================
-   COMMENT REPLY
+   COMMENT INPUT
+===================================================== */
+
+function setupCommentInput(
+  postId
+){
+
+  const commentInput =
+    document.getElementById(
+      "comment-input-" + postId
+    );
+
+
+  if(commentInput){
+
+    commentInput.onkeydown =
+      function(event){
+
+        if(
+          event.key === "Enter"
+        ){
+
+          event.preventDefault();
+
+          addComment(
+            postId
+          );
+
+        }
+
+      };
+
+  }
+
+}
+
+
+/* =====================================================
+   COMMENT REPLY BOX
 ===================================================== */
 
 function showCommentReply(
@@ -1671,13 +2336,17 @@ async function sendCommentReply(
       .from("comments")
       .insert({
 
-        post_id:postId,
+        post_id:
+          postId,
 
-        user_id:currentUser.id,
+        user_id:
+          currentUser.id,
 
-        username:currentUsername,
+        username:
+          currentUsername,
 
-        content:text
+        content:
+          text
 
       });
 
@@ -1694,7 +2363,9 @@ async function sendCommentReply(
   }
 
 
-  await loadComments(postId);
+  await loadComments(
+    postId
+  );
 
 }
 
@@ -1703,7 +2374,9 @@ async function sendCommentReply(
    ADD COMMENT
 ===================================================== */
 
-async function addComment(postId){
+async function addComment(
+  postId
+){
 
   if(!currentUser){
 
@@ -1743,13 +2416,17 @@ async function addComment(postId){
       .from("comments")
       .insert({
 
-        post_id:postId,
+        post_id:
+          postId,
 
-        user_id:currentUser.id,
+        user_id:
+          currentUser.id,
 
-        username:currentUsername,
+        username:
+          currentUsername,
 
-        content:text
+        content:
+          text
 
       });
 
@@ -1766,10 +2443,13 @@ async function addComment(postId){
   }
 
 
-  input.value = "";
+  input.value =
+    "";
 
 
-  await loadComments(postId);
+  await loadComments(
+    postId
+  );
 
 }
 
@@ -1825,11 +2505,14 @@ async function sendTextMessage(){
       .from("home_messages")
       .insert({
 
-        user_id:currentUser.id,
+        user_id:
+          currentUser.id,
 
-        username:currentUsername,
+        username:
+          currentUsername,
 
-        message:text
+        message:
+          text
 
       })
       .select()
@@ -1849,7 +2532,6 @@ async function sendTextMessage(){
       error.message
     );
 
-
     return;
 
   }
@@ -1861,7 +2543,8 @@ async function sendTextMessage(){
   );
 
 
-  input.value = "";
+  input.value =
+    "";
 
 
   await loadPosts();
@@ -1876,7 +2559,6 @@ async function sendTextMessage(){
 
 /* =====================================================
    LOAD MESSAGES
-   Combined feed refresh
 ===================================================== */
 
 async function loadMessages(){
@@ -1927,7 +2609,6 @@ async function deleteHomeMessage(
       "Message delete nahi hua.\n\n" +
       error.message
     );
-
 
     return;
 
@@ -2063,112 +2744,12 @@ document.addEventListener(
 
 
 /* =====================================================
-   LIKE
-===================================================== */
-
-async function toggleLike(postId){
-
-  if(!currentUser){
-
-    alert(
-      "Please login first."
-    );
-
-    return;
-
-  }
-
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .from("post_actions")
-      .insert({
-
-        post_id:postId,
-
-        user_id:currentUser.id,
-
-        action_type:"like"
-
-      });
-
-
-  if(error){
-
-    showNotice(
-      "Like save nahi hua."
-    );
-
-    return;
-
-  }
-
-
-  showNotice(
-    "👍 Liked"
-  );
-
-}
-
-
-/* =====================================================
-   DISLIKE
-===================================================== */
-
-async function toggleDislike(postId){
-
-  if(!currentUser){
-
-    alert(
-      "Please login first."
-    );
-
-    return;
-
-  }
-
-
-  const {
-    error
-  } =
-    await supabaseClient
-      .from("post_actions")
-      .insert({
-
-        post_id:postId,
-
-        user_id:currentUser.id,
-
-        action_type:"dislike"
-
-      });
-
-
-  if(error){
-
-    showNotice(
-      "Dislike save nahi hua."
-    );
-
-    return;
-
-  }
-
-
-  showNotice(
-    "👎 Disliked"
-  );
-
-}
-
-
-/* =====================================================
    DELETE POST
 ===================================================== */
 
-async function deletePost(postId){
+async function deletePost(
+  postId
+){
 
   if(!currentUser){
     return;
@@ -2214,20 +2795,12 @@ async function deletePost(postId){
   }
 
 
-  const post =
-    document.getElementById(
-      "post-" + postId
-    );
-
-
-  if(post){
-
-    post.remove();
-
-  }
-
-
   await loadPosts();
+
+
+  showNotice(
+    "🗑️ Post deleted."
+  );
 
 }
 
@@ -2236,7 +2809,9 @@ async function deletePost(postId){
    BLOCK USER
 ===================================================== */
 
-async function blockUser(userId){
+async function blockUser(
+  userId
+){
 
   if(!currentUser){
     return;
@@ -2270,9 +2845,11 @@ async function blockUser(userId){
       .from("user_blocks")
       .insert({
 
-        blocker_id:currentUser.id,
+        blocker_id:
+          currentUser.id,
 
-        blocked_id:userId
+        blocked_id:
+          userId
 
       });
 
@@ -2296,7 +2873,6 @@ async function blockUser(userId){
       "Block nahi hua.\n\n" +
       error.message
     );
-
 
     return;
 
@@ -2340,7 +2916,8 @@ function sendImage(){
   );
 
 
-  input.value = "";
+  input.value =
+    "";
 
 }
 
@@ -2387,7 +2964,8 @@ async function toggleRecording(){
         });
 
 
-    audioChunks = [];
+    audioChunks =
+      [];
 
 
     mediaRecorder =
@@ -2423,7 +3001,8 @@ async function toggleRecording(){
           );
 
 
-        isRecording = false;
+        isRecording =
+          false;
 
 
         const status =
@@ -2464,7 +3043,8 @@ async function toggleRecording(){
     mediaRecorder.start();
 
 
-    isRecording = true;
+    isRecording =
+      true;
 
 
     const status =
@@ -2521,8 +3101,11 @@ async function toggleRecording(){
 function goHome(){
 
   window.scrollTo({
+
     top:0,
+
     behavior:"smooth"
+
   });
 
 }
@@ -2560,7 +3143,6 @@ async function moreMenu(){
       error.message
     );
 
-
     return;
 
   }
@@ -2577,7 +3159,9 @@ async function moreMenu(){
    NOTICE
 ===================================================== */
 
-function showNotice(message){
+function showNotice(
+  message
+){
 
   const box =
     document.getElementById(
@@ -2615,26 +3199,51 @@ function showNotice(message){
    HELPERS
 ===================================================== */
 
-function escapeHtml(value){
+function escapeHtml(
+  value
+){
 
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
 
 
-function escapeAttr(value){
+function escapeAttr(
+  value
+){
 
-  return escapeHtml(value);
+  return escapeHtml(
+    value
+  );
 
 }
 
 
-function formatDate(date){
+function formatDate(
+  date
+){
 
   if(!date){
     return "";
@@ -2643,8 +3252,9 @@ function formatDate(date){
 
   try{
 
-    return new Date(date)
-      .toLocaleString();
+    return new Date(
+      date
+    ).toLocaleString();
 
   }catch(error){
 
