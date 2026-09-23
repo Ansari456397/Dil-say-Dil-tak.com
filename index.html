@@ -100,6 +100,27 @@ body{
   border-color:#7b61d9;
 }
 
+/* ================= SEND POST BUTTON ================= */
+
+.post-send-btn{
+  width:100%;
+  margin-top:10px;
+  border:0;
+  background:#6c5ce7;
+  color:white;
+  padding:11px;
+  border-radius:9px;
+  font-size:14px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.post-send-btn:active{
+  transform:scale(.98);
+}
+
+/* ================= MEDIA ================= */
+
 .post-media-row{
   display:flex;
   gap:8px;
@@ -508,6 +529,17 @@ body{
       placeholder="Write a post..."
       autocomplete="off"></textarea>
 
+    <!-- SEND POST BUTTON -->
+
+    <button
+      id="publishPostBtn"
+      class="post-send-btn"
+      type="button">
+      📤 Send a Post
+    </button>
+
+    <!-- MEDIA BUTTONS -->
+
     <div class="post-media-row">
 
       <button
@@ -710,7 +742,9 @@ function formatDate(date){
 function showNotice(message){
 
   const notice =
-    document.getElementById("notice");
+    document.getElementById(
+      "notice"
+    );
 
   if(!notice){
     return;
@@ -739,8 +773,11 @@ function setCurrentUser(user){
   currentUser = user;
 
   if(!user){
+
     currentUsername = "User";
+
     return;
+
   }
 
   currentUsername =
@@ -806,7 +843,9 @@ async function checkUser(){
 
     if(!user){
 
-      window.location.href = "login.html";
+      window.location.href =
+        "login.html";
+
       return;
 
     }
@@ -2748,6 +2787,24 @@ document.addEventListener(
           }
 
         }
+      );
+
+    }
+
+
+    /* ---------- SEND POST BUTTON ---------- */
+
+    const publishPostBtn =
+      document.getElementById(
+        "publishPostBtn"
+      );
+
+
+    if(publishPostBtn){
+
+      publishPostBtn.addEventListener(
+        "click",
+        addPost
       );
 
     }
