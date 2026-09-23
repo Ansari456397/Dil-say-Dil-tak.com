@@ -23,7 +23,7 @@ body{
   padding-bottom:80px;
 }
 
-/* HEADER */
+/* ================= HEADER ================= */
 
 .header{
   position:sticky;
@@ -44,7 +44,7 @@ body{
   color:#ffd6ff;
 }
 
-/* CONTAINER */
+/* ================= CONTAINER ================= */
 
 .container{
   width:100%;
@@ -53,7 +53,7 @@ body{
   padding:12px;
 }
 
-/* TOP MESSAGE */
+/* ================= MESSAGE BOX ================= */
 
 .home-message-box{
   background:white;
@@ -84,6 +84,10 @@ body{
   font-size:15px;
 }
 
+#chatInput:focus{
+  border-color:#6c5ce7;
+}
+
 .chat-send{
   border:0;
   border-radius:10px;
@@ -91,6 +95,7 @@ body{
   color:white;
   width:48px;
   font-size:20px;
+  cursor:pointer;
 }
 
 .message-tools{
@@ -105,9 +110,10 @@ body{
   background:#fafafa;
   border-radius:9px;
   padding:9px 5px;
+  cursor:pointer;
 }
 
-/* WELCOME */
+/* ================= WELCOME ================= */
 
 .welcome-box{
   background:white;
@@ -135,7 +141,7 @@ body{
   color:#333;
 }
 
-/* FEED */
+/* ================= FEED ================= */
 
 .section-title{
   font-size:19px;
@@ -147,7 +153,7 @@ body{
   margin-bottom:20px;
 }
 
-/* POST */
+/* ================= POST ================= */
 
 .post{
   background:white;
@@ -174,7 +180,7 @@ body{
   word-break:break-word;
 }
 
-/* POST OPTIONS */
+/* ================= POST ACTIONS ================= */
 
 .post-actions{
   display:flex !important;
@@ -199,6 +205,10 @@ body{
   font-size:13px !important;
 }
 
+.post-actions button:hover{
+  background:#f0edff !important;
+}
+
 .post-actions button.active{
   background:#eee9ff !important;
   border-color:#6c5ce7 !important;
@@ -211,7 +221,7 @@ body{
   margin-left:3px;
 }
 
-/* HOME MESSAGE */
+/* ================= HOME MESSAGE ================= */
 
 .home-message{
   background:white;
@@ -248,7 +258,7 @@ body{
   font-size:12px;
 }
 
-/* COMMENTS */
+/* ================= COMMENTS ================= */
 
 .comments{
   display:none;
@@ -308,6 +318,7 @@ body{
   color:white;
   border-radius:9px;
   padding:0 14px;
+  cursor:pointer;
 }
 
 .comment-reply-box{
@@ -327,6 +338,7 @@ body{
   border:1px solid #ddd;
   border-radius:9px;
   padding:9px;
+  outline:none;
 }
 
 .comment-reply-row button{
@@ -335,9 +347,10 @@ body{
   color:white;
   border-radius:9px;
   padding:0 13px;
+  cursor:pointer;
 }
 
-/* EMPTY */
+/* ================= EMPTY ================= */
 
 .empty{
   background:white;
@@ -347,7 +360,7 @@ body{
   color:#777;
 }
 
-/* BOTTOM NAV */
+/* ================= BOTTOM NAV ================= */
 
 .bottom-nav{
   position:fixed;
@@ -366,6 +379,7 @@ body{
   border:0;
   background:white;
   font-size:12px;
+  cursor:pointer;
 }
 
 .bottom-nav button span{
@@ -374,7 +388,7 @@ body{
   margin-bottom:2px;
 }
 
-/* NOTICE */
+/* ================= NOTICE ================= */
 
 .notice{
   position:fixed;
@@ -396,16 +410,20 @@ body{
 
 <body>
 
+<!-- ================= HEADER ================= -->
+
 <header class="header">
+
   <div class="logo">
     Socia<span>lyte</span>
   </div>
+
 </header>
 
 
 <div class="container">
 
-  <!-- TOP MESSAGE BOX -->
+  <!-- ================= TOP MESSAGE ================= -->
 
   <div class="home-message-box">
 
@@ -463,7 +481,7 @@ body{
   </div>
 
 
-  <!-- WELCOME -->
+  <!-- ================= WELCOME ================= -->
 
   <div class="welcome-box">
 
@@ -479,56 +497,74 @@ body{
   </div>
 
 
-  <!-- FEED -->
+  <!-- ================= HOME FEED ================= -->
 
   <div class="section-title">
     🏠 Home Feed
   </div>
 
   <div id="homeFeed">
+
     <div class="empty">
       Loading feed...
     </div>
+
   </div>
 
 </div>
 
 
-<!-- BOTTOM -->
+<!-- ================= BOTTOM NAV ================= -->
 
 <div class="bottom-nav">
 
-  <button type="button" onclick="goHome()">
+  <button
+    type="button"
+    onclick="goHome()">
+
     <span>🏠</span>
     Home
+
   </button>
+
 
   <button
     type="button"
     onclick="showNotice('Private Chat coming soon')">
+
     <span>💬</span>
     Private
+
   </button>
+
 
   <button
     type="button"
     onclick="openProfile()">
+
     <span>👤</span>
     Profile
+
   </button>
+
 
   <button
     type="button"
     onclick="showNotice('Notifications coming soon')">
+
     <span>🔔</span>
     Notifications
+
   </button>
+
 
   <button
     type="button"
     onclick="moreMenu()">
+
     <span>☰</span>
     More
+
   </button>
 
 </div>
@@ -539,29 +575,33 @@ body{
 
 <script>
 
-/* ================= SUPABASE ================= */
+/* =====================================================
+   SUPABASE
+===================================================== */
 
 const SUPABASE_URL =
-"https://szmauhxiyjffjhrcruee.supabase.co";
+  "https://szmauhxiyjffjhrcruee.supabase.co";
 
 const SUPABASE_KEY =
-"sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
+  "sb_publishable_-ys_eIxK2WuUucSGtoBdqw_nKWnIgep";
 
 const supabaseClient =
-window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY,
-  {
-    auth:{
-      persistSession:true,
-      autoRefreshToken:true,
-      detectSessionInUrl:true
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY,
+    {
+      auth:{
+        persistSession:true,
+        autoRefreshToken:true,
+        detectSessionInUrl:true
+      }
     }
-  }
-);
+  );
 
 
-/* ================= VARIABLES ================= */
+/* =====================================================
+   VARIABLES
+===================================================== */
 
 let currentUser = null;
 let currentUsername = "User";
@@ -571,11 +611,15 @@ let audioChunks = [];
 let isRecording = false;
 
 
-/* ================= USER ================= */
+/* =====================================================
+   SET USER
+===================================================== */
 
 function setCurrentUser(user){
 
-  if(!user) return false;
+  if(!user){
+    return false;
+  }
 
   currentUser = user;
 
@@ -591,21 +635,25 @@ function setCurrentUser(user){
     );
 
   if(box){
+
     box.textContent =
       currentUsername;
+
   }
 
   return true;
 }
 
 
-/* ================= LOGIN CHECK ================= */
+/* =====================================================
+   CHECK LOGIN
+===================================================== */
 
 async function checkUser(){
 
   for(
-    let attempt=1;
-    attempt<=8;
+    let attempt = 1;
+    attempt <= 8;
     attempt++
   ){
 
@@ -615,7 +663,7 @@ async function checkUser(){
         data,
         error
       } =
-      await supabaseClient.auth.getSession();
+        await supabaseClient.auth.getSession();
 
       if(
         !error &&
@@ -629,6 +677,7 @@ async function checkUser(){
         await loadPosts();
 
         return;
+
       }
 
     }catch(error){
@@ -654,7 +703,7 @@ async function checkUser(){
       data,
       error
     } =
-    await supabaseClient.auth.getUser();
+      await supabaseClient.auth.getUser();
 
     if(
       !error &&
@@ -668,11 +717,15 @@ async function checkUser(){
       await loadPosts();
 
       return;
+
     }
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "FINAL USER ERROR:",
+      error
+    );
 
   }
 
@@ -680,11 +733,16 @@ async function checkUser(){
   window.location.replace(
     "login.html"
   );
+
 }
 
 
+/* =====================================================
+   AUTH STATE
+===================================================== */
+
 supabaseClient.auth.onAuthStateChange(
-  (event,session)=>{
+  (event,session) => {
 
     if(session?.user){
 
@@ -698,7 +756,9 @@ supabaseClient.auth.onAuthStateChange(
 );
 
 
-/* ================= PROFILE ================= */
+/* =====================================================
+   PROFILE
+===================================================== */
 
 function openProfile(){
 
@@ -708,67 +768,82 @@ function openProfile(){
 }
 
 
-/* ================= LOAD FEED ================= */
+/* =====================================================
+   LOAD COMBINED FEED
+===================================================== */
 
 async function loadPosts(){
 
-  if(!currentUser) return;
+  if(!currentUser){
+    return;
+  }
 
   const feed =
     document.getElementById(
       "homeFeed"
     );
 
-  if(!feed) return;
+  if(!feed){
+    return;
+  }
 
   feed.innerHTML =
     '<div class="empty">Loading feed...</div>';
 
 
-  /* BLOCKED USERS */
+  /* ================= BLOCKED USERS ================= */
 
   let blockedIds = [];
 
   try{
 
     const {
-      data
+      data,
+      error
     } =
-    await supabaseClient
-      .from("user_blocks")
-      .select("blocked_id")
-      .eq(
-        "blocker_id",
-        currentUser.id
-      );
+      await supabaseClient
+        .from("user_blocks")
+        .select("blocked_id")
+        .eq(
+          "blocker_id",
+          currentUser.id
+        );
 
-    blockedIds =
-      (data || []).map(
-        x => x.blocked_id
-      );
+    if(!error){
+
+      blockedIds =
+        (data || []).map(
+          item =>
+            item.blocked_id
+        );
+
+    }
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      "BLOCK LOAD ERROR:",
+      error
+    );
 
   }
 
 
-  /* POSTS */
+  /* ================= POSTS ================= */
 
   const {
     data:posts,
     error:postError
   } =
-  await supabaseClient
-    .from("posts")
-    .select("*")
-    .order(
-      "created_at",
-      {
-        ascending:false
-      }
-    );
+    await supabaseClient
+      .from("posts")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
 
   if(postError){
 
@@ -780,23 +855,23 @@ async function loadPosts(){
   }
 
 
-  /* MESSAGES */
+  /* ================= HOME MESSAGES ================= */
 
   const {
     data:messages,
     error:messageError
   } =
-  await supabaseClient
-    .from("home_messages")
-    .select(
-      "id,user_id,username,message,created_at"
-    )
-    .order(
-      "created_at",
-      {
-        ascending:false
-      }
-    );
+    await supabaseClient
+      .from("home_messages")
+      .select(
+        "id,user_id,username,message,created_at"
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
 
   if(messageError){
 
@@ -808,6 +883,8 @@ async function loadPosts(){
   }
 
 
+  /* ================= SAFE POSTS ================= */
+
   const safePosts =
     (posts || []).filter(
       post =>
@@ -817,6 +894,8 @@ async function loadPosts(){
     );
 
 
+  /* ================= FEED ITEMS ================= */
+
   const feedItems = [];
 
 
@@ -824,10 +903,15 @@ async function loadPosts(){
     post => {
 
       feedItems.push({
+
         type:"post",
+
         id:post.id,
+
         created_at:post.created_at,
+
         data:post
+
       });
 
     }
@@ -844,10 +928,15 @@ async function loadPosts(){
       ){
 
         feedItems.push({
+
           type:"message",
+
           id:message.id,
+
           created_at:message.created_at,
+
           data:message
+
         });
 
       }
@@ -856,14 +945,18 @@ async function loadPosts(){
   );
 
 
+  /* ================= LATEST FIRST ================= */
+
   feedItems.sort(
-    (a,b)=>
+    (a,b) =>
       new Date(b.created_at) -
       new Date(a.created_at)
   );
 
 
-  if(feedItems.length===0){
+  /* ================= EMPTY ================= */
+
+  if(feedItems.length === 0){
 
     feed.innerHTML =
       '<div class="empty">No posts or messages yet.</div>';
@@ -873,16 +966,20 @@ async function loadPosts(){
   }
 
 
+  /* ================= RENDER ================= */
+
   feed.innerHTML =
-    feedItems.map(
-      item =>
-        item.type==="post"
-        ? renderFeedPost(item.data)
-        : renderFeedMessage(item.data)
-    ).join("");
+    feedItems
+      .map(
+        item =>
+          item.type === "post"
+          ? renderFeedPost(item.data)
+          : renderFeedMessage(item.data)
+      )
+      .join("");
 
 
-  /* LOAD COUNTS */
+  /* ================= LOAD ACTION DATA ================= */
 
   for(
     const post of safePosts
@@ -891,6 +988,7 @@ async function loadPosts(){
     await loadPostActions(
       post.id
     );
+
 
     if(
       post.user_id !== currentUser.id
@@ -907,7 +1005,9 @@ async function loadPosts(){
 }
 
 
-/* ================= RENDER POST ================= */
+/* =====================================================
+   RENDER POST
+===================================================== */
 
 function renderFeedPost(post){
 
@@ -916,6 +1016,8 @@ function renderFeedPost(post){
 
   let controls = "";
 
+
+  /* ================= OWN POST ================= */
 
   if(ownPost){
 
@@ -931,7 +1033,12 @@ function renderFeedPost(post){
 
     `;
 
-  }else{
+  }
+
+
+  /* ================= OTHER USER POST ================= */
+
+  else{
 
     controls = `
 
@@ -942,6 +1049,7 @@ function renderFeedPost(post){
         🚫 Block
 
       </button>
+
 
       <button
         type="button"
@@ -962,6 +1070,7 @@ function renderFeedPost(post){
     <div
       class="post feed-item"
       id="post-${escapeAttr(post.id)}">
+
 
       <div class="post-user">
 
@@ -990,12 +1099,14 @@ function renderFeedPost(post){
       </div>
 
 
-      <!-- OPTIONS -->
+      <!-- ================= POST OPTIONS ================= -->
 
       <div class="post-actions">
 
         ${controls}
 
+
+        <!-- LIKE -->
 
         <button
           type="button"
@@ -1012,6 +1123,8 @@ function renderFeedPost(post){
         </button>
 
 
+        <!-- DISLIKE -->
+
         <button
           type="button"
           id="dislike-btn-${escapeAttr(post.id)}"
@@ -1027,6 +1140,8 @@ function renderFeedPost(post){
         </button>
 
 
+        <!-- COMMENTS -->
+
         <button
           type="button"
           onclick="toggleComments('${escapeAttr(post.id)}')">
@@ -1038,11 +1153,12 @@ function renderFeedPost(post){
       </div>
 
 
-      <!-- COMMENTS -->
+      <!-- ================= COMMENTS ================= -->
 
       <div
         class="comments"
         id="comments-${escapeAttr(post.id)}">
+
 
         <div
           id="comment-list-${escapeAttr(post.id)}">
@@ -1056,6 +1172,7 @@ function renderFeedPost(post){
             type="text"
             placeholder="Write a comment..."
           >
+
 
           <button
             type="button"
@@ -1076,7 +1193,9 @@ function renderFeedPost(post){
 }
 
 
-/* ================= MESSAGE ================= */
+/* =====================================================
+   RENDER HOME MESSAGE
+===================================================== */
 
 function renderFeedMessage(message){
 
@@ -1088,6 +1207,7 @@ function renderFeedMessage(message){
   return `
 
     <div class="home-message feed-item">
+
 
       <div class="home-message-user">
 
@@ -1140,7 +1260,9 @@ function renderFeedMessage(message){
 }
 
 
-/* ================= LIKE / DISLIKE COUNTS ================= */
+/* =====================================================
+   LIKE / DISLIKE COUNTS + ACTIVE STATUS
+===================================================== */
 
 async function loadPostActions(postId){
 
@@ -1148,21 +1270,21 @@ async function loadPostActions(postId){
     data,
     error
   } =
-  await supabaseClient
-    .from("post_actions")
-    .select(
-      "user_id,action_type"
-    )
-    .eq(
-      "post_id",
-      postId
-    );
+    await supabaseClient
+      .from("post_actions")
+      .select(
+        "id,user_id,action_type"
+      )
+      .eq(
+        "post_id",
+        postId
+      );
 
 
   if(error){
 
     console.error(
-      "ACTION ERROR:",
+      "ACTION LOAD ERROR:",
       error
     );
 
@@ -1175,45 +1297,54 @@ async function loadPostActions(postId){
     data || [];
 
 
+  /* ================= LIKE COUNT ================= */
+
   const likes =
     new Set(
       actions
         .filter(
-          x =>
-            x.action_type === "like"
+          action =>
+            action.action_type === "like"
         )
         .map(
-          x =>
-            x.user_id
+          action =>
+            action.user_id
         )
     ).size;
 
+
+  /* ================= DISLIKE COUNT ================= */
 
   const dislikes =
     new Set(
       actions
         .filter(
-          x =>
-            x.action_type === "dislike"
+          action =>
+            action.action_type === "dislike"
         )
         .map(
-          x =>
-            x.user_id
+          action =>
+            action.user_id
         )
     ).size;
 
 
+  /* ================= MY ACTION ================= */
+
   const myAction =
     actions.find(
-      x =>
-        x.user_id === currentUser.id
+      action =>
+        action.user_id === currentUser.id
     );
 
+
+  /* ================= COUNT ELEMENTS ================= */
 
   const likeCount =
     document.getElementById(
       "like-count-" + postId
     );
+
 
   const dislikeCount =
     document.getElementById(
@@ -1237,10 +1368,13 @@ async function loadPostActions(postId){
   }
 
 
+  /* ================= ACTIVE BUTTON ================= */
+
   const likeBtn =
     document.getElementById(
       "like-btn-" + postId
     );
+
 
   const dislikeBtn =
     document.getElementById(
@@ -1270,7 +1404,9 @@ async function loadPostActions(postId){
 }
 
 
-/* ================= ACTION ================= */
+/* =====================================================
+   SET LIKE / DISLIKE
+===================================================== */
 
 async function setPostAction(
   postId,
@@ -1288,26 +1424,33 @@ async function setPostAction(
   }
 
 
+  /* ================= CURRENT ACTION ================= */
+
   const {
     data,
     error
   } =
-  await supabaseClient
-    .from("post_actions")
-    .select(
-      "id,action_type"
-    )
-    .eq(
-      "post_id",
-      postId
-    )
-    .eq(
-      "user_id",
-      currentUser.id
-    );
+    await supabaseClient
+      .from("post_actions")
+      .select(
+        "id,action_type"
+      )
+      .eq(
+        "post_id",
+        postId
+      )
+      .eq(
+        "user_id",
+        currentUser.id
+      );
 
 
   if(error){
+
+    console.error(
+      "ACTION CHECK ERROR:",
+      error
+    );
 
     showNotice(
       "Action check nahi hua."
@@ -1322,7 +1465,7 @@ async function setPostAction(
     data?.[0];
 
 
-  /* SAME ACTION = REMOVE */
+  /* ================= SAME ACTION = REMOVE ================= */
 
   if(
     existing &&
@@ -1330,22 +1473,22 @@ async function setPostAction(
   ){
 
     const {
-      error
+      error:deleteError
     } =
-    await supabaseClient
-      .from("post_actions")
-      .delete()
-      .eq(
-        "post_id",
-        postId
-      )
-      .eq(
-        "user_id",
-        currentUser.id
+      await supabaseClient
+        .from("post_actions")
+        .delete()
+        .eq(
+          "id",
+          existing.id
+        );
+
+
+    if(deleteError){
+
+      console.error(
+        deleteError
       );
-
-
-    if(error){
 
       showNotice(
         "Action remove nahi hua."
@@ -1354,6 +1497,7 @@ async function setPostAction(
       return;
 
     }
+
 
     await loadPostActions(
       postId
@@ -1364,27 +1508,27 @@ async function setPostAction(
   }
 
 
-  /* REMOVE OLD ACTION */
+  /* ================= REMOVE OLD ACTION ================= */
 
-  if(data && data.length){
+  if(existing){
 
     const {
-      error
+      error:removeError
     } =
-    await supabaseClient
-      .from("post_actions")
-      .delete()
-      .eq(
-        "post_id",
-        postId
-      )
-      .eq(
-        "user_id",
-        currentUser.id
+      await supabaseClient
+        .from("post_actions")
+        .delete()
+        .eq(
+          "id",
+          existing.id
+        );
+
+
+    if(removeError){
+
+      console.error(
+        removeError
       );
-
-
-    if(error){
 
       showNotice(
         "Previous action remove nahi hua."
@@ -1397,27 +1541,28 @@ async function setPostAction(
   }
 
 
-  /* ADD NEW */
+  /* ================= ADD NEW ACTION ================= */
 
   const {
     error:insertError
   } =
-  await supabaseClient
-    .from("post_actions")
-    .insert({
+    await supabaseClient
+      .from("post_actions")
+      .insert({
 
-      post_id:postId,
+        post_id:postId,
 
-      user_id:currentUser.id,
+        user_id:currentUser.id,
 
-      action_type:actionType
+        action_type:actionType
 
-    });
+      });
 
 
   if(insertError){
 
     console.error(
+      "ACTION INSERT ERROR:",
       insertError
     );
 
@@ -1437,6 +1582,10 @@ async function setPostAction(
 }
 
 
+/* =====================================================
+   LIKE
+===================================================== */
+
 async function toggleLike(postId){
 
   await setPostAction(
@@ -1446,6 +1595,10 @@ async function toggleLike(postId){
 
 }
 
+
+/* =====================================================
+   DISLIKE
+===================================================== */
 
 async function toggleDislike(postId){
 
@@ -1457,7 +1610,9 @@ async function toggleDislike(postId){
 }
 
 
-/* ================= FOLLOW ================= */
+/* =====================================================
+   FOLLOW STATUS
+===================================================== */
 
 async function loadFollowStatus(
   userId
@@ -1468,31 +1623,34 @@ async function loadFollowStatus(
       "follow-btn-" + userId
     );
 
-  if(!button) return;
+
+  if(!button){
+    return;
+  }
 
 
   const {
     data,
     error
   } =
-  await supabaseClient
-    .from("user_follows")
-    .select("id")
-    .eq(
-      "follower_id",
-      currentUser.id
-    )
-    .eq(
-      "following_id",
-      userId
-    )
-    .maybeSingle();
+    await supabaseClient
+      .from("user_follows")
+      .select("id")
+      .eq(
+        "follower_id",
+        currentUser.id
+      )
+      .eq(
+        "following_id",
+        userId
+      )
+      .maybeSingle();
 
 
   if(error){
 
     console.error(
-      "FOLLOW ERROR:",
+      "FOLLOW STATUS ERROR:",
       error
     );
 
@@ -1524,32 +1682,52 @@ async function loadFollowStatus(
 }
 
 
+/* =====================================================
+   FOLLOW / UNFOLLOW
+===================================================== */
+
 async function toggleFollow(
   userId
 ){
 
-  if(!currentUser) return;
+  if(!currentUser){
+    return;
+  }
+
+
+  if(
+    userId === currentUser.id
+  ){
+
+    return;
+
+  }
 
 
   const {
     data:existing,
     error
   } =
-  await supabaseClient
-    .from("user_follows")
-    .select("id")
-    .eq(
-      "follower_id",
-      currentUser.id
-    )
-    .eq(
-      "following_id",
-      userId
-    )
-    .maybeSingle();
+    await supabaseClient
+      .from("user_follows")
+      .select("id")
+      .eq(
+        "follower_id",
+        currentUser.id
+      )
+      .eq(
+        "following_id",
+        userId
+      )
+      .maybeSingle();
 
 
   if(error){
+
+    console.error(
+      "FOLLOW CHECK ERROR:",
+      error
+    );
 
     showNotice(
       "Follow check nahi hua."
@@ -1560,20 +1738,27 @@ async function toggleFollow(
   }
 
 
+  /* ================= UNFOLLOW ================= */
+
   if(existing){
 
     const {
-      error
+      error:deleteError
     } =
-    await supabaseClient
-      .from("user_follows")
-      .delete()
-      .eq(
-        "id",
-        existing.id
-      );
+      await supabaseClient
+        .from("user_follows")
+        .delete()
+        .eq(
+          "id",
+          existing.id
+        );
 
-    if(error){
+
+    if(deleteError){
+
+      console.error(
+        deleteError
+      );
 
       showNotice(
         "Unfollow nahi hua."
@@ -1583,29 +1768,39 @@ async function toggleFollow(
 
     }
 
+
     showNotice(
       "Unfollowed."
     );
 
-  }else{
+  }
+
+
+  /* ================= FOLLOW ================= */
+
+  else{
 
     const {
-      error
+      error:insertError
     } =
-    await supabaseClient
-      .from("user_follows")
-      .insert({
+      await supabaseClient
+        .from("user_follows")
+        .insert({
 
-        follower_id:
-          currentUser.id,
+          follower_id:
+            currentUser.id,
 
-        following_id:
-          userId
+          following_id:
+            userId
 
-      });
+        });
 
 
-    if(error){
+    if(insertError){
+
+      console.error(
+        insertError
+      );
 
       showNotice(
         "Follow nahi hua."
@@ -1614,6 +1809,7 @@ async function toggleFollow(
       return;
 
     }
+
 
     showNotice(
       "👥 Following"
@@ -1629,7 +1825,9 @@ async function toggleFollow(
 }
 
 
-/* ================= COMMENTS ================= */
+/* =====================================================
+   COMMENTS TOGGLE
+===================================================== */
 
 async function toggleComments(
   postId
@@ -1640,7 +1838,10 @@ async function toggleComments(
       "comments-" + postId
     );
 
-  if(!box) return;
+
+  if(!box){
+    return;
+  }
 
 
   if(
@@ -1666,6 +1867,10 @@ async function toggleComments(
 }
 
 
+/* =====================================================
+   LOAD COMMENTS
+===================================================== */
+
 async function loadComments(
   postId
 ){
@@ -1675,7 +1880,10 @@ async function loadComments(
       "comment-list-" + postId
     );
 
-  if(!list) return;
+
+  if(!list){
+    return;
+  }
 
 
   list.innerHTML =
@@ -1686,22 +1894,27 @@ async function loadComments(
     data,
     error
   } =
-  await supabaseClient
-    .from("comments")
-    .select("*")
-    .eq(
-      "post_id",
-      postId
-    )
-    .order(
-      "created_at",
-      {
-        ascending:true
-      }
-    );
+    await supabaseClient
+      .from("comments")
+      .select("*")
+      .eq(
+        "post_id",
+        postId
+      )
+      .order(
+        "created_at",
+        {
+          ascending:true
+        }
+      );
 
 
   if(error){
+
+    console.error(
+      "COMMENTS ERROR:",
+      error
+    );
 
     list.innerHTML =
       '<div class="empty">Comments load nahi hue.</div>';
@@ -1729,83 +1942,137 @@ async function loadComments(
 
 
   list.innerHTML =
-    data.map(
-      comment => {
+    data
+      .map(
+        comment => {
 
-        const username =
-          comment.username ||
-          "User";
-
-
-        return `
-
-          <div class="comment">
-
-            <div class="comment-user">
-              ${escapeHtml(username)}
-            </div>
-
-            <div class="comment-text">
-              ${escapeHtml(comment.content || "")}
-            </div>
-
-            <div class="comment-actions">
-
-              <button
-                type="button"
-                onclick="showCommentReply(
-                  '${escapeAttr(comment.id)}',
-                  '${escapeAttr(username)}'
-                )">
-
-                ↩️ Reply
-
-              </button>
-
-            </div>
+          const username =
+            comment.username ||
+            "User";
 
 
-            <div
-              class="comment-reply-box"
-              id="reply-box-${escapeAttr(comment.id)}">
+          return `
 
-              <div class="comment-reply-row">
+            <div class="comment">
 
-                <input
-                  id="reply-input-${escapeAttr(comment.id)}"
-                  type="text"
-                  placeholder="Reply to ${escapeAttr(username)}..."
-                >
+
+              <div class="comment-user">
+
+                ${escapeHtml(
+                  username
+                )}
+
+              </div>
+
+
+              <div class="comment-text">
+
+                ${escapeHtml(
+                  comment.content || ""
+                )}
+
+              </div>
+
+
+              <div class="comment-actions">
 
                 <button
                   type="button"
-                  onclick="sendCommentReply(
+                  onclick="showCommentReply(
                     '${escapeAttr(comment.id)}',
-                    '${escapeAttr(postId)}'
+                    '${escapeAttr(username)}'
                   )">
 
-                  ➤
+                  ↩️ Reply
 
                 </button>
 
               </div>
 
+
+              <div
+                class="comment-reply-box"
+                id="reply-box-${escapeAttr(comment.id)}">
+
+
+                <div class="comment-reply-row">
+
+                  <input
+                    id="reply-input-${escapeAttr(comment.id)}"
+                    type="text"
+                    placeholder="Reply to ${escapeAttr(username)}..."
+                  >
+
+
+                  <button
+                    type="button"
+                    onclick="sendCommentReply(
+                      '${escapeAttr(comment.id)}',
+                      '${escapeAttr(postId)}'
+                    )">
+
+                    ➤
+
+                  </button>
+
+                </div>
+
+              </div>
+
             </div>
 
-          </div>
+          `;
 
-        `;
-
-      }
-    ).join("");
+        }
+      )
+      .join("");
 
 
   setupCommentInput(
     postId
   );
 
+
+  data.forEach(
+    comment => {
+
+      const replyInput =
+        document.getElementById(
+          "reply-input-" + comment.id
+        );
+
+
+      if(replyInput){
+
+        replyInput.onkeydown =
+          function(event){
+
+            if(
+              event.key === "Enter"
+            ){
+
+              event.preventDefault();
+
+              sendCommentReply(
+                comment.id,
+                postId
+              );
+
+            }
+
+          };
+
+      }
+
+    }
+  );
+
 }
 
+
+/* =====================================================
+   COMMENT INPUT
+===================================================== */
 
 function setupCommentInput(
   postId
@@ -1815,6 +2082,7 @@ function setupCommentInput(
     document.getElementById(
       "comment-input-" + postId
     );
+
 
   if(input){
 
@@ -1840,6 +2108,10 @@ function setupCommentInput(
 }
 
 
+/* =====================================================
+   SHOW COMMENT REPLY
+===================================================== */
+
 function showCommentReply(
   commentId,
   username
@@ -1850,31 +2122,54 @@ function showCommentReply(
       "reply-box-" + commentId
     );
 
+
   const input =
     document.getElementById(
       "reply-input-" + commentId
     );
 
-  if(!box || !input) return;
+
+  if(
+    !box ||
+    !input
+  ){
+
+    return;
+
+  }
 
 
   box.style.display =
     "block";
 
+
   input.value =
     "@" + username + " ";
+
 
   input.focus();
 
 }
 
 
+/* =====================================================
+   SEND COMMENT REPLY
+===================================================== */
+
 async function sendCommentReply(
   commentId,
   postId
 ){
 
-  if(!currentUser) return;
+  if(!currentUser){
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+
+  }
 
 
   const input =
@@ -1882,31 +2177,37 @@ async function sendCommentReply(
       "reply-input-" + commentId
     );
 
-  if(!input) return;
+
+  if(!input){
+    return;
+  }
 
 
   const text =
     input.value.trim();
 
-  if(!text) return;
+
+  if(!text){
+    return;
+  }
 
 
   const {
     error
   } =
-  await supabaseClient
-    .from("comments")
-    .insert({
+    await supabaseClient
+      .from("comments")
+      .insert({
 
-      post_id:postId,
+        post_id:postId,
 
-      user_id:currentUser.id,
+        user_id:currentUser.id,
 
-      username:currentUsername,
+        username:currentUsername,
 
-      content:text
+        content:text
 
-    });
+      });
 
 
   if(error){
@@ -1928,11 +2229,23 @@ async function sendCommentReply(
 }
 
 
+/* =====================================================
+   ADD COMMENT
+===================================================== */
+
 async function addComment(
   postId
 ){
 
-  if(!currentUser) return;
+  if(!currentUser){
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+
+  }
 
 
   const input =
@@ -1940,31 +2253,37 @@ async function addComment(
       "comment-input-" + postId
     );
 
-  if(!input) return;
+
+  if(!input){
+    return;
+  }
 
 
   const text =
     input.value.trim();
 
-  if(!text) return;
+
+  if(!text){
+    return;
+  }
 
 
   const {
     error
   } =
-  await supabaseClient
-    .from("comments")
-    .insert({
+    await supabaseClient
+      .from("comments")
+      .insert({
 
-      post_id:postId,
+        post_id:postId,
 
-      user_id:currentUser.id,
+        user_id:currentUser.id,
 
-      username:currentUsername,
+        username:currentUsername,
 
-      content:text
+        content:text
 
-    });
+      });
 
 
   if(error){
@@ -1982,6 +2301,7 @@ async function addComment(
   input.value =
     "";
 
+
   await loadComments(
     postId
   );
@@ -1989,11 +2309,21 @@ async function addComment(
 }
 
 
-/* ================= HOME MESSAGE ================= */
+/* =====================================================
+   SEND HOME MESSAGE
+===================================================== */
 
 async function sendTextMessage(){
 
-  if(!currentUser) return;
+  if(!currentUser){
+
+    alert(
+      "Please login first."
+    );
+
+    return;
+
+  }
 
 
   const input =
@@ -2001,35 +2331,52 @@ async function sendTextMessage(){
       "chatInput"
     );
 
-  if(!input) return;
+
+  if(!input){
+
+    alert(
+      "Message box nahi mila."
+    );
+
+    return;
+
+  }
 
 
   const text =
     input.value.trim();
 
-  if(!text) return;
+
+  if(!text){
+    return;
+  }
 
 
   const {
     error
   } =
-  await supabaseClient
-    .from("home_messages")
-    .insert({
+    await supabaseClient
+      .from("home_messages")
+      .insert({
 
-      user_id:
-        currentUser.id,
+        user_id:
+          currentUser.id,
 
-      username:
-        currentUsername,
+        username:
+          currentUsername,
 
-      message:
-        text
+        message:
+          text
 
-    });
+      });
 
 
   if(error){
+
+    console.error(
+      "MESSAGE ERROR:",
+      error
+    );
 
     alert(
       "Message send nahi hua.\n\n" +
@@ -2044,7 +2391,9 @@ async function sendTextMessage(){
   input.value =
     "";
 
+
   await loadPosts();
+
 
   showNotice(
     "💬 Message sent."
@@ -2053,26 +2402,33 @@ async function sendTextMessage(){
 }
 
 
-/* ================= DELETE MESSAGE ================= */
+/* =====================================================
+   DELETE HOME MESSAGE
+===================================================== */
 
 async function deleteHomeMessage(
   messageId
 ){
 
+  if(!currentUser){
+    return;
+  }
+
+
   const {
     error
   } =
-  await supabaseClient
-    .from("home_messages")
-    .delete()
-    .eq(
-      "id",
-      messageId
-    )
-    .eq(
-      "user_id",
-      currentUser.id
-    );
+    await supabaseClient
+      .from("home_messages")
+      .delete()
+      .eq(
+        "id",
+        messageId
+      )
+      .eq(
+        "user_id",
+        currentUser.id
+      );
 
 
   if(error){
@@ -2089,6 +2445,7 @@ async function deleteHomeMessage(
 
   await loadPosts();
 
+
   showNotice(
     "🗑️ Message deleted."
   );
@@ -2096,11 +2453,18 @@ async function deleteHomeMessage(
 }
 
 
-/* ================= DELETE POST ================= */
+/* =====================================================
+   DELETE POST
+===================================================== */
 
 async function deletePost(
   postId
 ){
+
+  if(!currentUser){
+    return;
+  }
+
 
   if(
     !confirm(
@@ -2116,17 +2480,17 @@ async function deletePost(
   const {
     error
   } =
-  await supabaseClient
-    .from("posts")
-    .delete()
-    .eq(
-      "id",
-      postId
-    )
-    .eq(
-      "user_id",
-      currentUser.id
-    );
+    await supabaseClient
+      .from("posts")
+      .delete()
+      .eq(
+        "id",
+        postId
+      )
+      .eq(
+        "user_id",
+        currentUser.id
+      );
 
 
   if(error){
@@ -2143,6 +2507,7 @@ async function deletePost(
 
   await loadPosts();
 
+
   showNotice(
     "🗑️ Post deleted."
   );
@@ -2150,11 +2515,18 @@ async function deletePost(
 }
 
 
-/* ================= BLOCK ================= */
+/* =====================================================
+   BLOCK USER
+===================================================== */
 
 async function blockUser(
   userId
 ){
+
+  if(!currentUser){
+    return;
+  }
+
 
   if(
     userId === currentUser.id
@@ -2179,17 +2551,17 @@ async function blockUser(
   const {
     error
   } =
-  await supabaseClient
-    .from("user_blocks")
-    .insert({
+    await supabaseClient
+      .from("user_blocks")
+      .insert({
 
-      blocker_id:
-        currentUser.id,
+        blocker_id:
+          currentUser.id,
 
-      blocked_id:
-        userId
+        blocked_id:
+          userId
 
-    });
+      });
 
 
   if(error){
@@ -2218,15 +2590,18 @@ async function blockUser(
 
 
   showNotice(
-    "User blocked."
+    "🚫 User blocked."
   );
+
 
   await loadPosts();
 
 }
 
 
-/* ================= IMAGE ================= */
+/* =====================================================
+   IMAGE
+===================================================== */
 
 function sendImage(){
 
@@ -2234,6 +2609,7 @@ function sendImage(){
     document.getElementById(
       "imageInput"
     );
+
 
   if(
     !input ||
@@ -2249,13 +2625,16 @@ function sendImage(){
     "Image Storage abhi setup nahi hai."
   );
 
+
   input.value =
     "";
 
 }
 
 
-/* ================= VOICE ================= */
+/* =====================================================
+   VOICE
+===================================================== */
 
 async function toggleRecording(){
 
@@ -2275,7 +2654,11 @@ async function toggleRecording(){
 
   if(isRecording){
 
-    mediaRecorder.stop();
+    if(mediaRecorder){
+
+      mediaRecorder.stop();
+
+    }
 
     return;
 
@@ -2331,16 +2714,32 @@ async function toggleRecording(){
           false;
 
 
-        document.getElementById(
-          "recordStatus"
-        ).style.display =
-          "none";
+        const status =
+          document.getElementById(
+            "recordStatus"
+          );
 
 
-        document.getElementById(
-          "voiceBtn"
-        ).textContent =
-          "🎤 Voice";
+        const voiceBtn =
+          document.getElementById(
+            "voiceBtn"
+          );
+
+
+        if(status){
+
+          status.style.display =
+            "none";
+
+        }
+
+
+        if(voiceBtn){
+
+          voiceBtn.textContent =
+            "🎤 Voice";
+
+        }
 
 
         showNotice(
@@ -2352,26 +2751,45 @@ async function toggleRecording(){
 
     mediaRecorder.start();
 
+
     isRecording =
       true;
 
 
-    document.getElementById(
-      "recordStatus"
-    ).style.display =
-      "block";
+    const status =
+      document.getElementById(
+        "recordStatus"
+      );
 
 
-    document.getElementById(
-      "voiceBtn"
-    ).textContent =
-      "⏹️ Stop";
+    const voiceBtn =
+      document.getElementById(
+        "voiceBtn"
+      );
+
+
+    if(status){
+
+      status.style.display =
+        "block";
+
+    }
+
+
+    if(voiceBtn){
+
+      voiceBtn.textContent =
+        "⏹️ Stop";
+
+    }
 
   }catch(error){
 
     console.error(
+      "VOICE ERROR:",
       error
     );
+
 
     alert(
       "Microphone permission nahi mili."
@@ -2382,7 +2800,9 @@ async function toggleRecording(){
 }
 
 
-/* ================= BUTTONS ================= */
+/* =====================================================
+   BUTTON EVENTS
+===================================================== */
 
 document.addEventListener(
   "DOMContentLoaded",
@@ -2393,20 +2813,24 @@ document.addEventListener(
         "chatInput"
       );
 
+
     const sendBtn =
       document.getElementById(
         "sendMessageBtn"
       );
+
 
     const uploadBtn =
       document.getElementById(
         "uploadImageBtn"
       );
 
+
     const imageInput =
       document.getElementById(
         "imageInput"
       );
+
 
     const voiceBtn =
       document.getElementById(
@@ -2418,7 +2842,7 @@ document.addEventListener(
 
       chatInput.addEventListener(
         "keydown",
-        event => {
+        function(event){
 
           if(
             event.key === "Enter"
@@ -2446,12 +2870,18 @@ document.addEventListener(
     }
 
 
-    if(uploadBtn){
+    if(
+      uploadBtn &&
+      imageInput
+    ){
 
       uploadBtn.addEventListener(
         "click",
-        () =>
-          imageInput.click()
+        function(){
+
+          imageInput.click();
+
+        }
       );
 
     }
@@ -2480,7 +2910,9 @@ document.addEventListener(
 );
 
 
-/* ================= MORE ================= */
+/* =====================================================
+   MORE / LOGOUT
+===================================================== */
 
 async function moreMenu(){
 
@@ -2498,13 +2930,16 @@ async function moreMenu(){
   const {
     error
   } =
-  await supabaseClient.auth.signOut();
+    await supabaseClient
+      .auth
+      .signOut();
 
 
   if(error){
 
     alert(
-      "Logout nahi hua."
+      "Logout nahi hua.\n\n" +
+      error.message
     );
 
     return;
@@ -2519,7 +2954,9 @@ async function moreMenu(){
 }
 
 
-/* ================= HOME ================= */
+/* =====================================================
+   HOME
+===================================================== */
 
 function goHome(){
 
@@ -2531,7 +2968,9 @@ function goHome(){
 }
 
 
-/* ================= NOTICE ================= */
+/* =====================================================
+   NOTICE
+===================================================== */
 
 function showNotice(
   message
@@ -2542,11 +2981,15 @@ function showNotice(
       "notice"
     );
 
-  if(!box) return;
+
+  if(!box){
+    return;
+  }
 
 
   box.textContent =
     message;
+
 
   box.style.display =
     "block";
@@ -2565,7 +3008,9 @@ function showNotice(
 }
 
 
-/* ================= HELPERS ================= */
+/* =====================================================
+   HELPERS
+===================================================== */
 
 function escapeHtml(value){
 
@@ -2607,7 +3052,10 @@ function escapeAttr(value){
 
 function formatDate(date){
 
-  if(!date) return "";
+  if(!date){
+    return "";
+  }
+
 
   try{
 
@@ -2624,7 +3072,9 @@ function formatDate(date){
 }
 
 
-/* ================= START ================= */
+/* =====================================================
+   START
+===================================================== */
 
 checkUser();
 
