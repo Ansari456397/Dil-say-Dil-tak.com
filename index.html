@@ -1702,7 +1702,27 @@ body{
 
 
 <script>
+function openPrivateChatFromProfile(){
 
+  if(!currentUser){
+    showNotice("Please login first.");
+    return;
+  }
+
+  if(!viewedProfileId){
+    showNotice("User profile nahi mili.");
+    return;
+  }
+
+  if(viewedProfileId === currentUser.id){
+    showNotice("Apne profile se chat nahi kar sakte.");
+    return;
+  }
+
+  window.location.href =
+    "private.html?user=" +
+    encodeURIComponent(viewedProfileId);
+}
 /* =====================================================
    SUPABASE
 ===================================================== */
