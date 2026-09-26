@@ -3753,12 +3753,12 @@ function closeFollowList(){
 /* =====================================================
    COMMENTS SYSTEM
 ===================================================== */
+
 function toggleComments(postId){
 
-  const box =
-    document.getElementById(
-      "comments-" + postId
-    );
+  const box = document.getElementById(
+    "comments-" + postId
+  );
 
   if(!box){
     return;
@@ -3767,23 +3767,20 @@ function toggleComments(postId){
   if(box.style.display === "block"){
 
     box.style.display = "none";
-
     return;
   }
 
   box.style.display = "block";
 
   loadComments(postId);
-
 }
 
 
 async function loadComments(postId){
 
-  const list =
-    document.getElementById(
-      "comments-list-" + postId
-    );
+  const list = document.getElementById(
+    "comments-list-" + postId
+  );
 
   if(!list){
     return;
@@ -3792,17 +3789,14 @@ async function loadComments(postId){
   list.innerHTML =
     '<div class="loading">Loading comments...</div>';
 
-
-  const {data,error} =
+  const { data, error } =
     await supabaseClient
       .from("comments")
       .select("*")
-      .eq("post_id",postId)
-      .order(
-        "created_at",
-        {ascending:true}
-      );
-
+      .eq("post_id", postId)
+      .order("created_at", {
+        ascending: true
+      });
 
   if(error){
 
@@ -3817,10 +3811,7 @@ async function loadComments(postId){
     return;
   }
 
-
-  const comments =
-    data || [];
-
+  const comments = data || [];
 
   if(comments.length === 0){
 
@@ -3830,18 +3821,15 @@ async function loadComments(postId){
     return;
   }
 
-
   list.innerHTML =
-    comments.map(comment=>{
+    comments.map(comment => {
 
       const username =
         comment.username || "User";
 
-
       const isOwn =
         currentUser &&
         comment.user_id === currentUser.id;
-
 
       return `
 
@@ -3854,7 +3842,9 @@ async function loadComments(postId){
           </div>
 
           <div class="comment-text">
-            ${escapeHtml(comment.content)}
+            ${escapeHtml(
+              comment.comment_text || ""
+            )}
           </div>
 
           <div class="comment-actions">
@@ -3868,7 +3858,10 @@ async function loadComments(postId){
               ? `
                 <button
                   class="reply-btn"
-                  onclick="deleteComment('${escapeAttr(comment.id)}',${postId})">
+                  onclick="deleteComment(
+                    '${escapeAttr(comment.id)}',
+                    ${postId}
+                  )">
                   🗑️ Delete
                 </button>
               `
@@ -3882,7 +3875,6 @@ async function loadComments(postId){
       `;
 
     }).join("");
-
 }
 
 
@@ -3913,7 +3905,7 @@ async function addComment(postId){
     return;
   }
 
-  const {error} =
+  const { error } =
     await supabaseClient
       .from("comments")
       .insert({
@@ -3943,72 +3935,6 @@ async function addComment(postId){
   input.value = "";
 
   await loadComments(postId);
-
-}
-
-  if(!currentUser){
-
-    showNotice(
-      "Please login first."
-    );
-
-    return;
-  }
-
-
-  const input =
-    document.getElementById(
-      "comment-input-" + postId
-    );
-
-
-  if(!input){
-    return;
-  }
-
-
-  const content =
-    input.value.trim();
-
-
-  if(!content){
-    return;
-  }
-
-
-  const {error} =
-    await supabaseClient
-      .from("comments")
-      .insert({
-
-        post_id:postId,
-        user_id:currentUser.id,
-        username:currentUsername,
-        content:content
-
-      });
-
-
-  if(error){
-
-    console.error(
-      "COMMENT ADD ERROR:",
-      error
-    );
-
-    showNotice(
-      "Comment send nahi hua: " +
-      error.message
-    );
-
-    return;
-  }
-
-
-  input.value = "";
-
-  await loadComments(postId);
-
 }
 
 
@@ -4021,19 +3947,22 @@ async function deleteComment(
     return;
   }
 
-
-  const {error} =
+  const { error } =
     await supabaseClient
       .from("comments")
       .delete()
-      .eq("id",commentId)
+      .eq("id", commentId)
       .eq(
         "user_id",
         currentUser.id
       );
 
-
   if(error){
+
+    console.error(
+      "COMMENT DELETE ERROR:",
+      error
+    );
 
     showNotice(
       "Comment delete nahi hua: " +
@@ -4043,11 +3972,9 @@ async function deleteComment(
     return;
   }
 
-
   await loadComments(postId);
-
 }
-    
+
 
 
     
