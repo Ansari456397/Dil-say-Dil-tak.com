@@ -3897,6 +3897,64 @@ async function addComment(postId){
     return;
   }
 
+  const input =
+    document.getElementById(
+      "comment-input-" + postId
+    );
+
+  if(!input){
+    return;
+  }
+
+  const commentText =
+    input.value.trim();
+
+  if(!commentText){
+    return;
+  }
+
+  const {error} =
+    await supabaseClient
+      .from("comments")
+      .insert({
+
+        post_id: postId,
+        user_id: currentUser.id,
+        username: currentUsername,
+        comment_text: commentText
+
+      });
+
+  if(error){
+
+    console.error(
+      "COMMENT ADD ERROR:",
+      error
+    );
+
+    showNotice(
+      "Comment send nahi hua: " +
+      error.message
+    );
+
+    return;
+  }
+
+  input.value = "";
+
+  await loadComments(postId);
+
+}
+
+  if(!currentUser){
+
+    showNotice(
+      "Please login first."
+    );
+
+    return;
+  }
+
 
   const input =
     document.getElementById(
