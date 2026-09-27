@@ -2442,17 +2442,20 @@ function renderPost(post){
           </div>
 
           <div
-            class="feed-user"
-            onclick="profileClick('${escapeAttr(post.user_id)}')">
+  class="feed-user"
+  onclick="profileClick('${escapeAttr(post.user_id)}')">
 
-            ${escapeHtml(
-              post.username || "User"
-            )}
+  ${escapeHtml(
+    post.username || "User"
+  )}
 
-          </div>
+  ${
+    post.user_id === "8dc9b9e7-3115-4f4b-9893-39592e98977d"
+      ? '<span class="creator-badge">👑 Creator</span>'
+      : ''
+  }
 
-        </div>
-
+</div>
         <div class="feed-date">
           ${formatDate(post.created_at)}
         </div>
