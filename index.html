@@ -2391,16 +2391,14 @@ function profileClick(userId){
 /* =====================================================
    RENDER POST
 ===================================================== */
-
+```js
 function renderPost(post){
 
   const isOwn =
     currentUser &&
     post.user_id === currentUser.id;
 
-
   let buttons = "";
-
 
   if(isOwn){
 
@@ -2431,13 +2429,13 @@ function renderPost(post){
 
   }
 
-
   return `
 
     <div
       class="feed-item"
       id="post-${post.id}">
 
+      <!-- USER HEADER -->
       <div class="feed-head">
 
         <div class="feed-user-wrap">
@@ -2452,32 +2450,36 @@ function renderPost(post){
             )}
 
           </div>
-<div
-  class="feed-user"
-  onclick="profileClick('${escapeAttr(post.user_id)}')">
 
-  ${escapeHtml(
-    post.username || "User"
-  )}
+          <div
+            class="feed-user"
+            onclick="profileClick('${escapeAttr(post.user_id)}')">
 
+            ${escapeHtml(
+              post.username || "User"
+            )}
 
-          
+          </div>
 
-</div>
-        <div class="feed-date">
-          ${formatDate(post.created_at)}
+          <div class="feed-date">
+            ${formatDate(post.created_at)}
+          </div>
+
         </div>
 
       </div>
 
+      <!-- POST CONTENT -->
       <div class="feed-content">
         ${escapeHtml(post.content)}
       </div>
 
+      <!-- POST TYPE -->
       <div class="feed-type">
         📝 Post
       </div>
 
+      <!-- ACTION BUTTONS -->
       <div class="action-row">
 
         ${buttons}
@@ -2485,26 +2487,33 @@ function renderPost(post){
         <button
           class="action-btn"
           onclick="toggleLike(${post.id})">
+
           ❤️ Like
           <span id="like-count-${post.id}">0</span>
+
         </button>
 
         <button
           class="action-btn"
           onclick="toggleDislike(${post.id})">
+
           👎 Dislike
           <span id="dislike-count-${post.id}">0</span>
+
         </button>
 
         <button
-  class="action-btn"
-  onclick="toggleComments(${post.id})">
-  💬 Comments
-  <span id="comment-count-${post.id}">0</span>
-</button>
+          class="action-btn"
+          onclick="toggleComments(${post.id})">
+
+          💬 Comments
+          <span id="comment-count-${post.id}">0</span>
+
+        </button>
 
       </div>
 
+      <!-- COMMENTS -->
       <div
         id="comments-${post.id}"
         class="comments-box">
@@ -2537,6 +2546,23 @@ function renderPost(post){
   `;
 
 }
+```
+
+
+        
+      
+
+
+          
+
+
+      
+
+    
+        
+      
+          
+        
 
 
 /* =====================================================
