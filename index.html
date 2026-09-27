@@ -2342,8 +2342,33 @@ async function loadFeed(){
         .join("");
 
 
-    await loadPostActions();
-    await loadFollowStatus();
+feed.innerHTML =
+  feedItems
+    .map(item=>{
+
+      if(item.type === "post"){
+        return renderPost(item.data);
+      }
+
+      return renderMessage(item.data);
+
+    })
+    .join("");
+
+
+try{
+  await loadPostActions();
+}catch(error){
+  console.error("POST ACTIONS ERROR:", error);
+}
+
+try{
+  await loadFollowStatus();
+}catch(error){
+  console.error("FOLLOW STATUS ERROR:", error);
+
+
+}
 
   }catch(error){
 
