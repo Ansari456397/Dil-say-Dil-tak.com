@@ -3915,7 +3915,6 @@ function cancelReply(postId){
 /* =====================================================
    LOAD COMMENTS
 ===================================================== */
-
 async function loadComments(postId){
 
   const list = document.getElementById(
@@ -4027,7 +4026,47 @@ async function loadComments(postId){
       `;
 
     }).join("");
+
 }
+
+
+async function deleteComment(commentId, postId){
+
+  if(!currentUser){
+    showNotice("Please login first.");
+    return;
+  }
+
+  const { error } =
+    await supabaseClient
+      .from("comments")
+      .delete()
+      .eq("id", commentId)
+      .eq("user_id", currentUser.id);
+
+  if(error){
+
+    console.error(
+      "COMMENT DELETE ERROR:",
+      error
+    );
+
+    showNotice(
+      "Comment delete nahi hua: " +
+      error.message
+    );
+
+    return;
+  }
+
+  await loadComments(postId);
+
+  if(typeof updateCommentCount === "function"){
+    await updateCommentCount(postId);
+  }
+
+}
+
 
 
 /* =====================================================
