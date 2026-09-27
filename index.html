@@ -3843,7 +3843,7 @@ async function loadComments(postId){
 
           <div class="comment-text">
             ${escapeHtml(
-              comment.comment_text || ""
+              content.comment_text || ""
             )}
           </div>
 
@@ -3917,63 +3917,7 @@ async function addComment(postId){
 
       });
 
-  if(error){
-
-    console.error(
-      "COMMENT ADD ERROR:",
-      error
-    );
-
-    showNotice(
-      "Comment send nahi hua: " +
-      error.message
-    );
-
-    return;
-  }
-
-  input.value = "";
-
-  await loadComments(postId);
-}
-
-
-async function deleteComment(
-  commentId,
-  postId
-){
-
-  if(!currentUser){
-    return;
-  }
-
-  const { error } =
-    await supabaseClient
-      .from("comments")
-      .delete()
-      .eq("id", commentId)
-      .eq(
-        "user_id",
-        currentUser.id
-      );
-
-  if(error){
-
-    console.error(
-      "COMMENT DELETE ERROR:",
-      error
-    );
-
-    showNotice(
-      "Comment delete nahi hua: " +
-      error.message
-    );
-
-    return;
-  }
-
-  await loadComments(postId);
-}
+  if(error
 
 
 
