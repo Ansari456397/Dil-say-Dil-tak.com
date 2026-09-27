@@ -3917,7 +3917,26 @@ async function addComment(postId){
 
       });
 
-  if(error
+  if(error){
+
+  console.error(
+    "COMMENT ADD ERROR:",
+    error
+  );
+
+  showNotice(
+    "Comment send nahi hua: " +
+    error.message
+  );
+
+  return;
+}
+
+input.value = "";
+
+await loadComments(postId);
+
+}
 
 
 
