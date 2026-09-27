@@ -3843,7 +3843,7 @@ async function loadComments(postId){
 
           <div class="comment-text">
             ${escapeHtml(
-              content.comment_text || ""
+              comment.content || ""
             )}
           </div>
 
@@ -3913,7 +3913,7 @@ async function addComment(postId){
         post_id: postId,
         user_id: currentUser.id,
         username: currentUsername,
-        comment_text: commentText
+        content: commentText
 
       });
 
