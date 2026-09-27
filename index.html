@@ -3847,28 +3847,43 @@ async function loadComments(postId){
             )}
           </div>
 
-          <div class="comment-actions">
+      <div class="comment-actions">
 
-            <span>
-              ${formatDate(comment.created_at)}
-            </span>
+  <span>
+    ${formatDate(comment.created_at)}
+  </span>
 
-            ${
-              isOwn
-              ? `
-                <button
-                  class="reply-btn"
-                  onclick="deleteComment(
-                    '${escapeAttr(comment.id)}',
-                    ${postId}
-                  )">
-                  🗑️ Delete
-                </button>
-              `
-              : ""
-            }
+  <button
+    type="button"
+    class="reply-btn"
+    onclick="showCommentReply(
+      '${escapeAttr(comment.id)}',
+      ${postId},
+      '${escapeAttr(username)}'
+    )">
+    ↩ Reply
+  </button>
 
-          </div>
+  ${
+    isOwn
+    ? `
+      <button
+        type="button"
+        class="reply-btn"
+        onclick="deleteComment(
+          '${escapeAttr(comment.id)}',
+          ${postId}
+        )">
+        🗑️ Delete
+      </button>
+    `
+    : ""
+  }
+
+</div>    
+          
+
+      
 
         </div>
 
