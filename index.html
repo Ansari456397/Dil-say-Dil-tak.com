@@ -2429,10 +2429,11 @@ function renderPost(post){
         </button>
 
         <button
-          class="action-btn"
-          onclick="toggleComments(${post.id})">
-          💬 Comments
-        </button>
+  class="action-btn"
+  onclick="toggleComments(${post.id})">
+  💬 Comments
+  <span id="comment-count-${post.id}">0</span>
+</button>
 
       </div>
 
