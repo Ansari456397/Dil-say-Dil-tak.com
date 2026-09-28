@@ -2156,6 +2156,7 @@ async function addPost(){
 
 
 
+```js
 /* =====================================================
    LOAD FEED
 ===================================================== */
@@ -2182,14 +2183,30 @@ async function loadFeed(){
 
     if(currentUser){
 
-      const result =
-        await supabaseClient
+      feed.innerHTML =
+        '<div class="loading">Loading blocks...</div>';
+
+      const blockPromise =
+        supabaseClient
           .from("user_blocks")
           .select("blocked_id")
           .eq(
             "blocker_id",
             currentUser.id
           );
+
+      const result =
+        await Promise.race([
+          blockPromise,
+          new Promise((_, reject) =>
+            setTimeout(
+              () => reject(
+                new Error("Block list request timeout")
+              ),
+              10000
+            )
+          )
+        ]);
 
       if(result.error){
         throw new Error(
@@ -2201,16 +2218,18 @@ async function loadFeed(){
       blockedIds =
         (result.data || [])
           .map(row => row.blocked_id);
-
     }
 
 
     /* =========================
-       LOAD POSTS
+       POSTS
     ========================= */
 
-    const postsResult =
-      await supabaseClient
+    feed.innerHTML =
+      '<div class="loading">Loading posts...</div>';
+
+    const postsPromise =
+      supabaseClient
         .from("posts")
         .select("*")
         .order(
@@ -2218,22 +2237,36 @@ async function loadFeed(){
           { ascending:false }
         );
 
-    if(postsResult.error){
+    const postsResult =
+      await Promise.race([
+        postsPromise,
+        new Promise((_, reject) =>
+          setTimeout(
+            () => reject(
+              new Error("Posts request timeout")
+            ),
+            10000
+          )
+        )
+      ]);
 
+    if(postsResult.error){
       throw new Error(
-        "Posts load error: " +
+        "Posts error: " +
         postsResult.error.message
       );
-
     }
 
 
     /* =========================
-       LOAD HOME MESSAGES
+       HOME MESSAGES
     ========================= */
 
-    const messagesResult =
-      await supabaseClient
+    feed.innerHTML =
+      '<div class="loading">Loading messages...</div>';
+
+    const messagesPromise =
+      supabaseClient
         .from("home_messages")
         .select("*")
         .order(
@@ -2241,13 +2274,24 @@ async function loadFeed(){
           { ascending:false }
         );
 
-    if(messagesResult.error){
+    const messagesResult =
+      await Promise.race([
+        messagesPromise,
+        new Promise((_, reject) =>
+          setTimeout(
+            () => reject(
+              new Error("Messages request timeout")
+            ),
+            10000
+          )
+        )
+      ]);
 
+    if(messagesResult.error){
       throw new Error(
-        "Home messages error: " +
+        "Messages error: " +
         messagesResult.error.message
       );
-
     }
 
 
@@ -2259,7 +2303,7 @@ async function loadFeed(){
 
 
     /* =========================
-       COMBINE FEED
+       COMBINE
     ========================= */
 
     let feedItems = [];
@@ -2301,18 +2345,10 @@ async function loadFeed(){
     });
 
 
-    /* =========================
-       NEWEST FIRST
-    ========================= */
-
     feedItems.sort(
       (a,b) =>
-        new Date(
-          b.data.created_at
-        ) -
-        new Date(
-          a.data.created_at
-        )
+        new Date(b.data.created_at) -
+        new Date(a.data.created_at)
     );
 
 
@@ -2325,8 +2361,7 @@ async function loadFeed(){
         ...new Set(
           feedItems
             .map(
-              item =>
-                item.data.user_id
+              item => item.data.user_id
             )
             .filter(Boolean)
         )
@@ -2338,8 +2373,11 @@ async function loadFeed(){
 
     if(userIds.length){
 
-      const result =
-        await supabaseClient
+      feed.innerHTML =
+        '<div class="loading">Loading profiles...</div>';
+
+      const profilePromise =
+        supabaseClient
           .from("profiles")
           .select(
             "id,avatar_url,username,name,profile_privacy"
@@ -2349,23 +2387,31 @@ async function loadFeed(){
             userIds
           );
 
+      const profileResult =
+        await Promise.race([
+          profilePromise,
+          new Promise((_, reject) =>
+            setTimeout(
+              () => reject(
+                new Error("Profiles request timeout")
+              ),
+              10000
+            )
+          )
+        ]);
 
-      if(result.error){
-
+      if(profileResult.error){
         throw new Error(
-          "Profiles load error: " +
-          result.error.message
+          "Profiles error: " +
+          profileResult.error.message
         );
-
       }
 
-
-      (result.data || [])
+      (profileResult.data || [])
         .forEach(profile => {
 
-          profileMap[
-            profile.id
-          ] = profile;
+          profileMap[profile.id] =
+            profile;
 
         });
 
@@ -2379,14 +2425,10 @@ async function loadFeed(){
     feedItems.forEach(item => {
 
       const profile =
-        profileMap[
-          item.data.user_id
-        ];
-
+        profileMap[item.data.user_id];
 
       item.data.avatar_url =
         profile?.avatar_url || "";
-
 
       item.data.username =
         profile?.username ||
@@ -2398,7 +2440,7 @@ async function loadFeed(){
 
 
     /* =========================
-       EMPTY FEED
+       EMPTY
     ========================= */
 
     if(feedItems.length === 0){
@@ -2407,71 +2449,47 @@ async function loadFeed(){
         '<div class="empty">No posts or messages yet.</div>';
 
       return;
-
     }
 
 
     /* =========================
-       RENDER FEED
+       RENDER
     ========================= */
 
     feed.innerHTML =
       feedItems
         .map(item => {
 
-          if(
-            item.type === "post"
-          ){
-
-            return renderPost(
-              item.data
-            );
-
+          if(item.type === "post"){
+            return renderPost(item.data);
           }
 
-          return renderMessage(
-            item.data
-          );
+          return renderMessage(item.data);
 
         })
         .join("");
 
 
     /* =========================
-       LOAD LIKE / DISLIKE
-       STATUS
+       ACTIONS
     ========================= */
 
-    try{
-
-      await loadPostActions();
-
-    }catch(error){
-
-      console.error(
-        "POST ACTIONS ERROR:",
-        error
+    loadPostActions()
+      .catch(error =>
+        console.error(
+          "POST ACTIONS ERROR:",
+          error
+        )
       );
 
-    }
 
-
-    /* =========================
-       LOAD FOLLOW STATUS
-    ========================= */
-
-    try{
-
-      await loadFollowStatus();
-
-    }catch(error){
-
-      console.error(
-        "FOLLOW STATUS ERROR:",
-        error
+    loadFollowStatus()
+      .catch(error =>
+        console.error(
+          "FOLLOW STATUS ERROR:",
+          error
+        )
       );
-
-    }
 
 
   }catch(error){
@@ -2481,9 +2499,7 @@ async function loadFeed(){
       error
     );
 
-
     feed.innerHTML = `
-
       <div class="empty"
         style="
           padding:20px;
@@ -2502,7 +2518,6 @@ async function loadFeed(){
         )}
 
       </div>
-
     `;
 
   }
@@ -2511,13 +2526,9 @@ async function loadFeed(){
 ```
 
 
-
-
-    
-
+       
 
     
-
 
     
 
