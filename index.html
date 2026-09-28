@@ -2155,6 +2155,7 @@ async function addPost(){
 }
 
 
+
 /* =====================================================
    LOAD FEED
 ===================================================== */
@@ -2173,6 +2174,10 @@ async function loadFeed(){
 
   try{
 
+    /* =========================
+       BLOCKED USERS
+    ========================= */
+
     let blockedIds = [];
 
     if(currentUser){
@@ -2186,16 +2191,23 @@ async function loadFeed(){
             currentUser.id
           );
 
-      if(!result.error){
-
-        blockedIds =
-          (result.data || [])
-            .map(row=>row.blocked_id);
-
+      if(result.error){
+        throw new Error(
+          "Block list error: " +
+          result.error.message
+        );
       }
+
+      blockedIds =
+        (result.data || [])
+          .map(row => row.blocked_id);
 
     }
 
+
+    /* =========================
+       LOAD POSTS
+    ========================= */
 
     const postsResult =
       await supabaseClient
@@ -2203,9 +2215,22 @@ async function loadFeed(){
         .select("*")
         .order(
           "created_at",
-          {ascending:false}
+          { ascending:false }
         );
 
+    if(postsResult.error){
+
+      throw new Error(
+        "Posts load error: " +
+        postsResult.error.message
+      );
+
+    }
+
+
+    /* =========================
+       LOAD HOME MESSAGES
+    ========================= */
 
     const messagesResult =
       await supabaseClient
@@ -2213,8 +2238,17 @@ async function loadFeed(){
         .select("*")
         .order(
           "created_at",
-          {ascending:false}
+          { ascending:false }
         );
+
+    if(messagesResult.error){
+
+      throw new Error(
+        "Home messages error: " +
+        messagesResult.error.message
+      );
+
+    }
 
 
     const posts =
@@ -2224,12 +2258,20 @@ async function loadFeed(){
       messagesResult.data || [];
 
 
+    /* =========================
+       COMBINE FEED
+    ========================= */
+
     let feedItems = [];
 
 
-    posts.forEach(post=>{
+    posts.forEach(post => {
 
-      if(!blockedIds.includes(post.user_id)){
+      if(
+        !blockedIds.includes(
+          post.user_id
+        )
+      ){
 
         feedItems.push({
           type:"post",
@@ -2241,9 +2283,13 @@ async function loadFeed(){
     });
 
 
-    messages.forEach(message=>{
+    messages.forEach(message => {
 
-      if(!blockedIds.includes(message.user_id)){
+      if(
+        !blockedIds.includes(
+          message.user_id
+        )
+      ){
 
         feedItems.push({
           type:"message",
@@ -2255,18 +2301,33 @@ async function loadFeed(){
     });
 
 
+    /* =========================
+       NEWEST FIRST
+    ========================= */
+
     feedItems.sort(
-      (a,b)=>
-        new Date(b.data.created_at) -
-        new Date(a.data.created_at)
+      (a,b) =>
+        new Date(
+          b.data.created_at
+        ) -
+        new Date(
+          a.data.created_at
+        )
     );
 
+
+    /* =========================
+       LOAD PROFILES
+    ========================= */
 
     const userIds =
       [
         ...new Set(
           feedItems
-            .map(item=>item.data.user_id)
+            .map(
+              item =>
+                item.data.user_id
+            )
             .filter(Boolean)
         )
       ];
@@ -2283,31 +2344,49 @@ async function loadFeed(){
           .select(
             "id,avatar_url,username,name,profile_privacy"
           )
-          .in("id",userIds);
+          .in(
+            "id",
+            userIds
+          );
 
 
-      if(!result.error){
+      if(result.error){
 
-        (result.data || [])
-          .forEach(profile=>{
-
-            profileMap[profile.id] =
-              profile;
-
-          });
+        throw new Error(
+          "Profiles load error: " +
+          result.error.message
+        );
 
       }
+
+
+      (result.data || [])
+        .forEach(profile => {
+
+          profileMap[
+            profile.id
+          ] = profile;
+
+        });
 
     }
 
 
-    feedItems.forEach(item=>{
+    /* =========================
+       ADD PROFILE DATA
+    ========================= */
+
+    feedItems.forEach(item => {
 
       const profile =
-        profileMap[item.data.user_id];
+        profileMap[
+          item.data.user_id
+        ];
+
 
       item.data.avatar_url =
         profile?.avatar_url || "";
+
 
       item.data.username =
         profile?.username ||
@@ -2317,6 +2396,10 @@ async function loadFeed(){
 
     });
 
+
+    /* =========================
+       EMPTY FEED
+    ========================= */
 
     if(feedItems.length === 0){
 
@@ -2328,35 +2411,68 @@ async function loadFeed(){
     }
 
 
+    /* =========================
+       RENDER FEED
+    ========================= */
+
     feed.innerHTML =
       feedItems
-        .map(item=>{
+        .map(item => {
 
-          if(item.type === "post"){
-            return renderPost(item.data);
+          if(
+            item.type === "post"
+          ){
+
+            return renderPost(
+              item.data
+            );
+
           }
 
-          return renderMessage(item.data);
+          return renderMessage(
+            item.data
+          );
 
         })
         .join("");
 
 
+    /* =========================
+       LOAD LIKE / DISLIKE
+       STATUS
+    ========================= */
+
+    try{
+
+      await loadPostActions();
+
+    }catch(error){
+
+      console.error(
+        "POST ACTIONS ERROR:",
+        error
+      );
+
+    }
 
 
-try{
-  await loadPostActions();
-}catch(error){
-  console.error("POST ACTIONS ERROR:", error);
-}
+    /* =========================
+       LOAD FOLLOW STATUS
+    ========================= */
 
-try{
-  await loadFollowStatus();
-}catch(error){
-  console.error("FOLLOW STATUS ERROR:", error);
+    try{
 
+      await loadFollowStatus();
 
-}
+    }catch(error){
+
+      console.error(
+        "FOLLOW STATUS ERROR:",
+        error
+      );
+
+    }
+
 
   }catch(error){
 
@@ -2365,12 +2481,45 @@ try{
       error
     );
 
-    feed.innerHTML =
-      '<div class="empty">Feed load nahi ho saki.</div>';
+
+    feed.innerHTML = `
+
+      <div class="empty"
+        style="
+          padding:20px;
+          color:#c0392b;
+          text-align:center;
+          word-break:break-word;
+        ">
+
+        <strong>Feed load nahi ho saki.</strong>
+
+        <br><br>
+
+        ${escapeHtml(
+          error?.message ||
+          String(error)
+        )}
+
+      </div>
+
+    `;
 
   }
 
 }
+```
+
+
+
+
+    
+
+
+    
+
+
+    
 
 
 /* =====================================================
