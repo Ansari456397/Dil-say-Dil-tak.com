@@ -2342,18 +2342,6 @@ async function loadFeed(){
         .join("");
 
 
-feed.innerHTML =
-  feedItems
-    .map(item=>{
-
-      if(item.type === "post"){
-        return renderPost(item.data);
-      }
-
-      return renderMessage(item.data);
-
-    })
-    .join("");
 
 
 try{
