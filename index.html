@@ -2156,382 +2156,64 @@ async function addPost(){
 
 
 
-```js
+
 /* =====================================================
    LOAD FEED
 ===================================================== */
-
 async function loadFeed(){
 
-  const feed =
-    document.getElementById("homeFeed");
+  const feed = document.getElementById("homeFeed");
 
   if(!feed){
+    console.log("homeFeed not found");
     return;
   }
 
-  feed.innerHTML =
-    '<div class="loading">Loading feed...</div>';
-
-  try{
-
-    /* =========================
-       BLOCKED USERS
-    ========================= */
-
-    let blockedIds = [];
-
-    if(currentUser){
-
-      feed.innerHTML =
-        '<div class="loading">Loading blocks...</div>';
-
-      const blockPromise =
-        supabaseClient
-          .from("user_blocks")
-          .select("blocked_id")
-          .eq(
-            "blocker_id",
-            currentUser.id
-          );
-
-      const result =
-        await Promise.race([
-          blockPromise,
-          new Promise((_, reject) =>
-            setTimeout(
-              () => reject(
-                new Error("Block list request timeout")
-              ),
-              10000
-            )
-          )
-        ]);
-
-      if(result.error){
-        throw new Error(
-          "Block list error: " +
-          result.error.message
-        );
-      }
-
-      blockedIds =
-        (result.data || [])
-          .map(row => row.blocked_id);
-    }
-
-
-    /* =========================
-       POSTS
-    ========================= */
-
-    feed.innerHTML =
-      '<div class="loading">Loading posts...</div>';
-
-    const postsPromise =
-      supabaseClient
-        .from("posts")
-        .select("*")
-        .order(
-          "created_at",
-          { ascending:false }
-        );
-
-    const postsResult =
-      await Promise.race([
-        postsPromise,
-        new Promise((_, reject) =>
-          setTimeout(
-            () => reject(
-              new Error("Posts request timeout")
-            ),
-            10000
-          )
-        )
-      ]);
-
-    if(postsResult.error){
-      throw new Error(
-        "Posts error: " +
-        postsResult.error.message
-      );
-    }
-
-
-    /* =========================
-       HOME MESSAGES
-    ========================= */
-
-    feed.innerHTML =
-      '<div class="loading">Loading messages...</div>';
-
-    const messagesPromise =
-      supabaseClient
-        .from("home_messages")
-        .select("*")
-        .order(
-          "created_at",
-          { ascending:false }
-        );
-
-    const messagesResult =
-      await Promise.race([
-        messagesPromise,
-        new Promise((_, reject) =>
-          setTimeout(
-            () => reject(
-              new Error("Messages request timeout")
-            ),
-            10000
-          )
-        )
-      ]);
-
-    if(messagesResult.error){
-      throw new Error(
-        "Messages error: " +
-        messagesResult.error.message
-      );
-    }
-
-
-    const posts =
-      postsResult.data || [];
-
-    const messages =
-      messagesResult.data || [];
-
-
-    /* =========================
-       COMBINE
-    ========================= */
-
-    let feedItems = [];
-
-
-    posts.forEach(post => {
-
-      if(
-        !blockedIds.includes(
-          post.user_id
-        )
-      ){
-
-        feedItems.push({
-          type:"post",
-          data:post
-        });
-
-      }
-
-    });
-
-
-    messages.forEach(message => {
-
-      if(
-        !blockedIds.includes(
-          message.user_id
-        )
-      ){
-
-        feedItems.push({
-          type:"message",
-          data:message
-        });
-
-      }
-
-    });
-
-
-    feedItems.sort(
-      (a,b) =>
-        new Date(b.data.created_at) -
-        new Date(a.data.created_at)
-    );
-
-
-    /* =========================
-       LOAD PROFILES
-    ========================= */
-
-    const userIds =
-      [
-        ...new Set(
-          feedItems
-            .map(
-              item => item.data.user_id
-            )
-            .filter(Boolean)
-        )
-      ];
-
-
-    let profileMap = {};
-
-
-    if(userIds.length){
-
-      feed.innerHTML =
-        '<div class="loading">Loading profiles...</div>';
-
-      const profilePromise =
-        supabaseClient
-          .from("profiles")
-          .select(
-            "id,avatar_url,username,name,profile_privacy"
-          )
-          .in(
-            "id",
-            userIds
-          );
-
-      const profileResult =
-        await Promise.race([
-          profilePromise,
-          new Promise((_, reject) =>
-            setTimeout(
-              () => reject(
-                new Error("Profiles request timeout")
-              ),
-              10000
-            )
-          )
-        ]);
-
-      if(profileResult.error){
-        throw new Error(
-          "Profiles error: " +
-          profileResult.error.message
-        );
-      }
-
-      (profileResult.data || [])
-        .forEach(profile => {
-
-          profileMap[profile.id] =
-            profile;
-
-        });
-
-    }
-
-
-    /* =========================
-       ADD PROFILE DATA
-    ========================= */
-
-    feedItems.forEach(item => {
-
-      const profile =
-        profileMap[item.data.user_id];
-
-      item.data.avatar_url =
-        profile?.avatar_url || "";
-
-      item.data.username =
-        profile?.username ||
-        profile?.name ||
-        item.data.username ||
-        "User";
-
-    });
-
-
-    /* =========================
-       EMPTY
-    ========================= */
-
-    if(feedItems.length === 0){
-
-      feed.innerHTML =
-        '<div class="empty">No posts or messages yet.</div>';
-
-      return;
-    }
-
-
-    /* =========================
-       RENDER
-    ========================= */
-
-    feed.innerHTML =
-      feedItems
-        .map(item => {
-
-          if(item.type === "post"){
-            return renderPost(item.data);
-          }
-
-          return renderMessage(item.data);
-
-        })
-        .join("");
-
-
-    /* =========================
-       ACTIONS
-    ========================= */
-
-    loadPostActions()
-      .catch(error =>
-        console.error(
-          "POST ACTIONS ERROR:",
-          error
-        )
-      );
-
-
-    loadFollowStatus()
-      .catch(error =>
-        console.error(
-          "FOLLOW STATUS ERROR:",
-          error
-        )
-      );
-
-
-  }catch(error){
-
-    console.error(
-      "FEED ERROR:",
-      error
-    );
+  feed.innerHTML = `
+    <div class="loading">
+      Loading posts...
+    </div>
+  `;
+
+  const { data, error } = await supabaseClient
+    .from("posts")
+    .select("*")
+    .order("created_at", { ascending:false });
+
+  if(error){
+
+    console.error("POST ERROR:", error);
 
     feed.innerHTML = `
-      <div class="empty"
-        style="
-          padding:20px;
-          color:#c0392b;
-          text-align:center;
-          word-break:break-word;
-        ">
-
-        <strong>Feed load nahi ho saki.</strong>
-
-        <br><br>
-
-        ${escapeHtml(
-          error?.message ||
-          String(error)
-        )}
-
+      <div class="empty">
+        Feed error: ${escapeHtml(error.message)}
       </div>
     `;
 
+    return;
   }
 
+  if(!data || data.length === 0){
+
+    feed.innerHTML = `
+      <div class="empty">
+        No posts yet.
+      </div>
+    `;
+
+    return;
+  }
+
+  feed.innerHTML = data
+    .map(post => renderPost(post))
+    .join("");
+
 }
-```
+      
+           
+        
 
-
-       
-
-    
-
-    
-
+  
 
 /* =====================================================
    PROFILE CLICK
